@@ -1,0 +1,1 @@
+a:7:{s:2:"id";a:1:{i:0;s:1:"1";}s:9:"NMUSUARIO";a:1:{i:0;s:13:"Administrador";}s:7:"DSLOGIN";a:1:{i:0;s:5:"admin";}s:7:"DSSENHA";a:1:{i:0;s:5:"admin";}s:7:"STATIVO";a:1:{i:0;s:1:"S";}s:9:"DTCRIACAO";a:1:{i:0;s:19:"2018-11-15 13:45:50";}s:13:"DTMODIFICACAO";a:1:{i:0;s:19:"2018-11-15 13:48:10";}}
