@@ -109,9 +109,7 @@ if(isset($_REQUEST['cep']))
 			CURLOPT_MAXREDIRS => 10, // stop after 10 redirects
 		);
 		//$ch = curl_init('http://www.buscarcep.com.br/?cep='.$cep.'&formato=xml&chave=1vVU3UcKFHfVhFxBSlWWM4kqUREbBu/');
-		
-		//$ch = curl_init('http://buscarcep.com.br/?cep='.$cep.'&formato=xml&chave=Chave_Gratuita_BuscarCep&identificador=CLIENTE1');
-		$ch = curl_init('https://viacep.com.br/ws/'.$cep.'/xml/');
+		$ch = curl_init('http://buscarcep.com.br/?cep='.$cep.'&formato=xml&chave=Chave_Gratuita_BuscarCep&identificador=CLIENTE1');
 		
 		curl_setopt_array( $ch, $options );
 		$content = curl_exec( $ch );
@@ -141,9 +139,7 @@ if(isset($_REQUEST['cep']))
 		//echo file_get_contents('http://www.buscarcep.com.br/?chave=1N4geWh.fwv1HeoCFNpBMsG1Cn1Gxf0&cep='.$cep.'&formato=xml');
 		//echo file_get_contents('https://buscarcep.com.br/?cep='.$cep.'&formato=xml&chave=Chave_Gratuita_BuscarCep&identificador=CLIENTE1');
 		//$res = file_get_contents('http://www.buscarcep.com.br/?cep='.$cep.'&formato=xml&chave=1vVU3UcKFHfVhFxBSlWWM4kqUREbBu/');
-		
-		//$res = file_get_contents('http://buscarcep.com.br/?cep='.$cep.'&formato=xml&chave=Chave_Gratuita_BuscarCep&identificador=CLIENTE1');
-		$res = file_get_contents('https://viacep.com.br/ws/'.$cep.'/xml/');
+		$res = file_get_contents('http://buscarcep.com.br/?cep='.$cep.'&formato=xml&chave=Chave_Gratuita_BuscarCep&identificador=CLIENTE1');
 		echo utf8_decode($res);
 	}
 

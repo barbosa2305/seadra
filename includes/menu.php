@@ -4,18 +4,22 @@
  * Download SysGen: https://github.com/bjverde/sysgen
  * Download Formdin Framework: https://github.com/bjverde/formDin
  * 
- * SysGen  Version: 0.9.0-alpha
+ * SysGen  Version: 0.9.0
  * FormDin Version: 4.2.6-alpha
  * 
- * System seadra created in: 2018-11-15 14:42:51
+ * System seadra created in: 2018-11-25 11:20:25
  */
 
 $menu = new TMenuDhtmlx();
 $menu->add('1', null, 'Menu', null, null, 'menu-alt-512.png');
 $menu->add('1.0',1,'cliente','modulos/cliente.php');
-$menu->add('1.1',1,'pedido','modulos/pedido.php');
-$menu->add('1.2',1,'produto','modulos/produto.php');
-$menu->add('1.3',1,'usuario','modulos/usuario.php');
+$menu->add('1.1',1,'endereco','modulos/endereco.php');
+$menu->add('1.2',1,'itempedido','modulos/itempedido.php');
+$menu->add('1.3',1,'municipio','modulos/municipio.php');
+$menu->add('1.4',1,'pedido','modulos/pedido.php');
+$menu->add('1.5',1,'produto','modulos/produto.php');
+$menu->add('1.6',1,'unidadefederativa','modulos/unidadefederativa.php');
+$menu->add('1.7',1,'usuario','modulos/usuario.php');
 $menu->add('9', null, 'Sobre', 'modulos/sys_about.php', null, 'information-circle.jpg');
 
 $menu->add('10',null,'Config Ambiente',null,null,'setting-gear-512.png');

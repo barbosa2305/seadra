@@ -10,44 +10,44 @@
  * System seadra created in: 2018-11-25 11:20:25
  */
 
-class Cliente {
+class Itempedido {
 
 
 	public function __construct(){
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
-		$result = ClienteDAO::selectById( $id );
+		$result = ItempedidoDAO::selectById( $id );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$result = ClienteDAO::selectCount( $where );
+		$result = ItempedidoDAO::selectCount( $where );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$result = ClienteDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
+		$result = ItempedidoDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
-		$result = ClienteDAO::selectAll( $orderBy, $where );
+		$result = ItempedidoDAO::selectAll( $orderBy, $where );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
-	public static function save( ClienteVO $objVo ){
+	public static function save( ItempedidoVO $objVo ){
 		$result = null;
-		if( $objVo->getIdcliente() ) {
-			$result = ClienteDAO::update( $objVo );
+		if( $objVo->getIditempedido() ) {
+			$result = ItempedidoDAO::update( $objVo );
 		} else {
-			$result = ClienteDAO::insert( $objVo );
+			$result = ItempedidoDAO::insert( $objVo );
 		}
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
-		$result = ClienteDAO::delete( $id );
+		$result = ItempedidoDAO::delete( $id );
 		return $result;
 	}
 

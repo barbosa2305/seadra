@@ -10,44 +10,44 @@
  * System seadra created in: 2018-11-25 11:20:25
  */
 
-class Cliente {
+class Unidadefederativa {
 
 
 	public function __construct(){
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
-		$result = ClienteDAO::selectById( $id );
+		$result = UnidadefederativaDAO::selectById( $id );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$result = ClienteDAO::selectCount( $where );
+		$result = UnidadefederativaDAO::selectCount( $where );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$result = ClienteDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
+		$result = UnidadefederativaDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
-		$result = ClienteDAO::selectAll( $orderBy, $where );
+		$result = UnidadefederativaDAO::selectAll( $orderBy, $where );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
-	public static function save( ClienteVO $objVo ){
+	public static function save( UnidadefederativaVO $objVo ){
 		$result = null;
-		if( $objVo->getIdcliente() ) {
-			$result = ClienteDAO::update( $objVo );
+		if( $objVo->getIdunidadefederativa() ) {
+			$result = UnidadefederativaDAO::update( $objVo );
 		} else {
-			$result = ClienteDAO::insert( $objVo );
+			$result = UnidadefederativaDAO::insert( $objVo );
 		}
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
-		$result = ClienteDAO::delete( $id );
+		$result = UnidadefederativaDAO::delete( $id );
 		return $result;
 	}
 

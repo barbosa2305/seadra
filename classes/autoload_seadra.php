@@ -4,10 +4,10 @@
  * Download SysGen: https://github.com/bjverde/sysgen
  * Download Formdin Framework: https://github.com/bjverde/formDin
  * 
- * SysGen  Version: 0.9.0-alpha
+ * SysGen  Version: 0.9.0
  * FormDin Version: 4.2.6-alpha
  * 
- * System seadra created in: 2018-11-15 14:43:12
+ * System seadra created in: 2018-11-25 11:19:56
  */
 
 if ( !function_exists( 'seadra_autoload') ) {

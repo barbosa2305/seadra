@@ -3,23 +3,23 @@ class ClienteVO {
 	private $idcliente = null;
 	private $nmcliente = null;
 	private $nrcpfcnpj = null;
-	private $idendereco = null;
-	private $dscomplementoendereco = null;
 	private $nrtelefone = null;
 	private $nrcelular = null;
+	private $idendereco = null;
+	private $dscomplementoendereco = null;
 	private $stativo = null;
 	private $idusuariocriacao = null;
 	private $dtcriacao = null;
 	private $idusuariomodificacao = null;
 	private $dtmodificacao = null;
-	public function __construct( $idcliente=null, $nmcliente=null, $nrcpfcnpj=null, $idendereco=null, $dscomplementoendereco=null, $nrtelefone=null, $nrcelular=null, $stativo=null, $idusuariocriacao=null, $dtcriacao=null, $idusuariomodificacao=null, $dtmodificacao=null ) {
+	public function __construct( $idcliente=null, $nmcliente=null, $nrcpfcnpj=null, $nrtelefone=null, $nrcelular=null, $idendereco=null, $dscomplementoendereco=null, $stativo=null, $idusuariocriacao=null, $dtcriacao=null, $idusuariomodificacao=null, $dtmodificacao=null ) {
 		$this->setIdcliente( $idcliente );
 		$this->setNmcliente( $nmcliente );
 		$this->setNrcpfcnpj( $nrcpfcnpj );
-		$this->setIdendereco( $idendereco );
-		$this->setDscomplementoendereco( $dscomplementoendereco );
 		$this->setNrtelefone( $nrtelefone );
 		$this->setNrcelular( $nrcelular );
+		$this->setIdendereco( $idendereco );
+		$this->setDscomplementoendereco( $dscomplementoendereco );
 		$this->setStativo( $stativo );
 		$this->setIdusuariocriacao( $idusuariocriacao );
 		$this->setDtcriacao( $dtcriacao );
@@ -54,24 +54,6 @@ class ClienteVO {
 		return $this->nrcpfcnpj;
 	}
 	//--------------------------------------------------------------------------------
-	public function setIdendereco( $strNewValue = null )
-	{
-		$this->idendereco = $strNewValue;
-	}
-	public function getIdendereco()
-	{
-		return $this->idendereco;
-	}
-	//--------------------------------------------------------------------------------
-	public function setDscomplementoendereco( $strNewValue = null )
-	{
-		$this->dscomplementoendereco = $strNewValue;
-	}
-	public function getDscomplementoendereco()
-	{
-		return $this->dscomplementoendereco;
-	}
-	//--------------------------------------------------------------------------------
 	public function setNrtelefone( $strNewValue = null )
 	{
 		$this->nrtelefone = $strNewValue;
@@ -88,6 +70,24 @@ class ClienteVO {
 	public function getNrcelular()
 	{
 		return $this->nrcelular;
+	}
+	//--------------------------------------------------------------------------------
+	public function setIdendereco( $strNewValue = null )
+	{
+		$this->idendereco = $strNewValue;
+	}
+	public function getIdendereco()
+	{
+		return $this->idendereco;
+	}
+	//--------------------------------------------------------------------------------
+	public function setDscomplementoendereco( $strNewValue = null )
+	{
+		$this->dscomplementoendereco = $strNewValue;
+	}
+	public function getDscomplementoendereco()
+	{
+		return $this->dscomplementoendereco;
 	}
 	//--------------------------------------------------------------------------------
 	public function setStativo( $strNewValue = null )

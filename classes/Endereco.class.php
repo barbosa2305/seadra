@@ -10,44 +10,44 @@
  * System seadra created in: 2018-11-25 11:20:25
  */
 
-class Cliente {
+class Endereco {
 
 
 	public function __construct(){
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
-		$result = ClienteDAO::selectById( $id );
+		$result = EnderecoDAO::selectById( $id );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$result = ClienteDAO::selectCount( $where );
+		$result = EnderecoDAO::selectCount( $where );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$result = ClienteDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
+		$result = EnderecoDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
-		$result = ClienteDAO::selectAll( $orderBy, $where );
+		$result = EnderecoDAO::selectAll( $orderBy, $where );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
-	public static function save( ClienteVO $objVo ){
+	public static function save( EnderecoVO $objVo ){
 		$result = null;
-		if( $objVo->getIdcliente() ) {
-			$result = ClienteDAO::update( $objVo );
+		if( $objVo->getIdendereco() ) {
+			$result = EnderecoDAO::update( $objVo );
 		} else {
-			$result = ClienteDAO::insert( $objVo );
+			$result = EnderecoDAO::insert( $objVo );
 		}
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
-		$result = ClienteDAO::delete( $id );
+		$result = EnderecoDAO::delete( $id );
 		return $result;
 	}
 

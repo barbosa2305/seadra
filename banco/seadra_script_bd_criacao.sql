@@ -31,10 +31,29 @@ CREATE UNIQUE INDEX `dsLogin_UNIQUE` ON `seadra`.`Usuario` (`dsLogin` ASC);
 -- Table `seadra`.`UnidadeFederativa`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `seadra`.`UnidadeFederativa` (
-  `idUnidadeFederativa` INT NOT NULL AUTO_INCREMENT,
+  `idUnidadeFederativa` INT NOT NULL,
   `dsSigla` CHAR(2) NOT NULL,
   `dsNome` VARCHAR(30) NOT NULL,
   PRIMARY KEY (`idUnidadeFederativa`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `form_exemplo`.`municipio`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `seadra`.`Municipio` (
+  `idMunicipio` INT NOT NULL AUTO_INCREMENT,
+  `cdMunicipio` INT NULL,
+  `nmMunicipio` VARCHAR(200) NOT NULL,
+  `idUnidadeFederativa` INT NOT NULL,
+  `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
+  PRIMARY KEY (`idMunicipio`),
+  INDEX `fk_municipio_uf_idx` (`idUnidadeFederativa` ASC),
+  CONSTRAINT `fk_municipio_uf`
+    FOREIGN KEY (`idUnidadeFederativa`)
+    REFERENCES `seadra`.`UnidadeFederativa` (`idUnidadeFederativa`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -47,18 +66,18 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Endereco` (
   `dsLogradouro` VARCHAR(255) NOT NULL,
   `dsBairro` VARCHAR(100) NOT NULL,
   `dsLocalidade` VARCHAR(100) NOT NULL,
-  `idUnidadeFederativa` INT NOT NULL,
+  `idMunicipio` INT NOT NULL,
   PRIMARY KEY (`idEndereco`),
-  CONSTRAINT `fk_Endereco_UnidadeFederativa`
-    FOREIGN KEY (`idUnidadeFederativa`)
-    REFERENCES `seadra`.`UnidadeFederativa` (`idUnidadeFederativa`)
+  CONSTRAINT `fk_Endereco_Municipio`
+    FOREIGN KEY (`idMunicipio`)
+    REFERENCES `seadra`.`Municipio` (`idMunicipio`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `dsCep_UNIQUE` ON `seadra`.`Endereco` (`dsCep` ASC);
 
-CREATE INDEX `fk_Endereco_UnidadeFederativa_idx` ON `seadra`.`Endereco` (`idUnidadeFederativa` ASC);
+CREATE INDEX `fk_Endereco_Municipio_idx` ON `seadra`.`Endereco` (`idMunicipio` ASC);
 
 
 -- -----------------------------------------------------
@@ -183,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`ItemPedido` (
   `idPedido` INT NOT NULL,
   `idProduto` INT NOT NULL,
   `qtItemPedido` INT NOT NULL,
-  PRIMARY KEY (`idItemPedido`, `idPedido`, `idProduto`),
+  PRIMARY KEY (`idItemPedido`),
   CONSTRAINT `fk_ItemPedido_Produto`
     FOREIGN KEY (`idProduto`)
     REFERENCES `seadra`.`Produto` (`idProduto`)
