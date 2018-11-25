@@ -9,6 +9,8 @@ $frm->setMaximize(true);
 
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
+
+
 $frm->addMemoField('NMUSUARIO', 'NMUSUARIO',255,TRUE,80,3);
 $frm->addTextField('DSLOGIN', 'DSLOGIN',20,TRUE,20);
 $frm->addMemoField('DSSENHA', 'DSSENHA',255,TRUE,80,3);

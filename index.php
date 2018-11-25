@@ -17,13 +17,16 @@ require_once('includes/config_conexao.php');
 require_once('base/classes/webform/TApplication.class.php');
 require_once('classes/autoload_seadra.php');
 
-
 $app = new TApplication(); // criar uma instancia do objeto aplicacao
 $app->setAppRootDir(__DIR__);
 $app->setTitle(SYSTEM_NAME);
 $app->setSigla(SYSTEM_ACRONYM);
 $app->setVersionSystem(SYSTEM_VERSION);
 
+$app->setLoginFile('includes/tela_login.php');
 $app->setMainMenuFile('includes/menu.php');
+$login = ArrayHelper::get( $_SESSION[APLICATIVO],'LOGIN');
+$app->setLoginInfo($login);
+
 $app->run();
 ?>

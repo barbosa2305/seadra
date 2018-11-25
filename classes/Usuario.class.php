@@ -20,6 +20,19 @@ class Usuario {
 		$result = UsuarioDAO::selectById( $id );
 		return $result;
 	}
+	//--------------------------------------------------------------------------------	
+	public static function login( $login_user, $pwd_user )	{
+		$user = UsuarioDAO::selectByLogin($login_user);
+        if (password_verify($pwd_user, $user['DSSENHA'][0])) {
+            $_SESSION[APLICATIVO]['IDUSER'] = $user['IDUSUARIO'][0];
+            $_SESSION[APLICATIVO]['LOGIN']  = $user['DSLOGIN'][0];
+			$msg = 1;
+		
+        }else{
+            $msg = 0;
+		}
+        return $msg;
+    }   
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$result = UsuarioDAO::selectCount( $where );
