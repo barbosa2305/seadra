@@ -7,15 +7,16 @@
  * SysGen  Version: 0.9.0
  * FormDin Version: 4.2.6-alpha
  * 
- * System seadra created in: 2018-11-25 11:19:56
+ * System seadra created in: 2018-11-27 11:25:14
  */
 
 require_once('includes/constantes.php');
 require_once('includes/config_conexao.php');
 
 //FormDin version: 4.2.6-alpha
-require_once('base/classes/webform/TApplication.class.php');
+require_once('../base/classes/webform/TApplication.class.php');
 require_once('classes/autoload_seadra.php');
+
 
 $app = new TApplication(); // criar uma instancia do objeto aplicacao
 $app->setAppRootDir(__DIR__);
@@ -23,10 +24,6 @@ $app->setTitle(SYSTEM_NAME);
 $app->setSigla(SYSTEM_ACRONYM);
 $app->setVersionSystem(SYSTEM_VERSION);
 
-$app->setLoginFile('includes/tela_login.php');
 $app->setMainMenuFile('includes/menu.php');
-$login = ArrayHelper::get( $_SESSION[APLICATIVO],'LOGIN');
-$app->setLoginInfo($login);
-
 $app->run();
 ?>

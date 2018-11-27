@@ -32,16 +32,6 @@ class UsuarioDAO extends TPDOConnection {
 		$sql = self::$sqlBasicSelect.' where idUsuario = ?';
 		$result = self::executeSql($sql, $values );
 		return $result;
-	}	
-	//--------------------------------------------------------------------------------
-	public static function selectByLogin( $login ) {
-		if( empty($login) || !is_string($login) ){
-			throw new InvalidArgumentException();
-		}
-		$values = array($login);
-		$sql = self::$sqlBasicSelect.' where dslogin = ?';
-		$result = self::executeSql($sql, $values );
-		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
