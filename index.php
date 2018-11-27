@@ -14,14 +14,14 @@ require_once('includes/constantes.php');
 require_once('includes/config_conexao.php');
 
 //FormDin version: 4.2.6-alpha
-require_once('../base/classes/webform/TApplication.class.php');
+require_once('base/classes/webform/TApplication.class.php');
 require_once('classes/autoload_seadra.php');
-
 
 $app = new TApplication(); // criar uma instancia do objeto aplicacao
 $app->setAppRootDir(__DIR__);
 $app->setTitle(SYSTEM_NAME);
-$app->setSigla(SYSTEM_ACRONYM);
+# $app->setSigla(SYSTEM_ACRONYM);
+$app->setSigla('');
 $app->setVersionSystem(SYSTEM_VERSION);
 
 $app->setMainMenuFile('includes/menu.php');
