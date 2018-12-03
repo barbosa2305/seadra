@@ -5,14 +5,14 @@
  * Download Formdin Framework: https://github.com/bjverde/formDin
  * 
  * SysGen  Version: 0.9.0
- * FormDin Version: 4.2.6-alpha
+ * FormDin Version: 4.2.7-alpha
  * 
- * System seadra created in: 2018-11-27 11:25:14
+ * System seadra created in: 2018-12-03 21:17:31
  */
 
 define('SYSTEM_NAME'    , 'Seadra');
 define('SYSTEM_ACRONYM' , 'seadra');
-define('SYSTEM_VERSION' , '1.0.0');
+define('SYSTEM_VERSION' , '0.0.1');
 define('APLICATIVO'     , SYSTEM_ACRONYM);
 define('DS'   , DIRECTORY_SEPARATOR);
 ?>

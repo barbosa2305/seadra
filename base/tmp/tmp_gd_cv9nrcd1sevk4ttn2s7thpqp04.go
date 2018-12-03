@@ -1,1 +1,0 @@
-a:2:{s:2:"id";a:6:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"4";i:4;s:1:"5";i:5;s:1:"9";}s:10:"NOM_REGIAO";a:6:{i:0;s:5:"Norte";i:1;s:8:"Nordeste";i:2;s:7:"Sudeste";i:3;s:12:"Centro-Oeste";i:4;s:3:"Sul";i:5;s:12:"Brasil Todos";}}
