@@ -11,21 +11,30 @@
  */
 
 $menu = new TMenuDhtmlx();
-$menu->add('1', null, 'Menu', null, null, 'menu-alt-512.png');
-$menu->add('1.0',1,'cliente','modulos/cliente.php');
-$menu->add('1.1',1,'endereco','modulos/endereco.php');
-$menu->add('1.2',1,'itempedido','modulos/itempedido.php');
-$menu->add('1.3',1,'municipio','modulos/municipio.php');
-$menu->add('1.4',1,'pedido','modulos/pedido.php');
-$menu->add('1.5',1,'produto','modulos/produto.php');
-$menu->add('1.6',1,'unidadefederativa','modulos/unidadefederativa.php');
-$menu->add('1.7',1,'usuario','modulos/usuario.php');
+
+$menu->add('1', null, 'Principal', null, null, 'menu-alt-512.png');
+$menu->add('1.0',1,'Cliente','modulos/cliente.php');
+$menu->add('1.1',1,'Produto','modulos/produto.php');
+$menu->add('1.2',1,'Pedido','modulos/pedido.php');
+
+$menu->add('2', null, 'Acesso', null, null, 'icon-key-yellow.png');
+$menu->add('2.1',2,'Alterar Minha Senha','modulos/alterasenha.php', null, 'lock16.gif');
+$menu->add('2.2',2,'Usuário','modulos/usuario.php');
+
 $menu->add('9', null, 'Sobre', 'modulos/sys_about.php', null, 'information-circle.jpg');
 
-$menu->add('10',null,'Config Ambiente',null,null,'setting-gear-512.png');
-$menu->add('10.1','10','Ambiente Resumido','modulos/sys_environment_summary.php',null,'information-circle.jpg');
-$menu->add('10.2','10','PHPInfo','modulos/sys_environment.php',null,'php_logo.png');
-$menu->add('10.4','10','Gerador VO/DAO','../base/includes/gerador_vo_dao.php');
-$menu->add('10.5','10','Gerador Form VO/DAO','../base/includes/gerador_form_vo_dao.php',null,'smiley-1-512.png');
+if (Acesso::isUserAdm()) {
+    $menu->add('1.3',1,'itempedido','modulos/itempedido.php');
+    $menu->add('1.4',1,'endereco','modulos/endereco.php');
+    $menu->add('1.5',1,'municipio','modulos/municipio.php');
+    $menu->add('1.6',1,'unidadefederativa','modulos/unidadefederativa.php');
+
+    $menu->add('10',null,'Config Ambiente',null,null,'setting-gear-512.png');
+    $menu->add('10.1','10','Ambiente Resumido','modulos/sys_environment_summary.php',null,'information-circle.jpg');
+    $menu->add('10.2','10','PHPInfo','modulos/sys_environment.php',null,'php_logo.png');
+    $menu->add('10.4','10','Gerador VO/DAO','../base/includes/gerador_vo_dao.php');
+    $menu->add('10.5','10','Gerador Form VO/DAO','../base/includes/gerador_form_vo_dao.php',null,'smiley-1-512.png');
+}
+
 $menu->getXml();
 ?>
