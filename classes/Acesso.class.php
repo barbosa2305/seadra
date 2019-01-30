@@ -34,7 +34,12 @@ class Acesso {
     }
     
     public static function getUserLogin() {
-        return  ArrayHelper::get($_SESSION[APLICATIVO]['USER'],'LOGIN');
+        $login = null;
+        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
+            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+            $login = $user['LOGIN'];
+        }
+        return $login;
     }
 
     public static function getUserName() {

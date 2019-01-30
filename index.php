@@ -10,6 +10,9 @@
  * System seadra created in: 2018-12-03 21:17:31
  */
 
+//Constantes e configurações
+require_once('classes/ServidorConfig.class.php');
+
 require_once('includes/constantes.php');
 require_once('includes/config_conexao.php');
 
@@ -20,7 +23,9 @@ require_once('classes/autoload_seadra.php');
 
 $app = new TApplication(); // criar uma instancia do objeto aplicacao
 $app->setAppRootDir(__DIR__);
-$app->setTitle(SYSTEM_NAME);
+$app->setTitle('');
+//$app->setTitle(SYSTEM_NAME);
+$app->setSubtitle(SYSTEM_NAME_SUB);
 $app->setSigla('');
 $app->setVersionSystem(SYSTEM_VERSION);
 
