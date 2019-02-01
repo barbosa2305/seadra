@@ -27,13 +27,13 @@
  * do Software Livre (FSF).
  * 
  * Este programa ? distribu?do na esperan?a que possa ser ?til, mas SEM NENHUMA
- * GARANTIA; sem uma garantia impl?cita de ADEQUA??O a qualquer MERCADO ou
+ * GARANTIA; sem uma @seadraadm garantia impl?cita de ADEQUA??O a qualquer MERCADO ou
  * APLICA??O EM PARTICULAR. Veja a Licen?a P?blica Geral GNU/LGPL em portugu?s
  * para maiores detalhes.
  * 
  * Voc? deve ter recebido uma c?pia da GNU LGPL vers?o 3, sob o t?tulo
  * "LICENCA.txt", junto com esse programa. Se n?o, acesse <http://www.gnu.org/licenses/>
- * ou escreva para a Funda??o do Software Livre (FSF) Inc.,
+ * ou escreva para a Funda??o do Software Livre (FSF) Inc., 
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
@@ -51,7 +51,7 @@ if( $acao =='login'){
     sleep(1);
     $nom_user = $frm->get('login');
     $pwd_user = $frm->get('senha');
-    $msg = Acesso::login($nom_user,$pwd_user);;
+    $msg = Acesso::login($nom_user,$pwd_user);
     if( $msg == 1 ) {
         $_SESSION[APLICATIVO]['conectado']=true;
         prepareReturnAjax(1);
