@@ -225,3 +225,8 @@ CREATE UNIQUE INDEX `pedidoProduto_UNIQUE` ON `seadra`.`ItemPedido` (`idPedido` 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+DROP USER IF EXISTS 'seadra_bd'@'localhost';
+CREATE USER 'seadra_bd'@'localhost' IDENTIFIED BY '@seadraadm';
+GRANT DELETE,EXECUTE,INSERT,SELECT,UPDATE ON seadra.* TO 'seadra_bd'@'localhost';
