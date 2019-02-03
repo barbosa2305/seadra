@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Usuario` (
   `nmUsuario` VARCHAR(255) NOT NULL,
   `dsLogin` VARCHAR(20) NOT NULL,
   `dsSenha` VARCHAR(255) NOT NULL,
+  `tpGrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT '\'U\' = Usuários, \'A\' = Administradores.',
   `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
   `dtModificacao` DATETIME NULL ON UPDATE NOW(),
@@ -87,6 +88,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Cliente` (
   `idCliente` INT NOT NULL AUTO_INCREMENT,
   `nmCliente` VARCHAR(255) NOT NULL,
   `nrCpfCnpj` VARCHAR(30) NOT NULL,
+  `dsEmail` VARCHAR(100) NULL,
   `nrTelefone` VARCHAR(20) NULL,
   `nrCelular` VARCHAR(20) NULL,
   `idEndereco` INT NULL,
@@ -122,6 +124,8 @@ CREATE INDEX `fk_Cliente_UsuarioModificacao_idx` ON `seadra`.`Cliente` (`idUsuar
 
 CREATE INDEX `fk_Cliente_Endereco_idx` ON `seadra`.`Cliente` (`idEndereco` ASC);
 
+CREATE UNIQUE INDEX `dsEmail_UNIQUE` ON `seadra`.`Cliente` (`dsEmail` ASC);
+
 
 -- -----------------------------------------------------
 -- Table `seadra`.`Produto`
@@ -129,8 +133,8 @@ CREATE INDEX `fk_Cliente_Endereco_idx` ON `seadra`.`Cliente` (`idEndereco` ASC);
 CREATE TABLE IF NOT EXISTS `seadra`.`Produto` (
   `idProduto` INT NOT NULL AUTO_INCREMENT,
   `nmProduto` VARCHAR(255) NOT NULL,
-  `vlPrecoCusto` DECIMAL(10,2) NULL,
-  `vlPrecoVenda` DECIMAL(10,2) NULL,
+  `vlPrecoCusto` DECIMAL(10,2) NOT NULL,
+  `vlPrecoVenda` DECIMAL(10,2) NOT NULL,
   `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
   `idUsuarioCriacao` INT NOT NULL,
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
@@ -161,9 +165,9 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Pedido` (
   `idPedido` INT NOT NULL AUTO_INCREMENT,
   `idCliente` INT NOT NULL,
   `dtPedido` DATE NOT NULL,
-  `vlTotal` DECIMAL(10,2) NULL,
+  `vlTotal` DECIMAL(10,2) NOT NULL,
   `vlDesconto` DECIMAL(10,2) NULL,
-  `vlPago` DECIMAL(10,2) NULL,
+  `vlPago` DECIMAL(10,2) NOT NULL,
   `idUsuarioCriacao` INT NOT NULL,
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
   `idUsuarioModificacao` INT NULL,
@@ -184,8 +188,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Pedido` (
     REFERENCES `seadra`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-COMMENT = '	';
+ENGINE = InnoDB;
 
 CREATE INDEX `fk_Pedido_Cliente_idx` ON `seadra`.`Pedido` (`idCliente` ASC);
 
