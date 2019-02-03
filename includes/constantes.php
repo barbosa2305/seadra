@@ -10,10 +10,7 @@
  * System seadra created in: 2018-12-03 21:17:31
  */
 
-$ambiente  = ServidorConfig::getInstancia()->getConfigParam('ambiente');
-if( $ambiente == 'produção' || $ambiente == 'producao' ) {
-    $ambiente = null;
-}
+$ambiente  = 'desenvolvimento';
 
 define('SYSTEM_NAME'    , 'Seadra');
 define('SYSTEM_NAME_SUB', $ambiente);
