@@ -3,39 +3,24 @@ defined('APLICATIVO') or die();
 
 require_once 'includes/config_conexao.php';
 
-$login = (ArrayHelper::has('USER', $_SESSION[APLICATIVO]) ? $_SESSION[APLICATIVO]['USER']['LOGIN']:null);
-$grupo = null;
-if (ArrayHelper::has('USER', $_SESSION[APLICATIVO])) {
-    $grupo = (ArrayHelper::has('GRUPO_NOME', $_SESSION[APLICATIVO]['USER']) ? $_SESSION[APLICATIVO]['USER']['GRUPO_NOME']:null);
-}
+$login = Acesso::getUserLogin();
 
-$frm = new TForm('Sobre', 400, 500);
+$frm = new TForm('Sobre', 200, 440);
 $frm->setFlat(true);
 $frm->setMaximize(true);
 
-$frm->addGroupField('gpx1', 'Sistema');
+$g = $frm->addGroupField('gpx1');
+    $g->setColumns('100,160');
+
     $frm->addTextField('systemName', 'Sistema:', 50, false, 50, SYSTEM_NAME)->setReadOnly(true);
-    $frm->addTextField('systemAcronym', 'Sigla:', 20, false, 50, SYSTEM_ACRONYM)->setReadOnly(true);
-    $frm->addTextField('versionSystem', 'Versão do Sistema:', 20, false, 20, SYSTEM_VERSION)->setReadOnly(true);
+    $frm->addTextField('user', 'Usuário:', 50, false, 50, $login)->setReadOnly(true);
+    $frm->addTextField('versionSystem', 'Versão:', 50, false, 50, SYSTEM_VERSION)->setReadOnly(true);
+    $frm->addTextField('versionFormDin', 'Versão base:', 50, false, 50, FORMDIN_VERSION)->setReadOnly(true);
+
     $pathChangeLog = 'ajuda/changelog.php';
-    $changelog = $frm->addTextField('changelog', 'Arquivo ChangeLog:', 20, false, 20, $pathChangeLog);
-;
+    $changelog = $frm->addTextField('changelog', 'Mais informações:', 20, false, 20, 'Clique para abrir ->');
     $changelog->setReadOnly(true);
-    $changelog->setHelpOnLine('ChangeLog', 500, 800, $pathChangeLog);
-$frm->closeGroup();
-
-
-$frm->addGroupField('gpx2', 'Usuário');
-    $frm->addTextField('user', 'Usuário Logado:', 50, false, 50, $login)->setReadOnly(true);
-    $frm->addTextField('group', 'Grupo:', 50, false, 50, $grupo)->setReadOnly(true);
-$frm->closeGroup();
-
-$frm->addGroupField('gpx3', '');
-    $frm->addTextField('versionFormDin', 'Versão do FormDin:', 20, false, 20, FORMDIN_VERSION)->setReadOnly(true);
-    $frm->addTextField('servidorBD', 'Servidor de Banco:', 20, false, 20, HOST)->setReadOnly(true);
-    $frm->addTextField('banco', 'Banco:', 20, false, 20, DATABASE)->setReadOnly(true);
-$frm->closeGroup();
-
-
+    $changelog->setHelpOnLine('Mais informações do sistema', 500, 800, $pathChangeLog);
+$g->closeGroup();
 
 $frm->show();
