@@ -30,28 +30,31 @@ class Acesso {
     }
 
     public static function getUserId()	{
-        return ArrayHelper::get($_SESSION[APLICATIVO]['USER'],'IDUSUARIO');
+        $userId = null;
+        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
+            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+            $userId = $user['IDUSUARIO']; 
+        }
+        return $userId;
     }
     
     public static function getUserLogin() {
-        $login = null;
+        $userLogin = null;
         if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
             $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
-            $login = $user['LOGIN'];
+            $userLogin = $user['LOGIN'];
         }
-        return $login;
+        return $userLogin;
     }
 
     public static function getUserName() {
-        return ArrayHelper::get($_SESSION[APLICATIVO]['USER'],'NOME');
+        $userName = null;
+        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
+            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+            $userName = $user['NOME'];
+        }
+        return $userName;
     }
-
-    /**
-    * Obtém da sessão todas as informações do usuário: IdUsuario, Login e Nome.
-    */
-    public static function getUserInfo()	{
-	    return ArrayHelper::get($_SESSION[APLICATIVO],'USER');
-	}
 
 	public static function isUserAdm(){
         $result = false;     

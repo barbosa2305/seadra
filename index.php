@@ -31,7 +31,7 @@ $app->setVersionSystem(SYSTEM_VERSION);
 
 //Parametros para login
 $app->setLoginFile('includes/tela_login.php');
-$app->setLoginInfo(Acesso::getUserLogin());
+$app->setLoginInfo(Acesso::getUserName());
 
 $app->setMainMenuFile('includes/menu.php');
 //$app->setWaterMark('images/bg_transparencia.jpg');
