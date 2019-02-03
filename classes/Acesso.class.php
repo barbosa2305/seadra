@@ -60,28 +60,28 @@ class Acesso {
         }
         return $result;
     }
-    public static function changeNewPassword($login_user, $pwd_user_old, $pwd_user_new1, $pwd_user_new2)	{
+    public static function alterarSenha($login_user, $pwd_user_old, $pwd_user_new1, $pwd_user_new2)	{
         if(strlen($pwd_user_new1) < 8){
-            throw new DomainException('A senha deve ter no mínimo 8 caracteres.');
+            throw new DomainException(Mensagem::SENHA_TAMANHO_MINIMO);
         }
         if($pwd_user_new1 != $pwd_user_new2){
-            throw new DomainException('As senhas não conferem.');
+            throw new DomainException(Mensagem::SENHAS_NAO_COINCIDEM);
         }        
 		$user = UsuarioDAO::selectByLogin($login_user);
 		if (password_verify($pwd_user_old, $user['DSSENHA'][0])) {
             self::changePassword($user['IDUSUARIO'][0],$pwd_user_new1);
 		    $msg = 1;
         }else{
-            throw new DomainException('A senha atual não está correta.');
+            throw new DomainException(Mensagem::SENHA_ATUAL_INCORRETA);
         }
         return $msg;
     }
     
     private static function changePassword($idUser, $pwd_user)	{
-        $pwd_user_new_hash = password_hash($pwd_user_new1, PASSWORD_DEFAULT);
+        $pwd_user_new_hash = password_hash($pwd_user, PASSWORD_DEFAULT);
         $vo = new UsuarioVO();
         $vo->setIdusuario($idUser);
-        $vo->setDssenha($pwd_user);
+        $vo->setDssenha($pwd_user_new_hash);
         UsuarioDAO::updateSenha($vo);
     }
 }
