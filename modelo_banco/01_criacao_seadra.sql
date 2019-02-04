@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Usuario` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `nmUsuario` VARCHAR(255) NOT NULL,
   `dsLogin` VARCHAR(20) NOT NULL,
-  `dsSenha` VARCHAR(255) NOT NULL,
+  `dsSenha` VARCHAR(255) NULL,
   `tpGrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT '\'U\' = Usuários, \'A\' = Administradores.',
   `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
