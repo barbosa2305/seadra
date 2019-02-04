@@ -6,6 +6,7 @@ class UsuarioDAO extends TPDOConnection {
 									 ,nmusuario
 									 ,dslogin
 									 ,dssenha
+									 ,tpgrupo
 									 ,stativo
 									 ,dtcriacao
 									 ,dtmodificacao
@@ -19,6 +20,7 @@ class UsuarioDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMUSUARIO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSLOGIN', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSSENHA', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'TPGRUPO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTCRIACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTMODIFICACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
@@ -78,43 +80,39 @@ class UsuarioDAO extends TPDOConnection {
 	public static function insert( UsuarioVO $objVo ) {
 		$values = array(  $objVo->getNmusuario() 
 						, $objVo->getDslogin() 
-						, $objVo->getDssenha() 
-						, $objVo->getStativo() 
-						, $objVo->getDtcriacao() 
-						, $objVo->getDtmodificacao() 
+						, $objVo->getTpgrupo()
 						);
 		return self::executeSql('insert into seadra.usuario(
 								 nmusuario
 								,dslogin
-								,dssenha
-								,stativo
-								,dtcriacao
-								,dtmodificacao
-								) values (?,?,?,?,?,?)', $values );
+								,tpgrupo
+								) values (?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( UsuarioVO $objVo ) {
 		$values = array( $objVo->getNmusuario()
 						,$objVo->getDslogin()
-						,$objVo->getDssenha()
+						,$objVo->getTpgrupo()
 						,$objVo->getStativo()
-						,$objVo->getDtcriacao()
-						,$objVo->getDtmodificacao()
 						,$objVo->getIdUsuario() );
 		return self::executeSql('update seadra.usuario set 
 								 nmusuario = ?
 								,dslogin = ?
-								,dssenha = ?
+								,tpgrupo = ?
 								,stativo = ?
-								,dtcriacao = ?
-								,dtmodificacao = ?
 								where idUsuario = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
-	public static function updateSenha ( UsuarioVO $objVo ) {
+	public static function updatePassword ( UsuarioVO $objVo ) {
 		$values = array( $objVo->getDssenha()
                         ,$objVo->getIdusuario() );
 		return self::executeSql('update seadra.usuario set dssenha = ? where idUsuario = ?',$values);
+	}
+	//--------------------------------------------------------------------------------
+	public static function updateStatus ( UsuarioVO $objVo ) {
+		$values = array( $objVo->getStativo()
+                        ,$objVo->getIdusuario() );
+		return self::executeSql('update seadra.usuario set stativo = ? where idUsuario = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){

@@ -11,8 +11,8 @@ $frm->setColumns('110');
 $frm->addHiddenField( 'BUSCAR' ); // campo oculto para buscas
 $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 
-$login = Acesso::getUserLogin();
-$frm->addTextField('login','Usuário',255,true,35,$login)->setEnabled(false)->setAttribute('align','center');
+$userLogin = Acesso::getUserLogin();
+$frm->addTextField('login','Usuário',255,true,35,$userLogin)->setEnabled(false)->setAttribute('align','center');
 $frm->addPasswordField('senha','Senha atual',true,null,20,null,null,null,35)->setAttribute('align','center');
 $frm->addHtmlField('espaço1','');
 $frm->addPasswordField('novaSenha','Nova senha',true,null,20,null,null,null,35)->setAttribute('align','center');
@@ -27,16 +27,20 @@ switch( $acao ) {
 	case 'Salvar':
 		try{
 			if ( $frm->validate() ) {
-			    $login = $frm->getFieldValue('login');
+				$vo = new UsuarioVO();
+				$vo->setIdusuario(Acesso::getUserId());
+				$vo->setDslogin($frm->getFieldValue('login'));
+				//$userId = Acesso::getUserId();
+				//$userLogin = $frm->getFieldValue('login');
 			    $senhaAtual = $frm->getFieldValue('senha');
 				$novaSenha = $frm->getFieldValue('novaSenha');
 				$novaSenhaRepita = $frm->getFieldValue('novaSenhaRepita');
-				$resultado = Acesso::alterarSenha($login, $senhaAtual, $novaSenha, $novaSenhaRepita);
-				if($resultado==1) {
+				$result = Usuario::changePassword(false, $vo, $senhaAtual, $novaSenha, $novaSenhaRepita);
+				if ( $result == 1 ) {
 					$frm->setMessage(Mensagem::REGISTRO_GRAVADO);
-                    $frm->clearFields(null,array('login'));
-				}else{
-					$frm->setMessage($resultado);
+                    $frm->clearFields(null, array('login'));
+				} else {
+					$frm->setMessage($result);
 				}
 			}
 		}

@@ -12,6 +12,8 @@
 
 class Usuario {
 
+	const SENHA_PADRAO = '12345678';
+	const STATUS_INATIVO = 'N';
 
 	public function __construct(){
 	}
@@ -38,18 +40,85 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function save( UsuarioVO $objVo ){
 		$result = null;
-		if( $objVo->getIdusuario() ) {
-			$result = UsuarioDAO::update( $objVo );
+
+		if( strtolower($objVo->getDslogin()) == 'admin' ){
+			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
 		} else {
-			$result = UsuarioDAO::insert( $objVo );
+			if( $objVo->getIdusuario() ) {
+				$result = UsuarioDAO::update( $objVo );
+			} else {
+				$result = UsuarioDAO::insert( $objVo );
+				if ($result == 1) {
+					self::changePassword(true, $objVo);
+				}
+			}
 		}
+
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
-	public static function delete( $id ){
-		$result = UsuarioDAO::delete( $id );
+	public static function delete( UsuarioVO $objVo ){
+		$result = null;
+
+		if( strtolower($objVo->getDslogin()) == 'admin' ){
+			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
+		} else {
+			$objVo->setStativo(self::STATUS_INATIVO);
+			$result = UsuarioDAO::updateStatus( $objVo );
+		}
+
 		return $result;
 	}
 
+	public static function changePassword($resetPassword=false, $objVo, $pwd_user_current=null, $pwd_user_new=null, $pwd_user_new_repeat=null) {
+		$pwd_user_hash = null;
+		$result = null;
+		
+		if ($resetPassword) {
+			$result = self::validatePassword(self::SENHA_PADRAO);
+			if ( $result === true ) {
+				$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
+			}
+			
+		} else {
+			$user = UsuarioDAO::selectByLogin($objVo->getDslogin());
+			$result = self::validatePassword($pwd_user_current,$pwd_user_new,$pwd_user_new_repeat,$user['DSSENHA'][0]);
+			if ( $result === true ) {
+				$pwd_user_hash = password_hash($pwd_user_new, PASSWORD_DEFAULT);
+			}
+		}
+
+		if ( !empty($pwd_user_hash) ) {
+			//$vo = new UsuarioVO();
+			//$vo->setIdusuario($userId);
+			$objVo->setDssenha($pwd_user_hash);
+			$result = UsuarioDAO::updatePassword($objVo);
+		}
+
+        return $result;
+    }
+    
+	private static function validatePassword( $pwd_user_current,$pwd_user_new=null,$pwd_user_new_repeat=null,$pwd_user_current_coded=null ) {
+		$result = true;
+		if ( strlen( $pwd_user_current ) < 8 ) {
+			return Mensagem::SENHA_TAMANHO_MINIMO;
+		}
+		if ( !empty($pwd_user_new) ) {
+			if ( strlen( $pwd_user_new ) < 8 ) {
+				return Mensagem::SENHA_TAMANHO_MINIMO;
+			}
+		}
+		if ( !empty($pwd_user_new_repeat) ) {
+			if ( $pwd_user_new != $pwd_user_new_repeat ) {
+				return Mensagem::SENHAS_NAO_COINCIDEM;
+			}
+		}
+		if ( !empty($pwd_user_current) && !empty($pwd_user_current_coded) ) {
+			if ( !password_verify($pwd_user_current, $pwd_user_current_coded) ) {
+				return  Mensagem::SENHA_ATUAL_INCORRETA;
+			}
+		}
+		return $result;
+	}
 }
 ?>

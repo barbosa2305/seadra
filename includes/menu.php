@@ -23,7 +23,7 @@ $menu->add('2.2',2,'Usuário','modulos/usuario.php');
 
 $menu->add('9', null, 'Sobre', 'modulos/sys_about.php', null, 'information16.gif');
 
-if (Acesso::isUserAdm()) {
+if (Acesso::isUserLoggedAdm()) {
     $menu->add('1.3',1,'itempedido','modulos/itempedido.php');
     $menu->add('1.4',1,'endereco','modulos/endereco.php');
     $menu->add('1.5',1,'municipio','modulos/municipio.php');

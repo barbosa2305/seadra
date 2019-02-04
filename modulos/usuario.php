@@ -2,19 +2,24 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
-$frm = new TForm('usuario',800,950);
+
+$frm = new TForm('Usuário',800,950);
 $frm->setFlat(true);
 $frm->setMaximize(true);
 
+$frm->addHiddenField( 'BUSCAR' ); // Campo oculto para buscas
+$frm->addHiddenField( $primaryKey );   // Coluna chave da tabela
 
-$frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
-$frm->addHiddenField( $primaryKey );   // coluna chave da tabela
-$frm->addMemoField('NMUSUARIO', 'NMUSUARIO',255,TRUE,80,3);
-$frm->addTextField('DSLOGIN', 'DSLOGIN',20,TRUE,20);
-$frm->addMemoField('DSSENHA', 'DSSENHA',255,TRUE,80,3);
-$frm->addTextField('STATIVO', 'STATIVO',1,TRUE,1);
-$frm->addDateField('DTCRIACAO', 'DTCRIACAO',TRUE);
-$frm->addDateField('DTMODIFICACAO', 'DTMODIFICACAO',FALSE);
+$g = $frm->addGroupField('gpx1');
+	$g->setColumns('60,80');
+
+	$frm->addTextField('NMUSUARIO','Nome:',255,TRUE,80);
+	$frm->addTextField('DSLOGIN','Usuário:',20,TRUE,20);
+	$grupo = array('U' => 'Usuários', 'A' => 'Administradores');
+	$frm->addSelectField('TPGRUPO', 'Grupo:',true,$grupo,null,null,null,null,null,null,' ',null);
+	$ativo = array('S' => 'Sim', 'N' => 'Não');
+	$frm->addSelectField('STATIVO', 'Ativo ?',true,$ativo,null,null,null,null,null,null,' ',null);
+$g->closeGroup();
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, true, false);
 $frm->addButton('Salvar', null, 'Salvar', null, null, false, false);
@@ -24,15 +29,19 @@ $frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
 	case 'Salvar':
-		try{
+		try {
 			if ( $frm->validate() ) {
 				$vo = new UsuarioVO();
 				$frm->setVo( $vo );
 				$resultado = Usuario::save( $vo );
-				if($resultado==1) {
-					$frm->setMessage('Registro gravado com sucesso!!!');
+				if ($resultado==1) {
+					if ( empty($frm->get('IDUSUARIO')) ) {
+						$frm->setMessage('Operação realizada com sucesso! \r\n Usuário cadastrado com a senha padrão: 12345678');
+					} else {
+						$frm->setMessage('Operação realizada com sucesso!');
+					}
 					$frm->clearFields();
-				}else{
+				} else {
 					$frm->setMessage($resultado);
 				}
 			}
@@ -51,13 +60,14 @@ switch( $acao ) {
 	break;
 	//--------------------------------------------------------------------------------
 	case 'gd_excluir':
-		try{
-			$id = $frm->get( $primaryKey ) ;
-			$resultado = Usuario::delete( $id );;
-			if($resultado==1) {
-				$frm->setMessage('Registro excluido com sucesso!!!');
+		try {
+			$vo = new UsuarioVO();
+			$frm->setVo( $vo );
+			$resultado = Usuario::saveStatus( $vo );
+			if ($resultado==1) {
+				$frm->setMessage('Operação realizada com sucesso!');
 				$frm->clearFields();
-			}else{
+			} else {
 				$frm->clearFields();
 				$frm->setMessage($resultado);
 			}
@@ -70,6 +80,27 @@ switch( $acao ) {
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
+	//--------------------------------------------------------------------------------
+	case 'redefinirSenha':
+		try {
+			$vo = new UsuarioVO();
+			$frm->setVo( $vo );
+			$result = Usuario::changePassword(true, $vo);
+			if ($result==1) {
+				$frm->setMessage('Operação realizada com sucesso!');
+				$frm->clearFields();
+			} else {
+				$frm->setMessage($result);
+				$frm->clearFields();
+			}
+		}
+		catch (DomainException $e) {
+			$frm->setMessage( $e->getMessage() );
+		}
+		catch (Exception $e) {
+			MessageHelper::logRecord($e);
+			$frm->setMessage( $e->getMessage() );
+		}
 }
 
 
@@ -80,10 +111,8 @@ function getWhereGridParameters(&$frm){
 				'IDUSUARIO'=>$frm->get('IDUSUARIO')
 				,'NMUSUARIO'=>$frm->get('NMUSUARIO')
 				,'DSLOGIN'=>$frm->get('DSLOGIN')
-				,'DSSENHA'=>$frm->get('DSSENHA')
+				,'TPGRUPO'=>$frm->get('TPGRUPO')
 				,'STATIVO'=>$frm->get('STATIVO')
-				,'DTCRIACAO'=>$frm->get('DTCRIACAO')
-				,'DTMODIFICACAO'=>$frm->get('DTMODIFICACAO')
 		);
 	}
 	return $retorno;
@@ -98,13 +127,11 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$mixUpdateFields = $primaryKey.'|'.$primaryKey
 					.',NMUSUARIO|NMUSUARIO'
 					.',DSLOGIN|DSLOGIN'
-					.',DSSENHA|DSSENHA'
+					.',TPGRUPO|TPGRUPO'
 					.',STATIVO|STATIVO'
-					.',DTCRIACAO|DTCRIACAO'
-					.',DTMODIFICACAO|DTMODIFICACAO'
 					;
 	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Gride with SQL Pagination' // titulo do gride
+					   ,'Lista de usuários' // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados
@@ -113,13 +140,15 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setUpdateFields($mixUpdateFields);
 	$gride->setUrl( 'usuario.php' );
 
-	$gride->addColumn($primaryKey,'id');
-	$gride->addColumn('NMUSUARIO','NMUSUARIO');
-	$gride->addColumn('DSLOGIN','DSLOGIN');
-	$gride->addColumn('DSSENHA','DSSENHA');
-	$gride->addColumn('STATIVO','STATIVO');
-	$gride->addColumn('DTCRIACAO','DTCRIACAO');
-	$gride->addColumn('DTMODIFICACAO','DTMODIFICACAO');
+	$gride->addColumn($primaryKey,'Código');
+	$gride->addColumn('NMUSUARIO','Nome');
+	$gride->addColumn('DSLOGIN','Usuário');
+	$gride->addColumn('TPGRUPO','Grupo');
+	$gride->addColumn('STATIVO','Ativo ?');
+
+	$gride->addButton('Alterar','gd_alterar',null,null,null,'alterar.gif');
+	$gride->addButton('Excluir','gd_excluir',null,null,'Deseja exlcuir o registro?','lixeira.gif');
+	$gride->addButton('Redefinir senha','redefinirSenha',null,null,'Confirma redefinir a senha? \r\n Será alterada para senha padrão: 12345678','access16.gif');
 
 	$gride->show();
 	die();
@@ -136,10 +165,8 @@ function init() {
 					,"IDUSUARIO":""
 					,"NMUSUARIO":""
 					,"DSLOGIN":""
-					,"DSSENHA":""
+					,"TPGRUPO":""
 					,"STATIVO":""
-					,"DTCRIACAO":""
-					,"DTMODIFICACAO":""
 					};
 	fwGetGrid('usuario.php','gride',Parameters,true);
 }

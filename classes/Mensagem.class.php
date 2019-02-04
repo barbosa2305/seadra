@@ -7,6 +7,7 @@ final class Mensagem {
     const INFORME_ADMIN   = 'Entre em contato com o administrador do sistema para relatar o problema.';    
     const ERRO_INTERNO = 'Ocorreu um erro interno. ' . self::INFORME_ADMIN;
     const OPERACAO_FALHOU = 'Operação não realizada.';
+    const OPERACAO_NAO_PERMITIDA = 'Operação não permitida para este usuário.';
 
     const REGISTRO_GRAVADO = 'Registro gravado com sucesso!';
     

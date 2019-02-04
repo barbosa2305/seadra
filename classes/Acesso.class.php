@@ -17,16 +17,17 @@ class Acesso {
 
 	//--------------------------------------------------------------------------------	
 	public static function login( $login_user, $pwd_user )	{
+        $result = null;
 		$user = UsuarioDAO::selectByLogin($login_user);
         if (password_verify($pwd_user, $user['DSSENHA'][0])) {
             $_SESSION[APLICATIVO]['USER']['IDUSUARIO'] = $user['IDUSUARIO'][0];
             $_SESSION[APLICATIVO]['USER']['LOGIN']  = $login_user;
             $_SESSION[APLICATIVO]['USER']['NOME']  = $user['NMUSUARIO'][0];
-            $msg = 1;
+            $result = 1;
         } else {
-            $msg = 0;
+            $result = 0;
         }
-        return $msg;
+        return $result;
     }
 
     public static function getUserId()	{
@@ -56,36 +57,12 @@ class Acesso {
         return $userName;
     }
 
-	public static function isUserAdm(){
+	public static function isUserLoggedAdm(){
         $result = false;     
         if (self::getUserLogin() == 'admin') {
             $result = true;
         }
         return $result;
-    }
-    public static function alterarSenha($login_user, $pwd_user_old, $pwd_user_new1, $pwd_user_new2)	{
-        if(strlen($pwd_user_new1) < 8){
-            throw new DomainException(Mensagem::SENHA_TAMANHO_MINIMO);
-        }
-        if($pwd_user_new1 != $pwd_user_new2){
-            throw new DomainException(Mensagem::SENHAS_NAO_COINCIDEM);
-        }        
-		$user = UsuarioDAO::selectByLogin($login_user);
-		if (password_verify($pwd_user_old, $user['DSSENHA'][0])) {
-            self::changePassword($user['IDUSUARIO'][0],$pwd_user_new1);
-		    $msg = 1;
-        }else{
-            throw new DomainException(Mensagem::SENHA_ATUAL_INCORRETA);
-        }
-        return $msg;
-    }
-    
-    private static function changePassword($idUser, $pwd_user)	{
-        $pwd_user_new_hash = password_hash($pwd_user, PASSWORD_DEFAULT);
-        $vo = new UsuarioVO();
-        $vo->setIdusuario($idUser);
-        $vo->setDssenha($pwd_user_new_hash);
-        UsuarioDAO::updateSenha($vo);
     }
 }
 ?>

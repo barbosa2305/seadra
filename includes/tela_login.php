@@ -51,8 +51,8 @@ if( $acao =='login'){
     sleep(1);
     $nom_user = $frm->get('login');
     $pwd_user = $frm->get('senha');
-    $msg = Acesso::login($nom_user,$pwd_user);
-    if( $msg == 1 ) {
+    $result = Acesso::login($nom_user,$pwd_user);
+    if( $result == 1 ) {
         $_SESSION[APLICATIVO]['conectado']=true;
         prepareReturnAjax(1);
     }
