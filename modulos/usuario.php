@@ -16,9 +16,9 @@ $g = $frm->addGroupField('gpx1');
 	$frm->addTextField('NMUSUARIO','Nome:',255,TRUE,80);
 	$frm->addTextField('DSLOGIN','Usuário:',20,TRUE,20);
 	$grupo = array('U' => 'Usuários', 'A' => 'Administradores');
-	$frm->addSelectField('TPGRUPO', 'Grupo:',true,$grupo,null,null,null,null,null,null,' ',null);
+	$frm->addSelectField('TPGRUPO', 'Grupo:',true,$grupo,null,null,null,null,null,null,null,'U');
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
-	$frm->addSelectField('STATIVO', 'Ativo ?',true,$ativo,null,null,null,null,null,null,' ',null);
+	$frm->addSelectField('STATIVO', 'Ativo ?',true,$ativo,null,null,null,null,null,null,null,'S');
 $g->closeGroup();
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, true, false);
@@ -63,7 +63,7 @@ switch( $acao ) {
 		try {
 			$vo = new UsuarioVO();
 			$frm->setVo( $vo );
-			$resultado = Usuario::saveStatus( $vo );
+			$resultado = Usuario::delete( $vo );
 			if ($resultado==1) {
 				$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
 				$frm->clearFields();
@@ -139,12 +139,15 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setMaxRows( $maxRows );
 	$gride->setUpdateFields($mixUpdateFields);
 	$gride->setUrl( 'usuario.php' );
+	$gride->setExportExcel( false );
 
 	$gride->addColumn($primaryKey,'Código');
 	$gride->addColumn('NMUSUARIO','Nome');
 	$gride->addColumn('DSLOGIN','Usuário');
-	$gride->addColumn('TPGRUPO','Grupo');
-	$gride->addColumn('STATIVO','Ativo ?');
+	//$gride->addColumn('TPGRUPO','Grupo');
+	$gride->addColumn('DSGRUPO','Grupo');
+	//$gride->addColumn('STATIVO','Ativo ?');
+	$gride->addColumn('DSATIVO','Ativo ?',null,'center');
 
 	$gride->addButton('Alterar','gd_alterar',null,null,null,'alterar.gif');
 	$gride->addButton('Excluir','gd_excluir',null,null,'Deseja exlcuir o registro?','lixeira.gif');

@@ -20,6 +20,7 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$result = UsuarioDAO::selectById( $id );
+		$result = self::trataDados($result);
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
@@ -30,11 +31,13 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
 		$result = UsuarioDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
+		$result = self::trataDados($result);
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
 		$result = UsuarioDAO::selectAll( $orderBy, $where );
+		$result = self::trataDados($result);
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
@@ -47,10 +50,9 @@ class Usuario {
 			if( $objVo->getIdusuario() ) {
 				$result = UsuarioDAO::update( $objVo );
 			} else {
+				$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
+				$objVo->setDssenha($pwd_user_hash);
 				$result = UsuarioDAO::insert( $objVo );
-				if ($result == 1) {
-					self::changePassword(true, $objVo);
-				}
 			}
 		}
 
@@ -69,35 +71,37 @@ class Usuario {
 
 		return $result;
 	}
-
+	//--------------------------------------------------------------------------------
 	public static function changePassword($resetPassword=false, $objVo, $pwd_user_current=null, $pwd_user_new=null, $pwd_user_new_repeat=null) {
 		$pwd_user_hash = null;
 		$result = null;
-		
-		if ($resetPassword) {
-			$result = self::validatePassword(self::SENHA_PADRAO);
-			if ( $result === true ) {
-				$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
-			}
-			
-		} else {
-			$user = UsuarioDAO::selectByLogin($objVo->getDslogin());
-			$result = self::validatePassword($pwd_user_current,$pwd_user_new,$pwd_user_new_repeat,$user['DSSENHA'][0]);
-			if ( $result === true ) {
-				$pwd_user_hash = password_hash($pwd_user_new, PASSWORD_DEFAULT);
-			}
-		}
 
-		if ( !empty($pwd_user_hash) ) {
-			//$vo = new UsuarioVO();
-			//$vo->setIdusuario($userId);
-			$objVo->setDssenha($pwd_user_hash);
-			$result = UsuarioDAO::updatePassword($objVo);
+		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){
+			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
+		} else {
+			if ($resetPassword) {
+				$result = self::validatePassword(self::SENHA_PADRAO);
+				if ( $result === true ) {
+					$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
+				}
+				
+			} else {
+				$user = UsuarioDAO::selectByLogin($objVo->getDslogin());
+				$result = self::validatePassword($pwd_user_current,$pwd_user_new,$pwd_user_new_repeat,$user['DSSENHA'][0]);
+				if ( $result === true ) {
+					$pwd_user_hash = password_hash($pwd_user_new, PASSWORD_DEFAULT);
+				}
+			}
+
+			if ( !empty($pwd_user_hash) ) {
+				$objVo->setDssenha($pwd_user_hash);
+				$result = UsuarioDAO::updatePassword($objVo);
+			}
 		}
 
         return $result;
     }
-    
+    //--------------------------------------------------------------------------------
 	private static function validatePassword( $pwd_user_current,$pwd_user_new=null,$pwd_user_new_repeat=null,$pwd_user_current_coded=null ) {
 		$result = true;
 		if ( strlen( $pwd_user_current ) < 8 ) {
@@ -120,5 +124,30 @@ class Usuario {
 		}
 		return $result;
 	}
+	//--------------------------------------------------------------------------------
+	private static function trataDados($dados){
+	    if( isset($dados) ){
+	        foreach ($dados['STATIVO'] as $key => $value) {
+	            $dsPrincipal = 'Erro';
+	            if( $value == 'S' ){
+	                $dsPrincipal = 'Sim';
+	            } else {
+	                $dsPrincipal = 'Não';
+	            }
+	            $dados['DSATIVO'][$key]  = $dsPrincipal;
+			}
+
+			foreach ($dados['TPGRUPO'] as $key => $value) {
+	            $dsPrincipal = 'Erro';
+	            if( $value == 'A' ){
+	                $dsPrincipal = 'Administradores';
+	            } else {
+	                $dsPrincipal = 'Usuários';
+	            }
+	            $dados['DSGRUPO'][$key]  = $dsPrincipal;
+			}
+	    }
+	    return $dados;
+	}	
 }
 ?>
