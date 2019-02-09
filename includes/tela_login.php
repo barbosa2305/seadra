@@ -55,8 +55,7 @@ if( $acao =='login'){
     if( $result == 1 ) {
         $_SESSION[APLICATIVO]['conectado']=true;
         prepareReturnAjax(1);
-    }
-    else {
+    } else {
         $frm->setMessage(Mensagem::USUARIO_SENHA_INCORRETOS);
         prepareReturnAjax(0);
     }
