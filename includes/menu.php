@@ -19,7 +19,10 @@ $menu->add('1.2',1,'Pedido','modulos/pedido.php');
 
 $menu->add('2', null, 'Acesso', null, null, 'icon-key-yellow.png');
 $menu->add('2.1',2,'Alterar Minha Senha','modulos/alterasenha.php', null, 'lock16.gif');
-$menu->add('2.2',2,'Usuário','modulos/usuario.php');
+
+if ( Acesso::getUserGroup() == Acesso::USER_GRUPO_ADMIN ) {
+    $menu->add('2.2',2,'Usuário','modulos/usuario.php');
+}
 
 $menu->add('9', null, 'Sobre', 'modulos/sys_about.php', null, 'information16.gif');
 

@@ -13,6 +13,7 @@
 class Acesso {
 
     const USER_ADMIN = 'admin';
+    const USER_GRUPO_ADMIN = 'A';
 
 	public function __construct(){
     }    
@@ -26,6 +27,7 @@ class Acesso {
                 $_SESSION[APLICATIVO]['USER']['IDUSUARIO'] = $user['IDUSUARIO'][0];
                 $_SESSION[APLICATIVO]['USER']['LOGIN']  = $login_user;
                 $_SESSION[APLICATIVO]['USER']['NOME']  = $user['NMUSUARIO'][0];
+                $_SESSION[APLICATIVO]['USER']['GRUPO']  = $user['TPGRUPO'][0];
                 $result = 1;
             } 
         }
@@ -57,6 +59,15 @@ class Acesso {
             $userName = $user['NOME'];
         }
         return $userName;
+    }
+
+    public static function getUserGroup() {
+        $userGroup = null;
+        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
+            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+            $userGroup = $user['GRUPO'];
+        }
+        return $userGroup;
     }
 
 	public static function isUserLoggedAdm(){
