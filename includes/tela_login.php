@@ -57,7 +57,7 @@ if( $acao =='login'){
         prepareReturnAjax(1);
     }
     else {
-        $frm->setMessage('Login Inválido');
+        $frm->setMessage(Mensagem::USUARIO_SENHA_INCORRETOS);
         prepareReturnAjax(0);
     }
 }
@@ -71,7 +71,7 @@ $frm->show();
             fwApplicationRestart();    
         }
         else {
-            fwAlert('Login Inválido');
+            fwAlert('Usuário e/ou senha incorretos.');
         }
     }
 </script>
