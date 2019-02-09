@@ -46,6 +46,16 @@ class UsuarioDAO extends TPDOConnection {
 		return $result;
 	}	
 	//--------------------------------------------------------------------------------
+	public static function selectByLoginAtivo( $login ) {
+		if( empty($login) || !is_string($login) ){
+			throw new InvalidArgumentException();
+		}
+		$values = array($login);
+		$sql = self::$sqlBasicSelect.' where dslogin = ? and stAtivo = \'S\'';
+		$result = self::executeSql($sql, $values );
+		return $result;
+	}	
+	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
 		$sql = 'select count(idUsuario) as qtd from seadra.usuario';
@@ -80,13 +90,15 @@ class UsuarioDAO extends TPDOConnection {
 	public static function insert( UsuarioVO $objVo ) {
 		$values = array(  $objVo->getNmusuario() 
 						, $objVo->getDslogin() 
+						, $objVo->getDssenha()
 						, $objVo->getTpgrupo()
 						);
 		return self::executeSql('insert into seadra.usuario(
 								 nmusuario
 								,dslogin
+								,dssenha
 								,tpgrupo
-								) values (?,?,?)', $values );
+								) values (?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( UsuarioVO $objVo ) {
@@ -113,11 +125,6 @@ class UsuarioDAO extends TPDOConnection {
 		$values = array( $objVo->getStativo()
                         ,$objVo->getIdusuario() );
 		return self::executeSql('update seadra.usuario set stativo = ? where idUsuario = ?',$values);
-	}
-	//--------------------------------------------------------------------------------
-	public static function delete( $id ){
-		$values = array($id);
-		return self::executeSql('delete from seadra.usuario where idUsuario = ?',$values);
 	}
 }
 ?>

@@ -19,15 +19,15 @@ class Acesso {
 
 	//--------------------------------------------------------------------------------	
 	public static function login( $login_user, $pwd_user )	{
-        $result = null;
-		$user = UsuarioDAO::selectByLogin($login_user);
-        if (password_verify($pwd_user, $user['DSSENHA'][0])) {
-            $_SESSION[APLICATIVO]['USER']['IDUSUARIO'] = $user['IDUSUARIO'][0];
-            $_SESSION[APLICATIVO]['USER']['LOGIN']  = $login_user;
-            $_SESSION[APLICATIVO]['USER']['NOME']  = $user['NMUSUARIO'][0];
-            $result = 1;
-        } else {
-            $result = 0;
+        $result = 0;
+        $user = UsuarioDAO::selectByLoginAtivo($login_user);
+        if ( !empty($user) ) {
+            if (password_verify($pwd_user, $user['DSSENHA'][0])) {
+                $_SESSION[APLICATIVO]['USER']['IDUSUARIO'] = $user['IDUSUARIO'][0];
+                $_SESSION[APLICATIVO]['USER']['LOGIN']  = $login_user;
+                $_SESSION[APLICATIVO]['USER']['NOME']  = $user['NMUSUARIO'][0];
+                $result = 1;
+            } 
         }
         return $result;
     }
