@@ -36,9 +36,9 @@ switch( $acao ) {
 				$resultado = Usuario::save( $vo );
 				if ($resultado==1) {
 					if ( empty($frm->get('IDUSUARIO')) ) {
-						$frm->setMessage('Operação realizada com sucesso! \r\n Usuário cadastrado com a senha padrão: 12345678');
+						$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO .' \r\n '. Mensagem::SENHA_PADRAO_USUARIO);
 					} else {
-						$frm->setMessage('Operação realizada com sucesso!');
+						$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
 					}
 					$frm->clearFields();
 				} else {
@@ -65,7 +65,7 @@ switch( $acao ) {
 			$frm->setVo( $vo );
 			$resultado = Usuario::saveStatus( $vo );
 			if ($resultado==1) {
-				$frm->setMessage('Operação realizada com sucesso!');
+				$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
 				$frm->clearFields();
 			} else {
 				$frm->clearFields();
@@ -87,7 +87,7 @@ switch( $acao ) {
 			$frm->setVo( $vo );
 			$result = Usuario::changePassword(true, $vo);
 			if ($result==1) {
-				$frm->setMessage('Operação realizada com sucesso!');
+				$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
 				$frm->clearFields();
 			} else {
 				$frm->setMessage($result);

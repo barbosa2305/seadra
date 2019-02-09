@@ -41,7 +41,7 @@ class Usuario {
 	public static function save( UsuarioVO $objVo ){
 		$result = null;
 
-		if( strtolower($objVo->getDslogin()) == 'admin' ){
+		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){ 
 			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
 		} else {
 			if( $objVo->getIdusuario() ) {
@@ -60,7 +60,7 @@ class Usuario {
 	public static function delete( UsuarioVO $objVo ){
 		$result = null;
 
-		if( strtolower($objVo->getDslogin()) == 'admin' ){
+		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){
 			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
 		} else {
 			$objVo->setStativo(self::STATUS_INATIVO);

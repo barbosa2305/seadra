@@ -37,7 +37,7 @@ switch( $acao ) {
 				$novaSenhaRepita = $frm->getFieldValue('novaSenhaRepita');
 				$result = Usuario::changePassword(false, $vo, $senhaAtual, $novaSenha, $novaSenhaRepita);
 				if ( $result == 1 ) {
-					$frm->setMessage(Mensagem::REGISTRO_GRAVADO);
+					$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
                     $frm->clearFields(null, array('login'));
 				} else {
 					$frm->setMessage($result);
