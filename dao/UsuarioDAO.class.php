@@ -88,10 +88,10 @@ class UsuarioDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function insert( UsuarioVO $objVo ) {
-		$values = array(  $objVo->getNmusuario() 
-						, $objVo->getDslogin() 
-						, $objVo->getDssenha()
-						, $objVo->getTpgrupo()
+		$values = array( $objVo->getNmusuario() 
+						,strtolower($objVo->getDslogin())
+						,$objVo->getDssenha()
+						,$objVo->getTpgrupo()
 						);
 		return self::executeSql('insert into seadra.usuario(
 								 nmusuario
@@ -103,7 +103,7 @@ class UsuarioDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function update ( UsuarioVO $objVo ) {
 		$values = array( $objVo->getNmusuario()
-						,$objVo->getDslogin()
+						,strtolower($objVo->getDslogin())
 						,$objVo->getTpgrupo()
 						,$objVo->getStativo()
 						,$objVo->getIdUsuario() );
