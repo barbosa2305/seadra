@@ -12,6 +12,8 @@
 
 class Acesso {
 
+    const USER_ADMIN = 'admin';
+
 	public function __construct(){
     }    
 
@@ -59,7 +61,7 @@ class Acesso {
 
 	public static function isUserLoggedAdm(){
         $result = false;     
-        if (self::getUserLogin() == 'admin') {
+        if (self::getUserLogin() == self::USER_ADMIN) {
             $result = true;
         }
         return $result;
