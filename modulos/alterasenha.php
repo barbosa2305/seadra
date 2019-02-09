@@ -30,8 +30,6 @@ switch( $acao ) {
 				$vo = new UsuarioVO();
 				$vo->setIdusuario(Acesso::getUserId());
 				$vo->setDslogin($frm->getFieldValue('login'));
-				//$userId = Acesso::getUserId();
-				//$userLogin = $frm->getFieldValue('login');
 			    $senhaAtual = $frm->getFieldValue('senha');
 				$novaSenha = $frm->getFieldValue('novaSenha');
 				$novaSenhaRepita = $frm->getFieldValue('novaSenhaRepita');
