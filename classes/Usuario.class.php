@@ -20,33 +20,34 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$result = UsuarioDAO::selectById( $id );
-		$result = self::trataDados($result);
-		return $result;
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$result = UsuarioDAO::selectCount( $where );
-		return $result;
+		return UsuarioDAO::selectCount( $where );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
 		$result = UsuarioDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
-		$result = self::trataDados($result);
-		return $result;
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
 		$result = UsuarioDAO::selectAll( $orderBy, $where );
-		$result = self::trataDados($result);
-		return $result;
+		return self::trataDados($result);
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( UsuarioVO $objVo ){
 		$result = null;
 
 		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){ 
-			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
+			throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA);
 		} else {
+			if( (strtolower($objVo->getDslogin()) == Acesso::getUserLogin()) && 
+					($objVo->getStativo() == self::STATUS_INATIVO) ){
+				throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA);
+			}
+
 			if( $objVo->getIdusuario() ) {
 				$result = UsuarioDAO::update( $objVo );
 			} else {
@@ -62,8 +63,9 @@ class Usuario {
 	public static function delete( UsuarioVO $objVo ){
 		$result = null;
 
-		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){
-			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
+		if( (strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN) ||
+				(strtolower($objVo->getDslogin()) == Acesso::getUserLogin()) ){
+			throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA); 
 		} else {
 			$objVo->setStativo(self::STATUS_INATIVO);
 			$result = UsuarioDAO::updateStatus( $objVo );
