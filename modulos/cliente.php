@@ -11,6 +11,7 @@ $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 $frm->addMemoField('NMCLIENTE', 'NMCLIENTE',255,TRUE,80,3);
 $frm->addTextField('NRCPFCNPJ', 'NRCPFCNPJ',30,TRUE,30);
+$frm->addTextField('DSEMAIL', 'DSEMAIL',100,FALSE,100);
 $frm->addTextField('NRTELEFONE', 'NRTELEFONE',20,FALSE,20);
 $frm->addTextField('NRCELULAR', 'NRCELULAR',20,FALSE,20);
 $listEndereco = Endereco::selectAll();
@@ -31,6 +32,10 @@ $frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
+	//--------------------------------------------------------------------------------
+	case 'Limpar':
+		$frm->clearFields();
+	break;
 	case 'Salvar':
 		try{
 			if ( $frm->validate() ) {
@@ -52,10 +57,6 @@ switch( $acao ) {
 			MessageHelper::logRecord($e);
 			$frm->setMessage( $e->getMessage() );
 		}
-	break;
-	//--------------------------------------------------------------------------------
-	case 'Limpar':
-		$frm->clearFields();
 	break;
 	//--------------------------------------------------------------------------------
 	case 'gd_excluir':
@@ -88,6 +89,7 @@ function getWhereGridParameters(&$frm){
 				'IDCLIENTE'=>$frm->get('IDCLIENTE')
 				,'NMCLIENTE'=>$frm->get('NMCLIENTE')
 				,'NRCPFCNPJ'=>$frm->get('NRCPFCNPJ')
+				,'DSEMAIL'=>$frm->get('DSEMAIL')
 				,'NRTELEFONE'=>$frm->get('NRTELEFONE')
 				,'NRCELULAR'=>$frm->get('NRCELULAR')
 				,'IDENDERECO'=>$frm->get('IDENDERECO')
@@ -111,6 +113,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$mixUpdateFields = $primaryKey.'|'.$primaryKey
 					.',NMCLIENTE|NMCLIENTE'
 					.',NRCPFCNPJ|NRCPFCNPJ'
+					.',DSEMAIL|DSEMAIL'
 					.',NRTELEFONE|NRTELEFONE'
 					.',NRCELULAR|NRCELULAR'
 					.',IDENDERECO|IDENDERECO'
@@ -134,6 +137,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn($primaryKey,'id');
 	$gride->addColumn('NMCLIENTE','NMCLIENTE');
 	$gride->addColumn('NRCPFCNPJ','NRCPFCNPJ');
+	$gride->addColumn('DSEMAIL','DSEMAIL');
 	$gride->addColumn('NRTELEFONE','NRTELEFONE');
 	$gride->addColumn('NRCELULAR','NRCELULAR');
 	$gride->addColumn('IDENDERECO','IDENDERECO');
@@ -143,6 +147,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('DTCRIACAO','DTCRIACAO');
 	$gride->addColumn('IDUSUARIOMODIFICACAO','IDUSUARIOMODIFICACAO');
 	$gride->addColumn('DTMODIFICACAO','DTMODIFICACAO');
+
 
 	$gride->show();
 	die();
@@ -159,6 +164,7 @@ function init() {
 					,"IDCLIENTE":""
 					,"NMCLIENTE":""
 					,"NRCPFCNPJ":""
+					,"DSEMAIL":""
 					,"NRTELEFONE":""
 					,"NRCELULAR":""
 					,"IDENDERECO":""

@@ -10,8 +10,8 @@ $frm->setMaximize(true);
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 $frm->addMemoField('NMPRODUTO', 'NMPRODUTO',255,TRUE,80,3);
-$frm->addNumberField('VLPRECOCUSTO', 'VLPRECOCUSTO',10,FALSE,2);
-$frm->addNumberField('VLPRECOVENDA', 'VLPRECOVENDA',10,FALSE,2);
+$frm->addNumberField('VLPRECOCUSTO', 'VLPRECOCUSTO',10,TRUE,2);
+$frm->addNumberField('VLPRECOVENDA', 'VLPRECOVENDA',10,TRUE,2);
 $frm->addTextField('STATIVO', 'STATIVO',1,TRUE,1);
 $listUsuario = Usuario::selectAll();
 $frm->addSelectField('IDUSUARIOCRIACAO', 'IDUSUARIOCRIACAO',TRUE,$listUsuario,null,null,null,null,null,null,' ',null);
@@ -27,6 +27,10 @@ $frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
+	//--------------------------------------------------------------------------------
+	case 'Limpar':
+		$frm->clearFields();
+	break;
 	case 'Salvar':
 		try{
 			if ( $frm->validate() ) {
@@ -48,10 +52,6 @@ switch( $acao ) {
 			MessageHelper::logRecord($e);
 			$frm->setMessage( $e->getMessage() );
 		}
-	break;
-	//--------------------------------------------------------------------------------
-	case 'Limpar':
-		$frm->clearFields();
 	break;
 	//--------------------------------------------------------------------------------
 	case 'gd_excluir':
@@ -130,6 +130,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('DTCRIACAO','DTCRIACAO');
 	$gride->addColumn('IDUSUARIOMODIFICACAO','IDUSUARIOMODIFICACAO');
 	$gride->addColumn('DTMODIFICACAO','DTMODIFICACAO');
+
 
 	$gride->show();
 	die();

@@ -5,6 +5,7 @@ class ClienteDAO extends TPDOConnection {
 									  idcliente
 									 ,nmcliente
 									 ,nrcpfcnpj
+									 ,dsemail
 									 ,nrtelefone
 									 ,nrcelular
 									 ,idendereco
@@ -23,6 +24,7 @@ class ClienteDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDCLIENTE', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMCLIENTE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRCPFCNPJ', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSEMAIL', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRTELEFONE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRCELULAR', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDENDERECO', SqlHelper::SQL_TYPE_NUMERIC);
@@ -78,6 +80,7 @@ class ClienteDAO extends TPDOConnection {
 	public static function insert( ClienteVO $objVo ) {
 		$values = array(  $objVo->getNmcliente() 
 						, $objVo->getNrcpfcnpj() 
+						, $objVo->getDsemail() 
 						, $objVo->getNrtelefone() 
 						, $objVo->getNrcelular() 
 						, $objVo->getIdendereco() 
@@ -91,6 +94,7 @@ class ClienteDAO extends TPDOConnection {
 		return self::executeSql('insert into seadra.cliente(
 								 nmcliente
 								,nrcpfcnpj
+								,dsemail
 								,nrtelefone
 								,nrcelular
 								,idendereco
@@ -100,12 +104,13 @@ class ClienteDAO extends TPDOConnection {
 								,dtcriacao
 								,idusuariomodificacao
 								,dtmodificacao
-								) values (?,?,?,?,?,?,?,?,?,?,?)', $values );
+								) values (?,?,?,?,?,?,?,?,?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( ClienteVO $objVo ) {
 		$values = array( $objVo->getNmcliente()
 						,$objVo->getNrcpfcnpj()
+						,$objVo->getDsemail()
 						,$objVo->getNrtelefone()
 						,$objVo->getNrcelular()
 						,$objVo->getIdendereco()
@@ -119,6 +124,7 @@ class ClienteDAO extends TPDOConnection {
 		return self::executeSql('update seadra.cliente set 
 								 nmcliente = ?
 								,nrcpfcnpj = ?
+								,dsemail = ?
 								,nrtelefone = ?
 								,nrcelular = ?
 								,idendereco = ?

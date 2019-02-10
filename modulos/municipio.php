@@ -22,6 +22,10 @@ $frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
+	//--------------------------------------------------------------------------------
+	case 'Limpar':
+		$frm->clearFields();
+	break;
 	case 'Salvar':
 		try{
 			if ( $frm->validate() ) {
@@ -43,10 +47,6 @@ switch( $acao ) {
 			MessageHelper::logRecord($e);
 			$frm->setMessage( $e->getMessage() );
 		}
-	break;
-	//--------------------------------------------------------------------------------
-	case 'Limpar':
-		$frm->clearFields();
 	break;
 	//--------------------------------------------------------------------------------
 	case 'gd_excluir':
@@ -113,6 +113,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('NMMUNICIPIO','NMMUNICIPIO');
 	$gride->addColumn('IDUNIDADEFEDERATIVA','IDUNIDADEFEDERATIVA');
 	$gride->addColumn('STATIVO','STATIVO');
+
 
 	$gride->show();
 	die();

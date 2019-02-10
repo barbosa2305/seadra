@@ -12,9 +12,9 @@ $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 $listCliente = Cliente::selectAll();
 $frm->addSelectField('IDCLIENTE', 'IDCLIENTE',TRUE,$listCliente,null,null,null,null,null,null,' ',null);
 $frm->addDateField('DTPEDIDO', 'DTPEDIDO',TRUE);
-$frm->addNumberField('VLTOTAL', 'VLTOTAL',10,FALSE,2);
+$frm->addNumberField('VLTOTAL', 'VLTOTAL',10,TRUE,2);
 $frm->addNumberField('VLDESCONTO', 'VLDESCONTO',10,FALSE,2);
-$frm->addNumberField('VLPAGO', 'VLPAGO',10,FALSE,2);
+$frm->addNumberField('VLPAGO', 'VLPAGO',10,TRUE,2);
 $listUsuario = Usuario::selectAll();
 $frm->addSelectField('IDUSUARIOCRIACAO', 'IDUSUARIOCRIACAO',TRUE,$listUsuario,null,null,null,null,null,null,' ',null);
 $frm->addDateField('DTCRIACAO', 'DTCRIACAO',TRUE);
@@ -29,6 +29,10 @@ $frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
+	//--------------------------------------------------------------------------------
+	case 'Limpar':
+		$frm->clearFields();
+	break;
 	case 'Salvar':
 		try{
 			if ( $frm->validate() ) {
@@ -50,10 +54,6 @@ switch( $acao ) {
 			MessageHelper::logRecord($e);
 			$frm->setMessage( $e->getMessage() );
 		}
-	break;
-	//--------------------------------------------------------------------------------
-	case 'Limpar':
-		$frm->clearFields();
 	break;
 	//--------------------------------------------------------------------------------
 	case 'gd_excluir':
@@ -135,6 +135,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('DTCRIACAO','DTCRIACAO');
 	$gride->addColumn('IDUSUARIOMODIFICACAO','IDUSUARIOMODIFICACAO');
 	$gride->addColumn('DTMODIFICACAO','DTMODIFICACAO');
+
 
 	$gride->show();
 	die();

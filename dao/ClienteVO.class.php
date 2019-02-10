@@ -3,6 +3,7 @@ class ClienteVO {
 	private $idcliente = null;
 	private $nmcliente = null;
 	private $nrcpfcnpj = null;
+	private $dsemail = null;
 	private $nrtelefone = null;
 	private $nrcelular = null;
 	private $idendereco = null;
@@ -12,10 +13,11 @@ class ClienteVO {
 	private $dtcriacao = null;
 	private $idusuariomodificacao = null;
 	private $dtmodificacao = null;
-	public function __construct( $idcliente=null, $nmcliente=null, $nrcpfcnpj=null, $nrtelefone=null, $nrcelular=null, $idendereco=null, $dscomplementoendereco=null, $stativo=null, $idusuariocriacao=null, $dtcriacao=null, $idusuariomodificacao=null, $dtmodificacao=null ) {
+	public function __construct( $idcliente=null, $nmcliente=null, $nrcpfcnpj=null, $dsemail=null, $nrtelefone=null, $nrcelular=null, $idendereco=null, $dscomplementoendereco=null, $stativo=null, $idusuariocriacao=null, $dtcriacao=null, $idusuariomodificacao=null, $dtmodificacao=null ) {
 		$this->setIdcliente( $idcliente );
 		$this->setNmcliente( $nmcliente );
 		$this->setNrcpfcnpj( $nrcpfcnpj );
+		$this->setDsemail( $dsemail );
 		$this->setNrtelefone( $nrtelefone );
 		$this->setNrcelular( $nrcelular );
 		$this->setIdendereco( $idendereco );
@@ -52,6 +54,15 @@ class ClienteVO {
 	public function getNrcpfcnpj()
 	{
 		return $this->nrcpfcnpj;
+	}
+	//--------------------------------------------------------------------------------
+	public function setDsemail( $strNewValue = null )
+	{
+		$this->dsemail = $strNewValue;
+	}
+	public function getDsemail()
+	{
+		return $this->dsemail;
 	}
 	//--------------------------------------------------------------------------------
 	public function setNrtelefone( $strNewValue = null )
