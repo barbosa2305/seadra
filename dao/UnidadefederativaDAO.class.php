@@ -57,6 +57,16 @@ class UnidadefederativaDAO extends TPDOConnection {
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
+	public static function selectComboSiglaUf() {
+	    $sql = 'select dsSigla
+					  ,dsNome
+					  ,idUnidadeFederativa
+				from unidadefederativa 
+                order by dsNome';
+	    $result = self::executeSql($sql);
+	    return $result;
+	}
+	//--------------------------------------------------------------------------------
 	public static function insert( UnidadefederativaVO $objVo ) {
 		$values = array(  $objVo->getDssigla() 
 						, $objVo->getDsnome() 

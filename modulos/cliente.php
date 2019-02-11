@@ -2,32 +2,58 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
-$frm = new TForm('cliente',800,950);
-$frm->setFlat(true);
-$frm->setMaximize(true);
-
+$frm = new TForm('Cliente',800,950);
+$frm->setFlat(TRUE);
+$frm->setMaximize(TRUE);
 
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
-$frm->addMemoField('NMCLIENTE', 'NMCLIENTE',255,TRUE,80,3);
-$frm->addTextField('NRCPFCNPJ', 'NRCPFCNPJ',30,TRUE,30);
-$frm->addTextField('DSEMAIL', 'DSEMAIL',100,FALSE,100);
-$frm->addTextField('NRTELEFONE', 'NRTELEFONE',20,FALSE,20);
-$frm->addTextField('NRCELULAR', 'NRCELULAR',20,FALSE,20);
+
+$frm->addCpfCnpjField('NRCPFCNPJ', 'CPF/CNPJ',TRUE,null,TRUE,null,null,'CPF/CNPJ inválido.',TRUE);
+$frm->addTextField('NMCLIENTE', 'Nome',255,TRUE,80);
+$frm->addEmailField('DSEMAIL', 'E-mail',null,FALSE,80);
+$frm->addFoneField('NRTELEFONE', 'Telefone');
+$frm->addFoneField('NRCELULAR', 'Celular');
+// Endereço
+$frm->addHiddenField('IDMUNICIPIOTMP', '');
+$frm->addCepField('DSCEP'  // id do campo
+				 , 'CEP'   // label do campo
+				 , TRUE    // obrigatório
+				 , null	   // valor
+				 , null    // Nova linha
+				 , 'DSLOGRADOURO'  // campo endereço
+				 , 'DSBAIRRO'  // campo bairro
+				 , null       // campo cidade
+				 , null       //campo cod uf 
+				 , 'DSSIGLA'  // campo sig uf
+				 , null       // campo numero
+				 , null       // id do campo complemento
+				 , 'IDMUNICIPIOTMP' // id do cod municipio
+				 , null   // label sobre o campo
+				 , null   // no wrap label
+				 , 'myCallback'  // Js Callback
+				 , null   // Js Before Send
+				 , FALSE
+				 , 'O CEP está incompleto.'
+				 );
+$frm->addTextField('DSLOGRADOURO', 'Endereço:', 60);
+$frm->addTextField('DSCOMPLEMENTOENDERECO', 'Complemento',255,FALSE,80);
+$listUF = UnidadefederativaDAO::selectComboSiglaUf();
+$frm->addSelectField('DSSIGLA', 'UF',FALSE, $listUF);
+$frm->addSelectField('NMMUNICIPIO', 'Município', null, null, false);
+$frm->combinarSelects('DSSIGLA', 'IDMUNICIPIO',null /*'vw_municipios'*/, 'DSSIGLA', 'IDMUNICIPIO', 'NMMUNICIPIO', '-- Selecione --', '0', 'Nenhum município encontrado.');
+
+/*
 $listEndereco = Endereco::selectAll();
 $frm->addSelectField('IDENDERECO', 'IDENDERECO',FALSE,$listEndereco,null,null,null,null,null,null,' ',null);
 $frm->addMemoField('DSCOMPLEMENTOENDERECO', 'DSCOMPLEMENTOENDERECO',255,FALSE,80,3);
-$frm->addTextField('STATIVO', 'STATIVO',1,TRUE,1);
-$listUsuario = Usuario::selectAll();
-$frm->addSelectField('IDUSUARIOCRIACAO', 'IDUSUARIOCRIACAO',TRUE,$listUsuario,null,null,null,null,null,null,' ',null);
-$frm->addDateField('DTCRIACAO', 'DTCRIACAO',TRUE);
-$listUsuario = Usuario::selectAll();
-$frm->addSelectField('IDUSUARIOMODIFICACAO', 'IDUSUARIOMODIFICACAO',FALSE,$listUsuario,null,null,null,null,null,null,' ',null);
-$frm->addDateField('DTMODIFICACAO', 'DTMODIFICACAO',FALSE);
+*/
 
-$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, true, false);
-$frm->addButton('Salvar', null, 'Salvar', null, null, false, false);
-$frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
+$frm->addTextField('STATIVO', 'Ativo ?',1,TRUE,1);
+
+$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
+$frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);
+$frm->addButton('Limpar', null, 'Limpar', null, null, FALSE, FALSE);
 
 
 $acao = isset($acao) ? $acao : null;
@@ -134,19 +160,17 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setUpdateFields($mixUpdateFields);
 	$gride->setUrl( 'cliente.php' );
 
-	$gride->addColumn($primaryKey,'id');
-	$gride->addColumn('NMCLIENTE','NMCLIENTE');
-	$gride->addColumn('NRCPFCNPJ','NRCPFCNPJ');
-	$gride->addColumn('DSEMAIL','DSEMAIL');
-	$gride->addColumn('NRTELEFONE','NRTELEFONE');
-	$gride->addColumn('NRCELULAR','NRCELULAR');
+	$gride->addColumn($primaryKey,'Código');
+	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ');
+	$gride->addColumn('NMCLIENTE','Nome');
+	$gride->addColumn('DSEMAIL','E-mail');
+	$gride->addColumn('NRTELEFONE','Telefone');
+	$gride->addColumn('NRCELULAR','Celular');
+
 	$gride->addColumn('IDENDERECO','IDENDERECO');
 	$gride->addColumn('DSCOMPLEMENTOENDERECO','DSCOMPLEMENTOENDERECO');
-	$gride->addColumn('STATIVO','STATIVO');
-	$gride->addColumn('IDUSUARIOCRIACAO','IDUSUARIOCRIACAO');
-	$gride->addColumn('DTCRIACAO','DTCRIACAO');
-	$gride->addColumn('IDUSUARIOMODIFICACAO','IDUSUARIOMODIFICACAO');
-	$gride->addColumn('DTMODIFICACAO','DTMODIFICACAO');
+
+	$gride->addColumn('STATIVO','Ativo ?');
 
 
 	$gride->show();
