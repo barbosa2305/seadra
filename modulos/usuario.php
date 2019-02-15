@@ -3,7 +3,7 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
 
-$frm = new TForm('Usuário',800,950);
+$frm = new TForm('Usuário',500,700);
 $frm->setFlat(true);
 $frm->setMaximize(true);
 
