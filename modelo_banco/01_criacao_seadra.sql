@@ -224,6 +224,17 @@ CREATE INDEX `fk_ItemPedido_Pedido_idx` ON `seadra`.`ItemPedido` (`idPedido` ASC
 
 CREATE UNIQUE INDEX `pedidoProduto_UNIQUE` ON `seadra`.`ItemPedido` (`idPedido` ASC, `idProduto` ASC);
 
+-- -----------------------------------------------------
+-- View `seadra`.`vw_municipios`
+-- -----------------------------------------------------
+CREATE VIEW vw_municipios AS 
+select uf.idunidadefederativa as idunidadefederativa
+       ,uf.dssigla as dssigla
+       ,m.cdmunicipio as cdmunicipio
+	     ,m.nmmunicipio as nmmunicipio 
+from municipio m, unidadefederativa uf 
+where m.idunidadefederativa = uf.idunidadefederativa;
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
