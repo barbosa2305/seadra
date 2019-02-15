@@ -36,6 +36,10 @@ class Unidadefederativa {
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
+	public static function selectComboSiglaUf(){
+		return UnidadefederativaDAO::selectComboSiglaUf();
+	}
+	//--------------------------------------------------------------------------------
 	public static function save( UnidadefederativaVO $objVo ){
 		$result = null;
 		if( $objVo->getIdunidadefederativa() ) {

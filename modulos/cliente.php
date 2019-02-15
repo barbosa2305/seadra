@@ -15,7 +15,7 @@ $frm->addEmailField('DSEMAIL', 'E-mail',null,FALSE,80);
 $frm->addFoneField('NRTELEFONE', 'Telefone');
 $frm->addFoneField('NRCELULAR', 'Celular');
 // Endereço
-$frm->addHiddenField('IDMUNICIPIOTMP', '');
+$frm->addHiddenField('CDMUNICIPIOTMP', '');
 $frm->addCepField('DSCEP'  // id do campo
 				 , 'CEP'   // label do campo
 				 , TRUE    // obrigatório
@@ -25,10 +25,10 @@ $frm->addCepField('DSCEP'  // id do campo
 				 , 'DSBAIRRO'  // campo bairro
 				 , null       // campo cidade
 				 , null       //campo cod uf 
-				 , 'DSSIGLA'  // campo sig uf
+				 , 'DSSIGLA2'  // campo sig uf
 				 , null       // campo numero
 				 , null       // id do campo complemento
-				 , 'IDMUNICIPIOTMP' // id do cod municipio
+				 , 'CDMUNICIPIOTMP2' // id do cod municipio
 				 , null   // label sobre o campo
 				 , null   // no wrap label
 				 , 'myCallback'  // Js Callback
@@ -38,10 +38,11 @@ $frm->addCepField('DSCEP'  // id do campo
 				 );
 $frm->addTextField('DSLOGRADOURO', 'Endereço:', 60);
 $frm->addTextField('DSCOMPLEMENTOENDERECO', 'Complemento',255,FALSE,80);
-$listUF = UnidadefederativaDAO::selectComboSiglaUf();
-$frm->addSelectField('DSSIGLA', 'UF',FALSE, $listUF);
-$frm->addSelectField('NMMUNICIPIO', 'Município', null, null, false);
-$frm->combinarSelects('DSSIGLA', 'IDMUNICIPIO',null /*'vw_municipios'*/, 'DSSIGLA', 'IDMUNICIPIO', 'NMMUNICIPIO', '-- Selecione --', '0', 'Nenhum município encontrado.');
+$frm->addTextField('DSBAIRRO', 'Bairro:', 60);
+$listUF = Unidadefederativa::selectComboSiglaUf();
+$frm->addSelectField('DSSIGLA2', 'UF',FALSE, $listUF);
+$frm->addSelectField('CDMUNICIPIO2', 'Município', null, null, false);
+$frm->combinarSelects('DSSIGLA2', 'CDMUNICIPIO2', 'vw_municipios', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- Selecione --', '0', 'Nenhum município encontrado.');
 
 /*
 $listEndereco = Endereco::selectAll();
@@ -151,7 +152,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 					.',DTMODIFICACAO|DTMODIFICACAO'
 					;
 	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Gride with SQL Pagination' // titulo do gride
+					   ,'Lista de clientes' // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados
@@ -204,5 +205,10 @@ function init() {
 function buscar() {
 	jQuery("#BUSCAR").val(1);
 	init();
+}
+
+function myCallback(dataset){
+    console.log(jQuery("#CDMUNICIPIOTMP2").val());
+    jQuery("#DSSIGLA2").change();
 }
 </script>
