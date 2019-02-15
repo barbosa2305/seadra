@@ -15,7 +15,6 @@ $frm->addEmailField('DSEMAIL', 'E-mail',null,FALSE,80);
 $frm->addFoneField('NRTELEFONE', 'Telefone');
 $frm->addFoneField('NRCELULAR', 'Celular');
 // Endereço
-$frm->addHiddenField('CDMUNICIPIOTMP', '');
 $frm->addCepField('DSCEP'  // id do campo
 				 , 'CEP'   // label do campo
 				 , TRUE    // obrigatório
@@ -25,10 +24,10 @@ $frm->addCepField('DSCEP'  // id do campo
 				 , 'DSBAIRRO'  // campo bairro
 				 , null       // campo cidade
 				 , null       //campo cod uf 
-				 , 'DSSIGLA2'  // campo sig uf
+				 , 'DSSIGLA'  // campo sig uf
 				 , null       // campo numero
 				 , null       // id do campo complemento
-				 , 'CDMUNICIPIOTMP2' // id do cod municipio
+				 , 'CDMUNICIPIO_temp' // id do cod municipio
 				 , null   // label sobre o campo
 				 , null   // no wrap label
 				 , 'myCallback'  // Js Callback
@@ -40,9 +39,9 @@ $frm->addTextField('DSLOGRADOURO', 'Endereço:', 60);
 $frm->addTextField('DSCOMPLEMENTOENDERECO', 'Complemento',255,FALSE,80);
 $frm->addTextField('DSBAIRRO', 'Bairro:', 60);
 $listUF = Unidadefederativa::selectComboSiglaUf();
-$frm->addSelectField('DSSIGLA2', 'UF',FALSE, $listUF);
-$frm->addSelectField('CDMUNICIPIO2', 'Município', null, null, false);
-$frm->combinarSelects('DSSIGLA2', 'CDMUNICIPIO2', 'vw_municipios', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- Selecione --', '0', 'Nenhum município encontrado.');
+$frm->addSelectField('DSSIGLA', 'UF',FALSE, $listUF);
+$frm->addSelectField('CDMUNICIPIO', 'Município', null, null, FALSE);
+$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipios', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- Selecione --', '0', 'Nenhum município encontrado.');
 
 /*
 $listEndereco = Endereco::selectAll();
@@ -208,7 +207,7 @@ function buscar() {
 }
 
 function myCallback(dataset){
-    console.log(jQuery("#CDMUNICIPIOTMP2").val());
-    jQuery("#DSSIGLA2").change();
+    //console.log(jQuery("#CDMUNICIPIO_temp").val());
+    jQuery("#DSSIGLA").change();
 }
 </script>
