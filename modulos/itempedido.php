@@ -9,12 +9,8 @@ $frm->setMaximize(true);
 
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
-$list = Itempedido::selectAll();
-$frm->addSelectField('IDPEDIDO', 'IDPEDIDO',TRUE,$list,null,null,null,null,null,null,' ',null);
 $listPedido = Pedido::selectAll();
 $frm->addSelectField('IDPEDIDO', 'IDPEDIDO',TRUE,$listPedido,null,null,null,null,null,null,' ',null);
-$list = Itempedido::selectAll();
-$frm->addSelectField('IDPRODUTO', 'IDPRODUTO',TRUE,$list,null,null,null,null,null,null,' ',null);
 $listProduto = Produto::selectAll();
 $frm->addSelectField('IDPRODUTO', 'IDPRODUTO',TRUE,$listProduto,null,null,null,null,null,null,' ',null);
 $frm->addNumberField('QTITEMPEDIDO', 'QTITEMPEDIDO',10,TRUE,0);

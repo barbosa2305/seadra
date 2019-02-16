@@ -3,8 +3,10 @@ class EnderecoDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
 									  idendereco
+									 ,idcliente
 									 ,dscep
 									 ,dslogradouro
+									 ,dscomplemento
 									 ,dsbairro
 									 ,dslocalidade
 									 ,idmunicipio
@@ -15,8 +17,10 @@ class EnderecoDAO extends TPDOConnection {
 		if ( is_array($whereGrid) ){
 			$where = ' 1=1 ';
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDENDERECO', SqlHelper::SQL_TYPE_NUMERIC);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDCLIENTE', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSCEP', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSLOGRADOURO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSCOMPLEMENTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSBAIRRO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSLOCALIDADE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDMUNICIPIO', SqlHelper::SQL_TYPE_NUMERIC);
@@ -64,31 +68,39 @@ class EnderecoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function insert( EnderecoVO $objVo ) {
-		$values = array(  $objVo->getDscep() 
+		$values = array(  $objVo->getIdcliente() 
+						, $objVo->getDscep() 
 						, $objVo->getDslogradouro() 
+						, $objVo->getDscomplemento() 
 						, $objVo->getDsbairro() 
 						, $objVo->getDslocalidade() 
 						, $objVo->getIdmunicipio() 
 						);
 		return self::executeSql('insert into seadra.endereco(
-								 dscep
+								 idcliente
+								,dscep
 								,dslogradouro
+								,dscomplemento
 								,dsbairro
 								,dslocalidade
 								,idmunicipio
-								) values (?,?,?,?,?)', $values );
+								) values (?,?,?,?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( EnderecoVO $objVo ) {
-		$values = array( $objVo->getDscep()
+		$values = array( $objVo->getIdcliente()
+						,$objVo->getDscep()
 						,$objVo->getDslogradouro()
+						,$objVo->getDscomplemento()
 						,$objVo->getDsbairro()
 						,$objVo->getDslocalidade()
 						,$objVo->getIdmunicipio()
 						,$objVo->getIdEndereco() );
 		return self::executeSql('update seadra.endereco set 
-								 dscep = ?
+								 idcliente = ?
+								,dscep = ?
 								,dslogradouro = ?
+								,dscomplemento = ?
 								,dsbairro = ?
 								,dslocalidade = ?
 								,idmunicipio = ?

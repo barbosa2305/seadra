@@ -6,9 +6,9 @@ $frm = new TForm('Cliente',800,950);
 $frm->setFlat(TRUE);
 $frm->setMaximize(TRUE);
 
+
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
-
 $frm->addCpfCnpjField('NRCPFCNPJ', 'CPF/CNPJ',TRUE,null,TRUE,null,null,'CPF/CNPJ inválido.',TRUE);
 $frm->addTextField('NMCLIENTE', 'Nome',255,TRUE,80);
 $frm->addEmailField('DSEMAIL', 'E-mail',null,FALSE,80);
@@ -36,18 +36,12 @@ $frm->addCepField('DSCEP'  // id do campo
 				 , 'O CEP está incompleto.'
 				 );
 $frm->addTextField('DSLOGRADOURO', 'Endereço:', 60);
-$frm->addTextField('DSCOMPLEMENTOENDERECO', 'Complemento',255,FALSE,80);
+$frm->addTextField('', 'Complemento',255,FALSE,80);
 $frm->addTextField('DSBAIRRO', 'Bairro:', 60);
 $listUF = Unidadefederativa::selectComboSiglaUf();
 $frm->addSelectField('DSSIGLA', 'UF',FALSE, $listUF);
 $frm->addSelectField('CDMUNICIPIO', 'Município', null, null, FALSE);
 $frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipios', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- Selecione --', '0', 'Nenhum município encontrado.');
-
-/*
-$listEndereco = Endereco::selectAll();
-$frm->addSelectField('IDENDERECO', 'IDENDERECO',FALSE,$listEndereco,null,null,null,null,null,null,' ',null);
-$frm->addMemoField('DSCOMPLEMENTOENDERECO', 'DSCOMPLEMENTOENDERECO',255,FALSE,80,3);
-*/
 
 $frm->addTextField('STATIVO', 'Ativo ?',1,TRUE,1);
 
@@ -118,8 +112,6 @@ function getWhereGridParameters(&$frm){
 				,'DSEMAIL'=>$frm->get('DSEMAIL')
 				,'NRTELEFONE'=>$frm->get('NRTELEFONE')
 				,'NRCELULAR'=>$frm->get('NRCELULAR')
-				,'IDENDERECO'=>$frm->get('IDENDERECO')
-				,'DSCOMPLEMENTOENDERECO'=>$frm->get('DSCOMPLEMENTOENDERECO')
 				,'STATIVO'=>$frm->get('STATIVO')
 				,'IDUSUARIOCRIACAO'=>$frm->get('IDUSUARIOCRIACAO')
 				,'DTCRIACAO'=>$frm->get('DTCRIACAO')
@@ -142,8 +134,6 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 					.',DSEMAIL|DSEMAIL'
 					.',NRTELEFONE|NRTELEFONE'
 					.',NRCELULAR|NRCELULAR'
-					.',IDENDERECO|IDENDERECO'
-					.',DSCOMPLEMENTOENDERECO|DSCOMPLEMENTOENDERECO'
 					.',STATIVO|STATIVO'
 					.',IDUSUARIOCRIACAO|IDUSUARIOCRIACAO'
 					.',DTCRIACAO|DTCRIACAO'
@@ -166,12 +156,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('DSEMAIL','E-mail');
 	$gride->addColumn('NRTELEFONE','Telefone');
 	$gride->addColumn('NRCELULAR','Celular');
-
-	$gride->addColumn('IDENDERECO','IDENDERECO');
-	$gride->addColumn('DSCOMPLEMENTOENDERECO','DSCOMPLEMENTOENDERECO');
-
 	$gride->addColumn('STATIVO','Ativo ?');
-
 
 	$gride->show();
 	die();
@@ -191,8 +176,6 @@ function init() {
 					,"DSEMAIL":""
 					,"NRTELEFONE":""
 					,"NRCELULAR":""
-					,"IDENDERECO":""
-					,"DSCOMPLEMENTOENDERECO":""
 					,"STATIVO":""
 					,"IDUSUARIOCRIACAO":""
 					,"DTCRIACAO":""
@@ -205,9 +188,8 @@ function buscar() {
 	jQuery("#BUSCAR").val(1);
 	init();
 }
-
 function myCallback(dataset){
-    //console.log(jQuery("#CDMUNICIPIO_temp").val());
+    console.log(jQuery("#CDMUNICIPIO_temp").val());
     jQuery("#DSSIGLA").change();
 }
 </script>

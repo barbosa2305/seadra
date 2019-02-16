@@ -9,8 +9,11 @@ $frm->setMaximize(true);
 
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
+$listCliente = Cliente::selectAll();
+$frm->addSelectField('IDCLIENTE', 'IDCLIENTE',TRUE,$listCliente,null,null,null,null,null,null,' ',null);
 $frm->addTextField('DSCEP', 'DSCEP',8,TRUE,8);
 $frm->addMemoField('DSLOGRADOURO', 'DSLOGRADOURO',255,TRUE,80,3);
+$frm->addMemoField('DSCOMPLEMENTO', 'DSCOMPLEMENTO',255,FALSE,80,3);
 $frm->addTextField('DSBAIRRO', 'DSBAIRRO',100,TRUE,100);
 $frm->addTextField('DSLOCALIDADE', 'DSLOCALIDADE',100,TRUE,100);
 $listMunicipio = Municipio::selectAll();
@@ -78,8 +81,10 @@ function getWhereGridParameters(&$frm){
 	if($frm->get('BUSCAR') == 1 ){
 		$retorno = array(
 				'IDENDERECO'=>$frm->get('IDENDERECO')
+				,'IDCLIENTE'=>$frm->get('IDCLIENTE')
 				,'DSCEP'=>$frm->get('DSCEP')
 				,'DSLOGRADOURO'=>$frm->get('DSLOGRADOURO')
+				,'DSCOMPLEMENTO'=>$frm->get('DSCOMPLEMENTO')
 				,'DSBAIRRO'=>$frm->get('DSBAIRRO')
 				,'DSLOCALIDADE'=>$frm->get('DSLOCALIDADE')
 				,'IDMUNICIPIO'=>$frm->get('IDMUNICIPIO')
@@ -95,8 +100,10 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$dados = Endereco::selectAllPagination( $primaryKey, $whereGrid, $page,  $maxRows);
 	$realTotalRowsSqlPaginator = Endereco::selectCount( $whereGrid );
 	$mixUpdateFields = $primaryKey.'|'.$primaryKey
+					.',IDCLIENTE|IDCLIENTE'
 					.',DSCEP|DSCEP'
 					.',DSLOGRADOURO|DSLOGRADOURO'
+					.',DSCOMPLEMENTO|DSCOMPLEMENTO'
 					.',DSBAIRRO|DSBAIRRO'
 					.',DSLOCALIDADE|DSLOCALIDADE'
 					.',IDMUNICIPIO|IDMUNICIPIO'
@@ -112,8 +119,10 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setUrl( 'endereco.php' );
 
 	$gride->addColumn($primaryKey,'id');
+	$gride->addColumn('IDCLIENTE','IDCLIENTE');
 	$gride->addColumn('DSCEP','DSCEP');
 	$gride->addColumn('DSLOGRADOURO','DSLOGRADOURO');
+	$gride->addColumn('DSCOMPLEMENTO','DSCOMPLEMENTO');
 	$gride->addColumn('DSBAIRRO','DSBAIRRO');
 	$gride->addColumn('DSLOCALIDADE','DSLOCALIDADE');
 	$gride->addColumn('IDMUNICIPIO','IDMUNICIPIO');
@@ -132,8 +141,10 @@ $frm->show();
 function init() {
 	var Parameters = {"BUSCAR":""
 					,"IDENDERECO":""
+					,"IDCLIENTE":""
 					,"DSCEP":""
 					,"DSLOGRADOURO":""
+					,"DSCOMPLEMENTO":""
 					,"DSBAIRRO":""
 					,"DSLOCALIDADE":""
 					,"IDMUNICIPIO":""

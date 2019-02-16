@@ -8,8 +8,6 @@ class ClienteDAO extends TPDOConnection {
 									 ,dsemail
 									 ,nrtelefone
 									 ,nrcelular
-									 ,idendereco
-									 ,dscomplementoendereco
 									 ,stativo
 									 ,idusuariocriacao
 									 ,dtcriacao
@@ -27,8 +25,6 @@ class ClienteDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSEMAIL', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRTELEFONE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRCELULAR', SqlHelper::SQL_TYPE_TEXT_LIKE);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDENDERECO', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSCOMPLEMENTOENDERECO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDUSUARIOCRIACAO', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTCRIACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
@@ -83,8 +79,6 @@ class ClienteDAO extends TPDOConnection {
 						, $objVo->getDsemail() 
 						, $objVo->getNrtelefone() 
 						, $objVo->getNrcelular() 
-						, $objVo->getIdendereco() 
-						, $objVo->getDscomplementoendereco() 
 						, $objVo->getStativo() 
 						, $objVo->getIdusuariocriacao() 
 						, $objVo->getDtcriacao() 
@@ -97,14 +91,12 @@ class ClienteDAO extends TPDOConnection {
 								,dsemail
 								,nrtelefone
 								,nrcelular
-								,idendereco
-								,dscomplementoendereco
 								,stativo
 								,idusuariocriacao
 								,dtcriacao
 								,idusuariomodificacao
 								,dtmodificacao
-								) values (?,?,?,?,?,?,?,?,?,?,?,?)', $values );
+								) values (?,?,?,?,?,?,?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( ClienteVO $objVo ) {
@@ -113,8 +105,6 @@ class ClienteDAO extends TPDOConnection {
 						,$objVo->getDsemail()
 						,$objVo->getNrtelefone()
 						,$objVo->getNrcelular()
-						,$objVo->getIdendereco()
-						,$objVo->getDscomplementoendereco()
 						,$objVo->getStativo()
 						,$objVo->getIdusuariocriacao()
 						,$objVo->getDtcriacao()
@@ -127,8 +117,6 @@ class ClienteDAO extends TPDOConnection {
 								,dsemail = ?
 								,nrtelefone = ?
 								,nrcelular = ?
-								,idendereco = ?
-								,dscomplementoendereco = ?
 								,stativo = ?
 								,idusuariocriacao = ?
 								,dtcriacao = ?
