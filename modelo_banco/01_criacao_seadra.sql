@@ -63,8 +63,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `seadra`.`Endereco` (
   `idEndereco` INT NOT NULL AUTO_INCREMENT,
+  `idCliente` INT NOT NULL,
   `dsCep` VARCHAR(8) NOT NULL,
   `dsLogradouro` VARCHAR(255) NOT NULL,
+  `dsComplemento` VARCHAR(255) NULL,
   `dsBairro` VARCHAR(100) NOT NULL,
   `dsLocalidade` VARCHAR(100) NOT NULL,
   `idMunicipio` INT NOT NULL,
@@ -73,12 +75,19 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Endereco` (
     FOREIGN KEY (`idMunicipio`)
     REFERENCES `seadra`.`Municipio` (`idMunicipio`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Endereco_Cliente`
+    FOREIGN KEY (`idCliente`)
+    REFERENCES `seadra`.`Cliente` (`idCliente`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `dsCep_UNIQUE` ON `seadra`.`Endereco` (`dsCep` ASC);
 
 CREATE INDEX `fk_Endereco_Municipio_idx` ON `seadra`.`Endereco` (`idMunicipio` ASC);
+
+CREATE INDEX `fk_Endereco_Cliente_idx` ON `seadra`.`Endereco` (`idCliente` ASC);
 
 
 -- -----------------------------------------------------
@@ -91,8 +100,6 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Cliente` (
   `dsEmail` VARCHAR(100) NULL,
   `nrTelefone` VARCHAR(20) NULL,
   `nrCelular` VARCHAR(20) NULL,
-  `idEndereco` INT NULL,
-  `dsComplementoEndereco` VARCHAR(255) NULL,
   `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
   `idUsuarioCriacao` INT NOT NULL,
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
@@ -108,11 +115,6 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Cliente` (
     FOREIGN KEY (`idUsuarioModificacao`)
     REFERENCES `seadra`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Cliente_Endereco`
-    FOREIGN KEY (`idEndereco`)
-    REFERENCES `seadra`.`Endereco` (`idEndereco`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -121,8 +123,6 @@ CREATE UNIQUE INDEX `cpfCnpj_UNIQUE` ON `seadra`.`Cliente` (`nrCpfCnpj` ASC);
 CREATE INDEX `fk_Cliente_UsuarioCriacao_idx` ON `seadra`.`Cliente` (`idUsuarioCriacao` ASC);
 
 CREATE INDEX `fk_Cliente_UsuarioModificacao_idx` ON `seadra`.`Cliente` (`idUsuarioModificacao` ASC);
-
-CREATE INDEX `fk_Cliente_Endereco_idx` ON `seadra`.`Cliente` (`idEndereco` ASC);
 
 CREATE UNIQUE INDEX `dsEmail_UNIQUE` ON `seadra`.`Cliente` (`dsEmail` ASC);
 
