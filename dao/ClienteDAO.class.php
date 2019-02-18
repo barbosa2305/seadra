@@ -2,18 +2,26 @@
 class ClienteDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
-									  idcliente
+								  	 idcliente
 									 ,nmcliente
 									 ,nrcpfcnpj
 									 ,dsemail
 									 ,nrtelefone
 									 ,nrcelular
 									 ,stativo
-									 ,idusuariocriacao
-									 ,dtcriacao
-									 ,idusuariomodificacao
-									 ,dtmodificacao
-									 from seadra.cliente ';
+									 ,idendereco
+									 ,dscep
+									 ,dslogradouro
+									 ,dscomplemento
+									 ,dsbairro
+									 ,dslocalidade
+									 ,idmunicipio
+									 ,cdmunicipio
+									 ,nmmunicipio
+									 ,idunidadefederativa
+									 ,dssigla
+									 ,dsunidadefederativa
+									 from seadra.vw_clientes ';
 
 	private static function processWhereGridParameters( $whereGrid ) {
 		$result = $whereGrid;
@@ -25,11 +33,18 @@ class ClienteDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSEMAIL', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRTELEFONE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRCELULAR', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDENDERECO', SqlHelper::SQL_TYPE_NUMERIC);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSCEP', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSLOGRADOURO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSCOMPLEMENTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSBAIRRO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSLOCALIDADE', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDMUNICIPIO', SqlHelper::SQL_TYPE_NUMERIC);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMMUNICIPIO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDUNIDADEFEDERATIVA', SqlHelper::SQL_TYPE_NUMERIC);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSSIGLA', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSUNIDADEFEDERATIVA', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDUSUARIOCRIACAO', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTCRIACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDUSUARIOMODIFICACAO', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTMODIFICACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$result = $where;
 		}
 		return $result;
@@ -44,7 +59,7 @@ class ClienteDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
-		$sql = 'select count(idCliente) as qtd from seadra.cliente';
+		$sql = 'select count(idCliente) as qtd from seadra.vw_clientes';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql($sql);
 		return $result['QTD'][0];
@@ -79,24 +94,17 @@ class ClienteDAO extends TPDOConnection {
 						, $objVo->getDsemail() 
 						, $objVo->getNrtelefone() 
 						, $objVo->getNrcelular() 
-						, $objVo->getStativo() 
-						, $objVo->getIdusuariocriacao() 
-						, $objVo->getDtcriacao() 
-						, $objVo->getIdusuariomodificacao() 
-						, $objVo->getDtmodificacao() 
-						);
-		return self::executeSql('insert into seadra.cliente(
+						, $objVo->getIdusuario()
+						);				
+		self::executeSql('insert into seadra.cliente(
 								 nmcliente
 								,nrcpfcnpj
 								,dsemail
 								,nrtelefone
 								,nrcelular
-								,stativo
 								,idusuariocriacao
-								,dtcriacao
-								,idusuariomodificacao
-								,dtmodificacao
-								) values (?,?,?,?,?,?,?,?,?,?)', $values );
+								) values (?,?,?,?,?,?)', $values );
+		return self::getLastId('seadra.cliente','idCliente');
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( ClienteVO $objVo ) {
@@ -105,11 +113,7 @@ class ClienteDAO extends TPDOConnection {
 						,$objVo->getDsemail()
 						,$objVo->getNrtelefone()
 						,$objVo->getNrcelular()
-						,$objVo->getStativo()
-						,$objVo->getIdusuariocriacao()
-						,$objVo->getDtcriacao()
-						,$objVo->getIdusuariomodificacao()
-						,$objVo->getDtmodificacao()
+						,$objVo->getIdusuario()
 						,$objVo->getIdCliente() );
 		return self::executeSql('update seadra.cliente set 
 								 nmcliente = ?
@@ -117,17 +121,16 @@ class ClienteDAO extends TPDOConnection {
 								,dsemail = ?
 								,nrtelefone = ?
 								,nrcelular = ?
-								,stativo = ?
-								,idusuariocriacao = ?
-								,dtcriacao = ?
 								,idusuariomodificacao = ?
-								,dtmodificacao = ?
 								where idCliente = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
-	public static function delete( $id ){
-		$values = array($id);
-		return self::executeSql('delete from seadra.cliente where idCliente = ?',$values);
+	public static function updateStatus ( ClienteVO $objVo ) {
+		$values = array( $objVo->getStativo()
+						,$objVo->getIdCliente() );
+		return self::executeSql('update seadra.cliente set 
+								 stativo = ?
+								 where idCliente = ?',$values);
 	}
 }
 ?>

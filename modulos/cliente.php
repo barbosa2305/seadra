@@ -2,53 +2,56 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
-$frm = new TForm('Cliente',800,950);
+$frm = new TForm('Cliente',580,1000);
 $frm->setFlat(TRUE);
 $frm->setMaximize(TRUE);
 
-
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
-$frm->addCpfCnpjField('NRCPFCNPJ', 'CPF/CNPJ',TRUE,null,TRUE,null,null,'CPF/CNPJ inválido.',TRUE);
-$frm->addTextField('NMCLIENTE', 'Nome',255,TRUE,80);
-$frm->addEmailField('DSEMAIL', 'E-mail',null,FALSE,80);
-$frm->addFoneField('NRTELEFONE', 'Telefone');
-$frm->addFoneField('NRCELULAR', 'Celular');
-// Endereço
-$frm->addCepField('DSCEP'  // id do campo
-				 , 'CEP'   // label do campo
-				 , TRUE    // obrigatório
-				 , null	   // valor
-				 , null    // Nova linha
-				 , 'DSLOGRADOURO'  // campo endereço
-				 , 'DSBAIRRO'  // campo bairro
-				 , null       // campo cidade
-				 , null       //campo cod uf 
-				 , 'DSSIGLA'  // campo sig uf
-				 , null       // campo numero
-				 , null       // id do campo complemento
-				 , 'CDMUNICIPIO_temp' // id do cod municipio
-				 , null   // label sobre o campo
-				 , null   // no wrap label
-				 , 'myCallback'  // Js Callback
-				 , null   // Js Before Send
-				 , FALSE
-				 , 'O CEP está incompleto.'
-				 );
-$frm->addTextField('DSLOGRADOURO', 'Endereço:', 60);
-$frm->addTextField('', 'Complemento',255,FALSE,80);
-$frm->addTextField('DSBAIRRO', 'Bairro:', 60);
-$listUF = Unidadefederativa::selectComboSiglaUf();
-$frm->addSelectField('DSSIGLA', 'UF',FALSE, $listUF);
-$frm->addSelectField('CDMUNICIPIO', 'Município', null, null, FALSE);
-$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipios', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- Selecione --', '0', 'Nenhum município encontrado.');
 
-$frm->addTextField('STATIVO', 'Ativo ?',1,TRUE,1);
+$g = $frm->addGroupField('gpx1');
+	$g->setColumns('90,160');
+	$frm->addCpfCnpjField('NRCPFCNPJ', 'CPF/CNPJ:',TRUE,null,TRUE,null,null,'CPF/CNPJ inválido.',TRUE);
+	$frm->addTextField('NMCLIENTE', 'Nome:',255,TRUE,90);
+	$frm->addEmailField('DSEMAIL', 'E-mail:',null,FALSE,90);
+	$frm->addFoneField('NRTELEFONE', 'Telefone:');
+	$frm->addFoneField('NRCELULAR', 'Celular:');
+	$frm->addHiddenField('IDENDERECO');
+	// Endereço
+	$frm->addCepField('DSCEP'  // id do campo
+					, 'CEP'   // label do campo
+					, FALSE    // obrigatório
+					, null	   // valor
+					, null    // Nova linha
+					, 'DSLOGRADOURO'  // campo endereço
+					, 'DSBAIRRO'  // campo bairro
+					, 'DSLOCALIDADE' // campo cidade
+					, null       //campo cod uf 
+					, 'DSSIGLA'  // campo sig uf
+					, null       // campo numero
+					, null       // id do campo complemento
+					, 'CDMUNICIPIO_temp' // id do cod municipio
+					, null   // label sobre o campo
+					, null   // no wrap label
+					, 'myCallback'  // Js Callback
+					, null   // Js Before Send
+					, FALSE
+					, 'O CEP está incompleto.'
+					)->addEvent('onchange','select_change(this)');
+	$frm->addHiddenField('DSLOCALIDADE:');
+	$frm->addTextField('DSLOGRADOURO', 'Endereço:', 90);
+	$frm->addTextField('DSCOMPLEMENTO', 'Complemento:',255,FALSE,90);
+	$frm->addTextField('DSBAIRRO', 'Bairro:', 90);
+	$listUF = Unidadefederativa::selectComboSiglaUf();
+	$frm->addSelectField('DSSIGLA', 'UF:',FALSE, $listUF);
+	$frm->addSelectField('CDMUNICIPIO', 'Município:', null, null, FALSE);
+	$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipios', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- selecione --', '0', 'Nenhum município encontrado.');
+	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
+$g->closeGroup();
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
 $frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);
 $frm->addButton('Limpar', null, 'Limpar', null, null, FALSE, FALSE);
-
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
@@ -61,12 +64,13 @@ switch( $acao ) {
 			if ( $frm->validate() ) {
 				$vo = new ClienteVO();
 				$frm->setVo( $vo );
+				$vo->setIdusuario( Acesso::getUserId() );
 				$resultado = Cliente::save( $vo );
-				if($resultado==1) {
-					$frm->setMessage('Registro gravado com sucesso!!!');
+				if( $resultado ) {
+					$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
 					$frm->clearFields();
 				}else{
-					$frm->setMessage($resultado);
+					$frm->setMessage(Mensagem::OPERACAO_FALHOU);
 				}
 			}
 		}
@@ -83,12 +87,12 @@ switch( $acao ) {
 		try{
 			$id = $frm->get( $primaryKey ) ;
 			$resultado = Cliente::delete( $id );;
-			if($resultado==1) {
-				$frm->setMessage('Registro excluido com sucesso!!!');
+			if( $resultado ) {
+				$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
 				$frm->clearFields();
 			}else{
 				$frm->clearFields();
-				$frm->setMessage($resultado);
+				$frm->setMessage(Mensagem::OPERACAO_FALHOU);
 			}
 		}
 		catch (DomainException $e) {
@@ -112,11 +116,17 @@ function getWhereGridParameters(&$frm){
 				,'DSEMAIL'=>$frm->get('DSEMAIL')
 				,'NRTELEFONE'=>$frm->get('NRTELEFONE')
 				,'NRCELULAR'=>$frm->get('NRCELULAR')
-				,'STATIVO'=>$frm->get('STATIVO')
-				,'IDUSUARIOCRIACAO'=>$frm->get('IDUSUARIOCRIACAO')
-				,'DTCRIACAO'=>$frm->get('DTCRIACAO')
-				,'IDUSUARIOMODIFICACAO'=>$frm->get('IDUSUARIOMODIFICACAO')
-				,'DTMODIFICACAO'=>$frm->get('DTMODIFICACAO')
+				,'IDENDERECO'=>$frm->get('IDENDERECO')
+				,'DSCEP'=> preg_replace('/[^0-9]/','',$frm->get('DSCEP'))
+				,'DSLOGRADOURO'=>$frm->get('DSLOGRADOURO')
+				,'DSCOMPLEMENTO'=>$frm->get('DSCOMPLEMENTO')
+				,'DSBAIRRO'=>$frm->get('DSBAIRRO')
+				,'DSLOCALIDADE'=>$frm->get('DSLOCALIDADE')
+				,'IDMUNICIPIO'=>$frm->get('IDMUNICIPIO')
+				,'CDMUNICIPIO'=>$frm->get('CDMUNICIPIO')
+				,'NMMUNICIPIO'=>$frm->get('NMMUNICIPIO')
+				,'DSSIGLA'=>$frm->get('DSSIGLA')
+
 		);
 	}
 	return $retorno;
@@ -134,11 +144,16 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 					.',DSEMAIL|DSEMAIL'
 					.',NRTELEFONE|NRTELEFONE'
 					.',NRCELULAR|NRCELULAR'
-					.',STATIVO|STATIVO'
-					.',IDUSUARIOCRIACAO|IDUSUARIOCRIACAO'
-					.',DTCRIACAO|DTCRIACAO'
-					.',IDUSUARIOMODIFICACAO|IDUSUARIOMODIFICACAO'
-					.',DTMODIFICACAO|DTMODIFICACAO'
+					.',IDENDERECO|IDENDERECO'
+					.',DSCEP|DSCEP'
+					.',DSLOGRADOURO|DSLOGRADOURO'
+					.',DSCOMPLEMENTO|DSCOMPLEMENTO'
+					.',DSBAIRRO|DSBAIRRO'
+					.',DSLOCALIDADE|DSLOCALIDADE'
+					.',IDMUNICIPIO|IDMUNICIPIO'
+					.',CDMUNICIPIO|CDMUNICIPIO'
+					.',NMMUNICIPIO|NMMUNICIPIO'
+					.',DSSIGLA|DSSIGLA'
 					;
 	$gride = new TGrid( 'gd'                        // id do gride
 					   ,'Lista de clientes' // titulo do gride
@@ -156,7 +171,9 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('DSEMAIL','E-mail');
 	$gride->addColumn('NRTELEFONE','Telefone');
 	$gride->addColumn('NRCELULAR','Celular');
-	$gride->addColumn('STATIVO','Ativo ?');
+	$gride->addColumn('DSBAIRRO','Bairro');
+	$gride->addColumn('NMMUNICIPIO','Município');
+	$gride->addColumn('DSSIGLA','UF');
 
 	$gride->show();
 	die();
@@ -168,28 +185,37 @@ $frm->show();
 
 ?>
 <script>
-function init() {
-	var Parameters = {"BUSCAR":""
-					,"IDCLIENTE":""
-					,"NMCLIENTE":""
-					,"NRCPFCNPJ":""
-					,"DSEMAIL":""
-					,"NRTELEFONE":""
-					,"NRCELULAR":""
-					,"STATIVO":""
-					,"IDUSUARIOCRIACAO":""
-					,"DTCRIACAO":""
-					,"IDUSUARIOMODIFICACAO":""
-					,"DTMODIFICACAO":""
-					};
-	fwGetGrid('cliente.php','gride',Parameters,true);
-}
-function buscar() {
-	jQuery("#BUSCAR").val(1);
-	init();
-}
-function myCallback(dataset){
-    console.log(jQuery("#CDMUNICIPIO_temp").val());
-    jQuery("#DSSIGLA").change();
-}
+	function init() {
+		var Parameters = {"BUSCAR":""
+						,"IDCLIENTE":""
+						,"NMCLIENTE":""
+						,"NRCPFCNPJ":""
+						,"DSEMAIL":""
+						,"NRTELEFONE":""
+						,"NRCELULAR":""
+						,"IDENDERECO":""
+						,"DSCEP":""
+						,"DSLOGRADOURO":""
+						,"DSCOMPLEMENTO":""
+						,"DSBAIRRO":""
+						,"DSLOCALIDADE":""
+						,"IDMUNICIPIO":""
+						,"CDMUNICIPIO":""
+						,"NMMUNICIPIO":""
+						,"DSSIGLA":""
+						};
+		fwGetGrid('cliente.php','gride',Parameters,true);
+	}
+	function buscar() {
+		jQuery("#BUSCAR").val(1);
+		init();
+	}
+	function myCallback(dataset){
+		console.log(jQuery("#CDMUNICIPIO_temp").val());
+		jQuery("#DSSIGLA").change();
+	}
+	function select_change(e) {   
+		jQuery("#DSCOMPLEMENTO").val("");
+		jQuery("#CDMUNICIPIO").html('<option value="">-- selecione --</option>');
+	}
 </script>

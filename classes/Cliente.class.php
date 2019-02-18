@@ -12,42 +12,97 @@
 
 class Cliente {
 
-
 	public function __construct(){
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
-		$result = ClienteDAO::selectById( $id );
-		return $result;
+		return ClienteDAO::selectById( $id );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$result = ClienteDAO::selectCount( $where );
-		return $result;
+		$where['STATIVO'] = STATUS_ATIVO;
+		return ClienteDAO::selectCount( $where );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$result = ClienteDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
-		return $result;
+		$where['STATIVO'] = STATUS_ATIVO;
+		return ClienteDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
-		$result = ClienteDAO::selectAll( $orderBy, $where );
-		return $result;
+		$where['STATIVO'] = STATUS_ATIVO;
+		return ClienteDAO::selectAll( $orderBy, $where );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( ClienteVO $objVo ){
 		$result = null;
+		self::getIdMunicipio( $objVo );
 		if( $objVo->getIdcliente() ) {
 			$result = ClienteDAO::update( $objVo );
 		} else {
+			self::validarCliente( $objVo );
 			$result = ClienteDAO::insert( $objVo );
+			if ( $result ) $objVo->setIdcliente( $result );
+		}
+		if ( $result ) {
+			$enderecoVo = self::buildEndereco( $objVo );
+			$enderecoValido = self::validarEndereco( $enderecoVo );
+			if ( $enderecoValido ) {
+				Endereco::save( $enderecoVo );
+			}
 		}
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
-		$result = ClienteDAO::delete( $id );
+		$vo = new ClienteVO();
+		$vo->setIdcliente( $id );
+		$vo->setStativo( STATUS_INATIVO );
+		return ClienteDAO::updateStatus( $vo );
+	}
+	//--------------------------------------------------------------------------------
+	private static function buildEndereco( ClienteVO $objVo ){
+		$vo = new EnderecoVO();
+		$vo->setIdendereco( $objVo->getIdendereco() );
+		$vo->setIdcliente( $objVo->getIdcliente() );
+		$vo->setDscep( preg_replace('/[^0-9]/','',$objVo->getDscep()) );
+		$vo->setDslogradouro( trim($objVo->getDslogradouro()) );
+		$vo->setDscomplemento( trim($objVo->getDscomplemento()) );
+		$vo->setDsbairro( trim($objVo->getDsbairro()) );
+		$vo->setDslocalidade( trim($objVo->getDslocalidade()) );
+		$vo->setIdmunicipio( $objVo->getIdmunicipio() );
+		return $vo;
+	}
+	//--------------------------------------------------------------------------------
+	private static function getIdMunicipio( ClienteVO $objVo ){
+		if ( $objVo->getCdmunicipio() ) {
+			$where = array( 'CDMUNICIPIO'=>$objVo->getCdmunicipio() );
+			$municipio = Municipio::selectAll(null,$where);
+			if ( !empty($municipio) ) {
+				$idMunicipio = $municipio['IDMUNICIPIO'][0];
+				$objVo->setIdmunicipio( $idMunicipio );
+			}
+		}
+	}
+	//--------------------------------------------------------------------------------
+    private static function validarCliente( ClienteVO $objVo ){
+        $nrCpfCnpj = $objVo->getNrcpfcnpj();
+		$where['NRCPFCNPJ'] = $nrCpfCnpj;
+        $dados = self::selectAll(null, $where);
+        if( !empty($dados) ){
+            throw new DomainException(Mensagem::CPFCNPJ_JA_CADASTRADO); 
+        }
+    }
+	//--------------------------------------------------------------------------------
+	private static function validarEndereco(EnderecoVO $objVo ){
+		$result = true;
+		$dsCep = $objVo->getDscep();
+		$dsLogradouro = $objVo->getDslogradouro();
+		$dsBairro = $objVo->getDsbairro();
+		$idMunicipio = $objVo->getIdmunicipio();
+	    if ( !($dsCep && $dsLogradouro && $dsBairro && $idMunicipio) ) {
+	        $result = false;
+	    }	
 		return $result;
 	}
 

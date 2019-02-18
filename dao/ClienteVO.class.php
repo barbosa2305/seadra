@@ -6,23 +6,32 @@ class ClienteVO {
 	private $dsemail = null;
 	private $nrtelefone = null;
 	private $nrcelular = null;
+	private $idendereco = null;
+	private $dscep = null;
+	private $dslogradouro = null;
+	private $dscomplemento = null;
+	private $dsbairro = null;
+	private $dslocalidade = null;
+	private $idmunicipio = null;
+	private $cdmunicipio = null;
 	private $stativo = null;
-	private $idusuariocriacao = null;
-	private $dtcriacao = null;
-	private $idusuariomodificacao = null;
-	private $dtmodificacao = null;
-	public function __construct( $idcliente=null, $nmcliente=null, $nrcpfcnpj=null, $dsemail=null, $nrtelefone=null, $nrcelular=null, $stativo=null, $idusuariocriacao=null, $dtcriacao=null, $idusuariomodificacao=null, $dtmodificacao=null ) {
+	private $idusuario = null;
+	public function __construct( $idcliente=null, $nmcliente=null, $nrcpfcnpj=null, $dsemail=null, $nrtelefone=null, $nrcelular=null, $idendereco=null, $dscep=null, $dslogradouro=null, $dscomplemento=null, $dsbairro=null, $dslocalidade=null, $idmunicipio=null, $cdmunicipio=null, $stativo=null, $idusuario=null ) {
 		$this->setIdcliente( $idcliente );
 		$this->setNmcliente( $nmcliente );
 		$this->setNrcpfcnpj( $nrcpfcnpj );
 		$this->setDsemail( $dsemail );
 		$this->setNrtelefone( $nrtelefone );
 		$this->setNrcelular( $nrcelular );
+		$this->setDscep( $dscep );
+		$this->setDslogradouro( $dslogradouro );
+		$this->setDscomplemento( $dscomplemento );
+		$this->setDsbairro( $dsbairro );
+		$this->setDslocalidade( $dslocalidade );
+		$this->setIdmunicipio( $idmunicipio );
+		$this->setCdmunicipio( $cdmunicipio );
 		$this->setStativo( $stativo );
-		$this->setIdusuariocriacao( $idusuariocriacao );
-		$this->setDtcriacao( $dtcriacao );
-		$this->setIdusuariomodificacao( $idusuariomodificacao );
-		$this->setDtmodificacao( $dtmodificacao );
+		$this->setIdusuario( $idusuario );
 	}
 	//--------------------------------------------------------------------------------
 	public function setIdcliente( $strNewValue = null )
@@ -79,6 +88,78 @@ class ClienteVO {
 		return $this->nrcelular;
 	}
 	//--------------------------------------------------------------------------------
+	public function setIdendereco( $strNewValue = null )
+	{
+		$this->idendereco = $strNewValue;
+	}
+	public function getIdendereco()
+	{
+		return $this->idendereco;
+	}
+	//--------------------------------------------------------------------------------
+	public function setDscep( $strNewValue = null )
+	{
+		$this->dscep = $strNewValue;
+	}
+	public function getDscep()
+	{
+		return $this->dscep;
+	}
+	//--------------------------------------------------------------------------------
+	public function setDslogradouro( $strNewValue = null )
+	{
+		$this->dslogradouro = $strNewValue;
+	}
+	public function getDslogradouro()
+	{
+		return $this->dslogradouro;
+	}
+	//--------------------------------------------------------------------------------
+	public function setDscomplemento( $strNewValue = null )
+	{
+		$this->dscomplemento = $strNewValue;
+	}
+	public function getDscomplemento()
+	{
+		return $this->dscomplemento;
+	}
+	//--------------------------------------------------------------------------------
+	public function setDsbairro( $strNewValue = null )
+	{
+		$this->dsbairro = $strNewValue;
+	}
+	public function getDsbairro()
+	{
+		return $this->dsbairro;
+	}
+	//--------------------------------------------------------------------------------
+	public function setDslocalidade( $strNewValue = null )
+	{
+		$this->dslocalidade = $strNewValue;
+	}
+	public function getDslocalidade()
+	{
+		return $this->dslocalidade;
+	}
+	//--------------------------------------------------------------------------------
+	public function setIdmunicipio( $strNewValue = null )
+	{
+		$this->idmunicipio = $strNewValue;
+	}
+	public function getIdmunicipio()
+	{
+		return $this->idmunicipio;
+	}
+	//--------------------------------------------------------------------------------
+	public function setCdmunicipio( $strNewValue = null )
+	{
+		$this->cdmunicipio = $strNewValue;
+	}
+	public function getCdmunicipio()
+	{
+		return $this->cdmunicipio;
+	}
+	//--------------------------------------------------------------------------------
 	public function setStativo( $strNewValue = null )
 	{
 		$this->stativo = $strNewValue;
@@ -88,41 +169,13 @@ class ClienteVO {
 		return $this->stativo;
 	}
 	//--------------------------------------------------------------------------------
-	public function setIdusuariocriacao( $strNewValue = null )
+	public function setIdusuario( $strNewValue = null )
 	{
-		$this->idusuariocriacao = $strNewValue;
+		$this->idusuario = $strNewValue;
 	}
-	public function getIdusuariocriacao()
+	public function getIdusuario()
 	{
-		return $this->idusuariocriacao;
+		return $this->idusuario;
 	}
-	//--------------------------------------------------------------------------------
-	public function setDtcriacao( $strNewValue = null )
-	{
-		$this->dtcriacao = $strNewValue;
-	}
-	public function getDtcriacao()
-	{
-		return $this->dtcriacao;
-	}
-	//--------------------------------------------------------------------------------
-	public function setIdusuariomodificacao( $strNewValue = null )
-	{
-		$this->idusuariomodificacao = $strNewValue;
-	}
-	public function getIdusuariomodificacao()
-	{
-		return $this->idusuariomodificacao;
-	}
-	//--------------------------------------------------------------------------------
-	public function setDtmodificacao( $strNewValue = null )
-	{
-		$this->dtmodificacao = $strNewValue;
-	}
-	public function getDtmodificacao()
-	{
-		return $this->dtmodificacao;
-	}
-	//--------------------------------------------------------------------------------
 }
 ?>

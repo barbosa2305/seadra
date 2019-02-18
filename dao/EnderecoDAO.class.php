@@ -106,10 +106,5 @@ class EnderecoDAO extends TPDOConnection {
 								,idmunicipio = ?
 								where idEndereco = ?',$values);
 	}
-	//--------------------------------------------------------------------------------
-	public static function delete( $id ){
-		$values = array($id);
-		return self::executeSql('delete from seadra.endereco where idEndereco = ?',$values);
-	}
 }
 ?>
