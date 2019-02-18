@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Endereco` (
   `dsComplemento` VARCHAR(255) NULL NULL,
   `dsBairro` VARCHAR(100) NULL,
   `dsLocalidade` VARCHAR(100) NULL,
-  `idMunicipio` INT NOT NULL,
+  `idMunicipio` INT NULL,
   PRIMARY KEY (`idEndereco`),
   CONSTRAINT `fk_Endereco_Municipio`
     FOREIGN KEY (`idMunicipio`)
@@ -225,13 +225,13 @@ CREATE UNIQUE INDEX `pedidoProduto_UNIQUE` ON `seadra`.`ItemPedido` (`idPedido` 
 -- -----------------------------------------------------
 -- View `seadra`.`vw_municipios`
 -- -----------------------------------------------------
-CREATE OR REPLACE VIEW vw_municipios AS 
-select uf.idunidadefederativa as idunidadefederativa
-       ,uf.dssigla as dssigla
-       ,m.cdmunicipio as cdmunicipio
-	   ,m.nmmunicipio as nmmunicipio 
-from municipio m, unidadefederativa uf 
-where m.idunidadefederativa = uf.idunidadefederativa;
+CREATE OR REPLACE VIEW `seadra`.`vw_municipios` AS 
+select `uf`.`idUnidadeFederativa` AS `idUnidadeFederativa`
+       ,`uf`.`dsSigla` AS `dsSigla`
+       ,`m`.`cdMunicipio` AS `cdMunicipio`
+	   ,`m`.`nmMunicipio` AS `nmMunicipio`
+from `seadra`.`municipio` `m`, `seadra`.`unidadefederativa` `uf`
+where `m`.`idUnidadeFederativa` = `uf`.`idUnidadeFederativa`;
 
 
 -- -----------------------------------------------------
@@ -275,7 +275,13 @@ BEGIN
 	IF (OLD.`nrCpfCnpj` <> NEW.`nrCpfCnpj`) THEN
 		IF EXISTS (SELECT `idCliente` FROM `seadra`.`Cliente` 
 				   WHERE `nrCpfCnpj` = NEW.`nrCpfCnpj` AND `stAtivo` = 'S') THEN
-			SET NEW.`nrCpfCnpj` = NULL;
+            SIGNAL SQLSTATE '45000' set message_text='CPF/CNPJ ja cadastrado.';
+		END IF;
+	END IF;
+    IF (OLD.`dsEmail` <> NEW.`dsEmail`) THEN
+		IF EXISTS (SELECT `idCliente` FROM `seadra`.`Cliente` 
+				   WHERE `dsEmail` = NEW.`dsEmail` AND `stAtivo` = 'S') THEN
+            SIGNAL SQLSTATE '45000' set message_text='E-mail ja cadastrado.';
 		END IF;
 	END IF;
 END $$

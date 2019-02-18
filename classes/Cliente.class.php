@@ -46,10 +46,8 @@ class Cliente {
 		}
 		if ( $result ) {
 			$enderecoVo = self::buildEndereco( $objVo );
-			$enderecoValido = self::validarEndereco( $enderecoVo );
-			if ( $enderecoValido ) {
-				Endereco::save( $enderecoVo );
-			}
+			//self::validarEndereco( $enderecoVo );
+            Endereco::save( $enderecoVo );
 		}
 		return $result;
 	}
@@ -86,24 +84,32 @@ class Cliente {
 	}
 	//--------------------------------------------------------------------------------
     private static function validarCliente( ClienteVO $objVo ){
+        // CPF/CNPJ
         $nrCpfCnpj = $objVo->getNrcpfcnpj();
 		$where['NRCPFCNPJ'] = $nrCpfCnpj;
         $dados = self::selectAll(null, $where);
         if( !empty($dados) ){
             throw new DomainException(Mensagem::CPFCNPJ_JA_CADASTRADO); 
         }
+        $where = null;
+        // Email
+        $dsEmail = $objVo->getDsemail();
+        $where['DSEMAIL'] = $dsEmail;
+        $dados = self::selectAll(null, $where);
+        if( !empty($dados) ){
+            throw new DomainException(Mensagem::EMAIL_JA_CADASTRADO); 
+        }
+        $where = null;
     }
 	//--------------------------------------------------------------------------------
 	private static function validarEndereco(EnderecoVO $objVo ){
-		$result = true;
 		$dsCep = $objVo->getDscep();
 		$dsLogradouro = $objVo->getDslogradouro();
 		$dsBairro = $objVo->getDsbairro();
 		$idMunicipio = $objVo->getIdmunicipio();
 	    if ( !($dsCep && $dsLogradouro && $dsBairro && $idMunicipio) ) {
-	        $result = false;
+	        throw new DomainException(Mensagem::OPERACAO_FALHOU); 
 	    }	
-		return $result;
 	}
 
 }

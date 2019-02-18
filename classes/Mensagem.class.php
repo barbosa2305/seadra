@@ -18,4 +18,5 @@ final class Mensagem {
     const SENHA_PADRAO_USUARIO = 'A senha padrão: 12345678, foi definida para este usuário.';
 
     const CPFCNPJ_JA_CADASTRADO = 'O CPF/CNPJ informado já está cadastrado.';
+    const EMAIL_JA_CADASTRADO = 'O e-mail informado já está cadastrado.';
 }
