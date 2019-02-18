@@ -12,13 +12,13 @@ $frm->addHiddenField( $primaryKey );   // Coluna chave da tabela
 
 $g = $frm->addGroupField('gpx1');
 	$g->setColumns('60,80');
-
 	$frm->addTextField('NMUSUARIO','Nome:',255,TRUE,80);
 	$frm->addTextField('DSLOGIN','Usuário:',20,TRUE,20);
 	$grupo = array('U' => 'Usuários', 'A' => 'Administradores');
 	$frm->addSelectField('TPGRUPO', 'Grupo:',true,$grupo,null,null,null,null,null,null,null,'U');
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
 	$frm->addSelectField('STATIVO', 'Ativo ?',true,$ativo,null,null,null,null,null,null,null,'S');
+	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, true, false);

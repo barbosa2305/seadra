@@ -3,7 +3,7 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
 
-$frm = new TForm('Alterar a senha',190,400);
+$frm = new TForm('Alterar a senha',200,400);
 $frm->setFlat(true);
 $frm->setMaximize(true);
 $frm->setColumns('110');
@@ -17,7 +17,7 @@ $frm->addPasswordField('senha','Senha atual',true,null,20,null,null,null,35)->se
 $frm->addHtmlField('espaço1','');
 $frm->addPasswordField('novaSenha','Nova senha',true,null,20,null,null,null,35)->setAttribute('align','center');
 $frm->addPasswordField('novaSenhaRepita','Repita a nova senha',true,null,20,null,null,null,35)->setAttribute('align','center');
-$frm->addHtmlField('espaço2','');
+$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Salvar', null, 'Salvar', null, null, true, false);
 $frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
