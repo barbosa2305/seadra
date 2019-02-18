@@ -2,12 +2,15 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
 -- Schema seadra
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `seadra` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci ;
+-- -----------------------------------------------------	
+DROP SCHEMA IF EXISTS `seadra` ;
+
+CREATE SCHEMA IF NOT EXISTS `seadra` DEFAULT CHARACTER SET utf8 ; 
+
 USE `seadra` ;
 
 -- -----------------------------------------------------
@@ -18,14 +21,12 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Usuario` (
   `nmUsuario` VARCHAR(255) NOT NULL,
   `dsLogin` VARCHAR(20) NOT NULL,
   `dsSenha` VARCHAR(255) NULL,
-  `tpGrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT '\'U\' = Usuários, \'A\' = Administradores.',
+  `tpGrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT '\'U\' = Usuarios, \'A\' = Administradores',
   `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
   `dtModificacao` DATETIME NULL ON UPDATE NOW(),
   PRIMARY KEY (`idUsuario`))
 ENGINE = InnoDB;
-
-CREATE UNIQUE INDEX `dsLogin_UNIQUE` ON `seadra`.`Usuario` (`dsLogin` ASC);
 
 
 -- -----------------------------------------------------
@@ -64,30 +65,30 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `seadra`.`Endereco` (
   `idEndereco` INT NOT NULL AUTO_INCREMENT,
   `idCliente` INT NOT NULL,
-  `dsCep` VARCHAR(8) NOT NULL,
-  `dsLogradouro` VARCHAR(255) NOT NULL,
-  `dsComplemento` VARCHAR(255) NULL,
-  `dsBairro` VARCHAR(100) NOT NULL,
-  `dsLocalidade` VARCHAR(100) NOT NULL,
+  `dsCep` VARCHAR(8) NULL,
+  `dsLogradouro` VARCHAR(255) NULL,
+  `dsComplemento` VARCHAR(255) NULL NULL,
+  `dsBairro` VARCHAR(100) NULL,
+  `dsLocalidade` VARCHAR(100) NULL,
   `idMunicipio` INT NOT NULL,
   PRIMARY KEY (`idEndereco`),
   CONSTRAINT `fk_Endereco_Municipio`
     FOREIGN KEY (`idMunicipio`)
-    REFERENCES `seadra`.`Municipio` (`idMunicipio`)
+    REFERENCES `seadra`.`municipio` (`idMunicipio`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Endereco_Cliente`
     FOREIGN KEY (`idCliente`)
-    REFERENCES `seadra`.`Cliente` (`idCliente`)
+    REFERENCES `seadra`.`cliente` (`idCliente`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `dsCep_UNIQUE` ON `seadra`.`Endereco` (`dsCep` ASC);
+CREATE UNIQUE INDEX `idCliente_dsCep_UNIQUE` ON `seadra`.`endereco` (`idCliente` ASC, `dsCep` ASC);
 
-CREATE INDEX `fk_Endereco_Municipio_idx` ON `seadra`.`Endereco` (`idMunicipio` ASC);
+CREATE INDEX `fk_Endereco_Municipio_idx` ON `seadra`.`endereco` (`idMunicipio` ASC);
 
-CREATE INDEX `fk_Endereco_Cliente_idx` ON `seadra`.`Endereco` (`idCliente` ASC);
+CREATE INDEX `fk_Endereco_Cliente_idx` ON `seadra`.`endereco` (`idCliente` ASC);
 
 
 -- -----------------------------------------------------
@@ -118,13 +119,9 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Cliente` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `cpfCnpj_UNIQUE` ON `seadra`.`Cliente` (`nrCpfCnpj` ASC);
-
 CREATE INDEX `fk_Cliente_UsuarioCriacao_idx` ON `seadra`.`Cliente` (`idUsuarioCriacao` ASC);
 
 CREATE INDEX `fk_Cliente_UsuarioModificacao_idx` ON `seadra`.`Cliente` (`idUsuarioModificacao` ASC);
-
-CREATE UNIQUE INDEX `dsEmail_UNIQUE` ON `seadra`.`Cliente` (`dsEmail` ASC);
 
 
 -- -----------------------------------------------------
@@ -224,23 +221,55 @@ CREATE INDEX `fk_ItemPedido_Pedido_idx` ON `seadra`.`ItemPedido` (`idPedido` ASC
 
 CREATE UNIQUE INDEX `pedidoProduto_UNIQUE` ON `seadra`.`ItemPedido` (`idPedido` ASC, `idProduto` ASC);
 
+
 -- -----------------------------------------------------
 -- View `seadra`.`vw_municipios`
 -- -----------------------------------------------------
-CREATE VIEW vw_municipios AS 
+CREATE OR REPLACE VIEW vw_municipios AS 
 select uf.idunidadefederativa as idunidadefederativa
        ,uf.dssigla as dssigla
        ,m.cdmunicipio as cdmunicipio
-	     ,m.nmmunicipio as nmmunicipio 
+	   ,m.nmmunicipio as nmmunicipio 
 from municipio m, unidadefederativa uf 
 where m.idunidadefederativa = uf.idunidadefederativa;
+
+
+-- -----------------------------------------------------
+-- View `seadra`.`vw_clientes`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `seadra`.`vw_clientes` AS 
+select `cli`.`idCliente` AS `idCliente`
+	   ,`cli`.`nmCliente` AS `nmCliente`
+       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
+       ,`cli`.`dsEmail` AS `dsEmail`
+       ,`cli`.`nrTelefone` AS `nrTelefone`
+       ,`cli`.`nrCelular` AS `nrCelular`
+	   ,`cli`.`stAtivo` AS `stAtivo`
+       ,`end`.`idEndereco` AS `idEndereco`
+       ,`end`.`dsCep` AS `dsCep`
+       ,`end`.`dsLogradouro` AS `dsLogradouro`
+       ,`end`.`dsComplemento` AS `dsComplemento`
+       ,`end`.`dsBairro` AS `dsBairro`
+       ,`end`.`dsLocalidade` AS `dsLocalidade`
+       ,`mun`.`idMunicipio` AS `idMunicipio`
+	   ,`mun`.`cdMunicipio` AS `cdMunicipio`
+       ,`mun`.`nmMunicipio` AS `nmMunicipio`
+       ,`ufe`.`idUnidadeFederativa` AS `idUnidadeFederativa`
+       ,`ufe`.`dsSigla` AS `dsSigla`
+       ,`ufe`.`dsNome` AS `dsUnidadeFederativa`
+from `seadra`.`cliente` `cli` 
+	left join `seadra`.`endereco` `end` on `cli`.`idCliente` = `end`.`idCliente`
+    left join `seadra`.`municipio` `mun` on `mun`.`idMunicipio` = `end`.`idMunicipio`
+    left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
+
+-- -----------------------------------------------------
+-- User 
+-- -----------------------------------------------------
+DROP USER IF EXISTS 'seadra_bd'@'localhost';
+CREATE USER 'seadra_bd'@'localhost' IDENTIFIED BY '@seadraadm';
+GRANT DELETE,EXECUTE,INSERT,SELECT,UPDATE ON seadra.* TO 'seadra_bd'@'localhost';
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
-
-DROP USER IF EXISTS 'seadra_bd'@'localhost';
-CREATE USER 'seadra_bd'@'localhost' IDENTIFIED BY '@seadraadm';
-GRANT DELETE,EXECUTE,INSERT,SELECT,UPDATE ON seadra.* TO 'seadra_bd'@'localhost';

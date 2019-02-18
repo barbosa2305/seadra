@@ -92,7 +92,7 @@ INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1101708,11,'URUPA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1101757,11,'VALE DO ANARI');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1101807,11,'VALE DO PARAISO');
-INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1200013,12,'ACRELÂNDIA');
+INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1200013,12,'ACRELANDIA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1200054,12,'ASSIS BRASIL');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1200104,12,'BRASILEIA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',1200138,12,'BUJARI');
@@ -1632,7 +1632,7 @@ INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2610707,26,'PAULISTA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2610806,26,'PEDRA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2610905,26,'PESQUEIRA');
-INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2611002,26,'NOVA PETROLÂNDIA');
+INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2611002,26,'NOVA PETROLANDIA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2611101,26,'PETROLINA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2611200,26,'POCAO');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',2611309,26,'POMBOS');
@@ -3142,7 +3142,7 @@ INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3172004,31,'VISCONDE DO RIO BRANCO');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3172103,31,'VOLTA GRANDE');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3172202,31,'WENCESLAU BRAZ');
-INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3172203,31,'JUSTINÓPOLIS');
+INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3172203,31,'JUSTINOPOLIS');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3200102,32,'AFONSO CLAUDIO');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3200136,32,'AGUIA BRANCA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',3200169,32,'AGUA DOCE DO NORTE');
@@ -5617,4 +5617,4 @@ INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',5222203,52,'VILA BOA');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',5222302,52,'VILA PROPICIO');
 INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',5222303,52,'ARANTINA');
-INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',5300108,53,'BRASÍLIA');
+INSERT INTO `seadra`.`municipio` (`stativo`, `cdmunicipio`, `idUnidadeFederativa`, `nmMunicipio`) VALUES ('S',5300108,53,'BRASILIA');
