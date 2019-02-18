@@ -262,6 +262,26 @@ from `seadra`.`cliente` `cli`
     left join `seadra`.`municipio` `mun` on `mun`.`idMunicipio` = `end`.`idMunicipio`
     left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
 
+
+-- -----------------------------------------------------
+-- Trigger `seadra`.`tg_upd_cliente`
+-- -----------------------------------------------------
+DROP TRIGGER IF EXISTS `seadra`.`tg_upd_cliente`;
+
+DELIMITER $$
+CREATE TRIGGER `seadra`.`tg_upd_cliente` BEFORE UPDATE 
+ON `seadra`.`Cliente` FOR EACH ROW
+BEGIN
+	IF (OLD.`nrCpfCnpj` <> NEW.`nrCpfCnpj`) THEN
+		IF EXISTS (SELECT `idCliente` FROM `seadra`.`Cliente` 
+				   WHERE `nrCpfCnpj` = NEW.`nrCpfCnpj` AND `stAtivo` = 'S') THEN
+			SET NEW.`nrCpfCnpj` = NULL;
+		END IF;
+	END IF;
+END $$
+DELIMITER ;
+
+
 -- -----------------------------------------------------
 -- User 
 -- -----------------------------------------------------
