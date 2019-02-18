@@ -17,5 +17,7 @@ define('SYSTEM_NAME_SUB', $ambiente);
 define('SYSTEM_ACRONYM' , 'seadra');
 define('SYSTEM_VERSION' , '0.1.0');
 define('APLICATIVO'     , SYSTEM_ACRONYM);
+define('STATUS_ATIVO'   , 'S');
+define('STATUS_INATIVO' , 'N');
 if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 ?>
