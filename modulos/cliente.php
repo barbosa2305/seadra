@@ -38,7 +38,7 @@ $g = $frm->addGroupField('gpx1');
 					, FALSE
 					, 'O CEP está incompleto.'
 					)->addEvent('onchange','select_change(this)');
-	$frm->addHiddenField('DSLOCALIDADE:');
+	$frm->addHiddenField('DSLOCALIDADE');
 	$frm->addTextField('DSLOGRADOURO', 'Endereço:', 90);
 	$frm->addTextField('DSCOMPLEMENTO', 'Complemento:',255,FALSE,90);
 	$frm->addTextField('DSBAIRRO', 'Bairro:', 90);
