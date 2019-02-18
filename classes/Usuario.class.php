@@ -51,6 +51,7 @@ class Usuario {
 			if( $objVo->getIdusuario() ) {
 				$result = UsuarioDAO::update( $objVo );
 			} else {
+				self::validarUsuario( $objVo );
 				$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
 				$objVo->setDssenha($pwd_user_hash);
 				$result = UsuarioDAO::insert( $objVo );
@@ -150,6 +151,15 @@ class Usuario {
 			}
 	    }
 	    return $dados;
-	}	
+	}
+	//--------------------------------------------------------------------------------
+    private static function validarUsuario( UsuarioVO $objVo ){
+        $dsLogin = $objVo->getDslogin();
+        $where['DSLOGIN'] = $dsLogin;
+        $dados = self::selectAll(null, $where);
+        if( !empty($dados) ){
+            throw new DomainException(Mensagem::USUARIO_JA_CADASTRADO); 
+        }
+    }
 }
 ?>
