@@ -39,7 +39,6 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function save( UsuarioVO $objVo ){
 		$result = null;
-
 		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){ 
 			throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA);
 		} else {
@@ -47,23 +46,20 @@ class Usuario {
 					($objVo->getStativo() == self::STATUS_INATIVO) ){
 				throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA);
 			}
-
+			self::validarUsuario( $objVo );
 			if( $objVo->getIdusuario() ) {
 				$result = UsuarioDAO::update( $objVo );
 			} else {
-				self::validarUsuario( $objVo );
 				$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
 				$objVo->setDssenha($pwd_user_hash);
 				$result = UsuarioDAO::insert( $objVo );
 			}
 		}
-
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( UsuarioVO $objVo ){
 		$result = null;
-
 		if( (strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN) ||
 				(strtolower($objVo->getDslogin()) == Acesso::getUserLogin()) ){
 			throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA); 
@@ -71,14 +67,12 @@ class Usuario {
 			$objVo->setStativo(self::STATUS_INATIVO);
 			$result = UsuarioDAO::updateStatus( $objVo );
 		}
-
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function changePassword($resetPassword=false, $objVo, $pwd_user_current=null, $pwd_user_new=null, $pwd_user_new_repeat=null) {
 		$pwd_user_hash = null;
 		$result = null;
-
 		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){
 			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
 		} else {
@@ -95,13 +89,11 @@ class Usuario {
 					$pwd_user_hash = password_hash($pwd_user_new, PASSWORD_DEFAULT);
 				}
 			}
-
 			if ( !empty($pwd_user_hash) ) {
 				$objVo->setDssenha($pwd_user_hash);
 				$result = UsuarioDAO::updatePassword($objVo);
 			}
 		}
-
         return $result;
     }
     //--------------------------------------------------------------------------------
