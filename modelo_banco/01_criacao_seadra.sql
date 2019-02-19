@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Usuario` (
   PRIMARY KEY (`idUsuario`))
 ENGINE = InnoDB;
 
+CREATE UNIQUE INDEX `uk_dsLogin` ON `seadra`.`usuario` (`dsLogin` ASC);
+
 
 -- -----------------------------------------------------
 -- Table `seadra`.`UnidadeFederativa`
@@ -84,11 +86,11 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Endereco` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `idCliente_dsCep_UNIQUE` ON `seadra`.`endereco` (`idCliente` ASC, `dsCep` ASC);
-
 CREATE INDEX `fk_Endereco_Municipio_idx` ON `seadra`.`endereco` (`idMunicipio` ASC);
 
 CREATE INDEX `fk_Endereco_Cliente_idx` ON `seadra`.`endereco` (`idCliente` ASC);
+
+CREATE UNIQUE INDEX `uk_idCliente_dsCep` ON `seadra`.`endereco` (`idCliente` ASC, `dsCep` ASC);
 
 
 -- -----------------------------------------------------
@@ -123,6 +125,10 @@ CREATE INDEX `fk_Cliente_UsuarioCriacao_idx` ON `seadra`.`Cliente` (`idUsuarioCr
 
 CREATE INDEX `fk_Cliente_UsuarioModificacao_idx` ON `seadra`.`Cliente` (`idUsuarioModificacao` ASC);
 
+CREATE UNIQUE INDEX `uk_nrCpfCnpj` ON `seadra`.`cliente` (`nrCpfCnpj` ASC);
+
+CREATE UNIQUE INDEX `uk_dsEmail` ON `seadra`.`cliente` (`dsEmail` ASC);
+
 
 -- -----------------------------------------------------
 -- Table `seadra`.`Produto`
@@ -153,6 +159,8 @@ ENGINE = InnoDB;
 CREATE INDEX `fk_Produto_UsuarioCriacao_idx` ON `seadra`.`Produto` (`idUsuarioCriacao` ASC);
 
 CREATE INDEX `fk_Produto_UsuarioModificacao_idx` ON `seadra`.`Produto` (`idUsuarioModificacao` ASC);
+
+CREATE UNIQUE INDEX `uk_nmProduto` ON `seadra`.`produto` (`nmProduto` ASC);
 
 
 -- -----------------------------------------------------
@@ -219,25 +227,25 @@ CREATE INDEX `fk_ItemPedido_Produto_idx` ON `seadra`.`ItemPedido` (`idProduto` A
 
 CREATE INDEX `fk_ItemPedido_Pedido_idx` ON `seadra`.`ItemPedido` (`idPedido` ASC);
 
-CREATE UNIQUE INDEX `pedidoProduto_UNIQUE` ON `seadra`.`ItemPedido` (`idPedido` ASC, `idProduto` ASC);
+CREATE UNIQUE INDEX `uk_idPedido_idProduto` ON `seadra`.`itempedido` (`idPedido` ASC, `idProduto` ASC);
 
 
 -- -----------------------------------------------------
--- View `seadra`.`vw_municipios`
+-- View `seadra`.`vw_municipio`
 -- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_municipios` AS 
-select `uf`.`idUnidadeFederativa` AS `idUnidadeFederativa`
-       ,`uf`.`dsSigla` AS `dsSigla`
-       ,`m`.`cdMunicipio` AS `cdMunicipio`
-	   ,`m`.`nmMunicipio` AS `nmMunicipio`
-from `seadra`.`municipio` `m`, `seadra`.`unidadefederativa` `uf`
-where `m`.`idUnidadeFederativa` = `uf`.`idUnidadeFederativa`;
+CREATE OR REPLACE VIEW `seadra`.`vw_municipio` AS 
+select `ufe`.`idUnidadeFederativa` AS `idUnidadeFederativa`
+       ,`ufe`.`dsSigla` AS `dsSigla`
+       ,`mun`.`cdMunicipio` AS `cdMunicipio`
+	   ,`mun`.`nmMunicipio` AS `nmMunicipio`
+from `seadra`.`municipio` `mun`, `seadra`.`unidadefederativa` `ufe`
+where `mun`.`idUnidadeFederativa` = `ufe`.`idUnidadeFederativa`;
 
 
 -- -----------------------------------------------------
--- View `seadra`.`vw_clientes`
+-- View `seadra`.`vw_cliente`
 -- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_clientes` AS 
+CREATE OR REPLACE VIEW `seadra`.`vw_cliente` AS 
 select `cli`.`idCliente` AS `idCliente`
 	   ,`cli`.`nmCliente` AS `nmCliente`
        ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
@@ -261,31 +269,6 @@ from `seadra`.`cliente` `cli`
 	left join `seadra`.`endereco` `end` on `cli`.`idCliente` = `end`.`idCliente`
     left join `seadra`.`municipio` `mun` on `mun`.`idMunicipio` = `end`.`idMunicipio`
     left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
-
-
--- -----------------------------------------------------
--- Trigger `seadra`.`tg_upd_cliente`
--- -----------------------------------------------------
-DROP TRIGGER IF EXISTS `seadra`.`tg_upd_cliente`;
-
-DELIMITER $$
-CREATE TRIGGER `seadra`.`tg_upd_cliente` BEFORE UPDATE 
-ON `seadra`.`Cliente` FOR EACH ROW
-BEGIN
-	IF (OLD.`nrCpfCnpj` <> NEW.`nrCpfCnpj`) THEN
-		IF EXISTS (SELECT `idCliente` FROM `seadra`.`Cliente` 
-				   WHERE `nrCpfCnpj` = NEW.`nrCpfCnpj` AND `stAtivo` = 'S') THEN
-            SIGNAL SQLSTATE '45000' set message_text='CPF/CNPJ ja cadastrado.';
-		END IF;
-	END IF;
-    IF (OLD.`dsEmail` <> NEW.`dsEmail`) THEN
-		IF EXISTS (SELECT `idCliente` FROM `seadra`.`Cliente` 
-				   WHERE `dsEmail` = NEW.`dsEmail` AND `stAtivo` = 'S') THEN
-            SIGNAL SQLSTATE '45000' set message_text='E-mail ja cadastrado.';
-		END IF;
-	END IF;
-END $$
-DELIMITER ;
 
 
 -- -----------------------------------------------------
