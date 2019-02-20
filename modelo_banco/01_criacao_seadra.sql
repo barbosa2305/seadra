@@ -8,9 +8,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- Schema seadra
 -- -----------------------------------------------------	
 DROP SCHEMA IF EXISTS `seadra` ;
-
 CREATE SCHEMA IF NOT EXISTS `seadra` DEFAULT CHARACTER SET utf8 ; 
-
 USE `seadra` ;
 
 -- -----------------------------------------------------
@@ -271,11 +269,8 @@ from `seadra`.`cliente` `cli`
     left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
 
 
--- -----------------------------------------------------
--- User 
--- -----------------------------------------------------
 DROP USER IF EXISTS 'seadra_bd'@'localhost';
-CREATE USER 'seadra_bd'@'localhost' IDENTIFIED BY '@seadraadm';
+CREATE USER 'seadra_bd'@'localhost' IDENTIFIED BY 'jUpath6jUput';
 GRANT DELETE,EXECUTE,INSERT,SELECT,UPDATE ON seadra.* TO 'seadra_bd'@'localhost';
 
 
