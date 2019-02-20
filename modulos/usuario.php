@@ -4,8 +4,8 @@ defined('APLICATIVO') or die();
 $primaryKey = 'IDUSUARIO';
 
 $frm = new TForm('Usuário',500,700);
-$frm->setFlat(true);
-$frm->setMaximize(true);
+$frm->setFlat(TRUE);
+$frm->setMaximize(TRUE);
 
 $frm->addHiddenField( 'BUSCAR' ); // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // Coluna chave da tabela
@@ -15,15 +15,15 @@ $g = $frm->addGroupField('gpx1');
 	$frm->addTextField('NMUSUARIO','Nome:',255,TRUE,80);
 	$frm->addTextField('DSLOGIN','Usuário:',20,TRUE,20);
 	$grupo = array('U' => 'Usuários', 'A' => 'Administradores');
-	$frm->addSelectField('TPGRUPO', 'Grupo:',true,$grupo,null,null,null,null,null,null,null,'U');
+	$frm->addSelectField('TPGRUPO', 'Grupo:',TRUE,$grupo,null,null,null,null,null,null,null,'U');
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
-	$frm->addSelectField('STATIVO', 'Ativo ?',true,$ativo,null,null,null,null,null,null,null,'S');
+	$frm->addSelectField('STATIVO', 'Ativo ?',TRUE,$ativo,null,null,null,null,null,null,null,'S');
 	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 
-$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, true, false);
-$frm->addButton('Salvar', null, 'Salvar', null, null, false, false);
-$frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
+$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
+$frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);
+$frm->addButton('Limpar', null, 'Limpar', null, null, FALSE, FALSE);
 
 
 $acao = isset($acao) ? $acao : null;
@@ -34,22 +34,22 @@ switch( $acao ) {
 				$vo = new UsuarioVO();
 				$frm->setVo( $vo );
 				$resultado = Usuario::save( $vo );
-				if ($resultado==1) {
+				if ( $resultado == 1 ) {
 					if ( empty($frm->get('IDUSUARIO')) ) {
-						$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO .' \r\n '. Mensagem::SENHA_PADRAO_USUARIO);
+						$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO .' \r\n '. Mensagem::SENHA_PADRAO_USUARIO );
 					} else {
-						$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
+						$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 					}
 					$frm->clearFields();
 				} else {
-					$frm->setMessage($resultado);
+					$frm->setMessage( $resultado );
 				}
 			}
 		}
-		catch (DomainException $e) {
+		catch ( DomainException $e ) {
 			$frm->setMessage( $e->getMessage() );
 		}
-		catch (Exception $e) {
+		catch ( Exception $e ) {
 			MessageHelper::logRecord($e);
 			$frm->setMessage( $e->getMessage() );
 		}
@@ -64,45 +64,44 @@ switch( $acao ) {
 			$vo = new UsuarioVO();
 			$frm->setVo( $vo );
 			$resultado = Usuario::delete( $vo );
-			if ($resultado==1) {
-				$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
+			if ( $resultado == 1 ) {
+				$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 				$frm->clearFields();
 			} else {
 				$frm->clearFields();
-				$frm->setMessage($resultado);
+				$frm->setMessage( $resultado );
 			}
 		}
-		catch (DomainException $e) {
+		catch ( DomainException $e ) {
 			$frm->setMessage( $e->getMessage() );
 		}
-		catch (Exception $e) {
+		catch ( Exception $e ) {
 			MessageHelper::logRecord($e);
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
 	//--------------------------------------------------------------------------------
-	case 'redefinirSenha':
+	case 'gd_redefinirSenha':
 		try {
 			$vo = new UsuarioVO();
 			$frm->setVo( $vo );
-			$result = Usuario::changePassword(true, $vo);
-			if ($result==1) {
-				$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
+			$resultado = Usuario::redefinirSenha( $vo );
+			if ( $resultado == 1 ) {
+				$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 				$frm->clearFields();
 			} else {
-				$frm->setMessage($result);
+				$frm->setMessage( $resultado );
 				$frm->clearFields();
 			}
 		}
-		catch (DomainException $e) {
+		catch ( DomainException $e ) {
 			$frm->setMessage( $e->getMessage() );
 		}
-		catch (Exception $e) {
+		catch ( Exception $e ) {
 			MessageHelper::logRecord($e);
 			$frm->setMessage( $e->getMessage() );
 		}
 }
-
 
 function getWhereGridParameters(&$frm){
 	$retorno = null;
@@ -118,11 +117,11 @@ function getWhereGridParameters(&$frm){
 	return $retorno;
 }
 
-if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
+if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$maxRows = ROWS_PER_PAGE;
-	$whereGrid = getWhereGridParameters($frm);
+	$whereGrid = getWhereGridParameters( $frm );
 	$page = PostHelper::get('page');
-	$dados = Usuario::selectAllPagination( $primaryKey, $whereGrid, $page,  $maxRows);
+	$dados = Usuario::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
 	$realTotalRowsSqlPaginator = Usuario::selectCount( $whereGrid );
 	$mixUpdateFields = $primaryKey.'|'.$primaryKey
 					.',NMUSUARIO|NMUSUARIO'
@@ -137,21 +136,20 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setData( $dados ); // array de dados
 	$gride->setRealTotalRowsSqlPaginator( $realTotalRowsSqlPaginator );
 	$gride->setMaxRows( $maxRows );
-	$gride->setUpdateFields($mixUpdateFields);
+	$gride->setUpdateFields( $mixUpdateFields );
 	$gride->setUrl( 'usuario.php' );
-	$gride->setExportExcel( false );
+	$gride->setExportExcel( FALSE );
+	$gride->setOnDrawActionButton( 'gdConfigButtons' );
 
 	$gride->addColumn($primaryKey,'Código');
 	$gride->addColumn('NMUSUARIO','Nome');
 	$gride->addColumn('DSLOGIN','Usuário');
-	//$gride->addColumn('TPGRUPO','Grupo');
 	$gride->addColumn('DSGRUPO','Grupo');
-	//$gride->addColumn('STATIVO','Ativo ?');
 	$gride->addColumn('DSATIVO','Ativo ?',null,'center');
 
-	$gride->addButton('Alterar','gd_alterar',null,null,null,'alterar.gif');
-	$gride->addButton('Excluir','gd_excluir',null,null,'Deseja exlcuir o registro?','lixeira.gif');
-	$gride->addButton('Redefinir senha','redefinirSenha',null,null,'Confirma redefinir a senha? \r\n Será alterada para senha padrão: 12345678','access16.gif');
+	$gride->addButton('Alterar','gd_alterar','btnAlterar',null,null,'alterar.gif');
+	$gride->addButton('Excluir','gd_excluir','btnExcluir',null,'Deseja exlcuir o registro?','lixeira.gif');
+	$gride->addButton('Redefinir senha','gd_redefinirSenha','btnRedefinir',null,'Confirma redefinir a senha? \r\n Será alterada para senha padrão: 12345678','access16.gif');
 
 	$gride->show();
 	die();
@@ -160,6 +158,22 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 $frm->addHtmlField('gride');
 $frm->addJavascript('init()');
 $frm->show();
+
+function gdConfigButtons($rowNum, TButton $button, $objColumn, $aData){
+	$property = $button->getProperty('name');
+    if ( $aData['DSLOGIN'] == Acesso::USER_ADMIN && (Acesso::isUserLoggedAdm()) ){
+        if ( $property != 'btnRedefinir' ){
+           $button->setVisible(FALSE);
+        }
+    } elseif ( $aData['DSLOGIN'] == Acesso::USER_ADMIN && !(Acesso::isUserLoggedAdm()) ){
+		$button->setVisible(FALSE);
+	}
+	if ( $aData['DSLOGIN'] == Acesso::getUserLogin() ){
+		if ( $property == 'btnExcluir' ){
+            $button->setVisible(FALSE);
+        }
+	}
+}
 
 ?>
 <script>

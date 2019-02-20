@@ -36,16 +36,6 @@ class UsuarioDAO extends TPDOConnection {
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectByLogin( $login ) {
-		if( empty($login) || !is_string($login) ){
-			throw new InvalidArgumentException();
-		}
-		$values = array($login);
-		$sql = self::$sqlBasicSelect.' where dslogin = ?';
-		$result = self::executeSql($sql, $values );
-		return $result;
-	}	
-	//--------------------------------------------------------------------------------
 	public static function selectByLoginAtivo( $login ) {
 		if( empty($login) || !is_string($login) ){
 			throw new InvalidArgumentException();

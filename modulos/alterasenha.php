@@ -28,12 +28,12 @@ switch( $acao ) {
 		try{
 			if ( $frm->validate() ) {
 				$vo = new UsuarioVO();
-				$vo->setIdusuario(Acesso::getUserId());
-				$vo->setDslogin($frm->getFieldValue('login'));
+				$vo->setIdusuario( Acesso::getUserId() );
+				$vo->setDslogin( $frm->getFieldValue('login') );
 			    $senhaAtual = $frm->getFieldValue('senha');
 				$novaSenha = $frm->getFieldValue('novaSenha');
 				$novaSenhaRepita = $frm->getFieldValue('novaSenhaRepita');
-				$result = Usuario::changePassword(false, $vo, $senhaAtual, $novaSenha, $novaSenhaRepita);
+				$result = Usuario::alterarSenha( $vo,$senhaAtual,$novaSenha,$novaSenhaRepita );
 				if ( $result == 1 ) {
 					$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
                     $frm->clearFields(null, array('login'));

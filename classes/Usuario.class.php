@@ -13,7 +13,7 @@
 class Usuario {
 
 	const SENHA_PADRAO = '12345678';
-	const STATUS_INATIVO = 'N';
+	const SENHA_TAMANHO_MINIMO = 8;
 
 	public function __construct(){
 	}
@@ -39,85 +39,40 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function save( UsuarioVO $objVo ){
 		$result = null;
-		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){ 
-			throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA);
+		self::validarPermissoes( $objVo );
+		if( $objVo->getIdusuario() ) {
+			$result = UsuarioDAO::update( $objVo );
 		} else {
-			if( (strtolower($objVo->getDslogin()) == Acesso::getUserLogin()) && 
-					($objVo->getStativo() == self::STATUS_INATIVO) ){
-				throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA);
-			}
-			self::validarUsuario( $objVo );
-			if( $objVo->getIdusuario() ) {
-				$result = UsuarioDAO::update( $objVo );
-			} else {
-				$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
-				$objVo->setDssenha($pwd_user_hash);
-				$result = UsuarioDAO::insert( $objVo );
-			}
+			self::validarUsuarioJaCadastrado( $objVo );
+			$pwd_user_hash = password_hash( self::SENHA_PADRAO,PASSWORD_DEFAULT );
+			$objVo->setDssenha( $pwd_user_hash );
+			$result = UsuarioDAO::insert( $objVo );
 		}
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( UsuarioVO $objVo ){
-		$result = null;
-		if( (strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN) ||
-				(strtolower($objVo->getDslogin()) == Acesso::getUserLogin()) ){
-			throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA); 
-		} else {
-			$objVo->setStativo(self::STATUS_INATIVO);
-			$result = UsuarioDAO::updateStatus( $objVo );
-		}
-		return $result;
+		self::validarPermissoes( $objVo,TRUE );
+		$objVo->setStativo( STATUS_INATIVO );
+		return UsuarioDAO::updateStatus( $objVo );
 	}
 	//--------------------------------------------------------------------------------
-	public static function changePassword($resetPassword=false, $objVo, $pwd_user_current=null, $pwd_user_new=null, $pwd_user_new_repeat=null) {
+	public static function alterarSenha( UsuarioVO $objVo, $pwd_user_current=null, $pwd_user_new=null, $pwd_user_new_repeat=null ) {
 		$pwd_user_hash = null;
-		$result = null;
-		if( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN ){
-			$result = Mensagem::OPERACAO_NAO_PERMITIDA;
-		} else {
-			if ($resetPassword) {
-				$result = self::validatePassword(self::SENHA_PADRAO);
-				if ( $result === true ) {
-					$pwd_user_hash = password_hash(self::SENHA_PADRAO, PASSWORD_DEFAULT);
-				}
-				
-			} else {
-				$user = UsuarioDAO::selectByLogin($objVo->getDslogin());
-				$result = self::validatePassword($pwd_user_current,$pwd_user_new,$pwd_user_new_repeat,$user['DSSENHA'][0]);
-				if ( $result === true ) {
-					$pwd_user_hash = password_hash($pwd_user_new, PASSWORD_DEFAULT);
-				}
-			}
-			if ( !empty($pwd_user_hash) ) {
-				$objVo->setDssenha($pwd_user_hash);
-				$result = UsuarioDAO::updatePassword($objVo);
-			}
-		}
-        return $result;
-    }
-    //--------------------------------------------------------------------------------
-	private static function validatePassword( $pwd_user_current,$pwd_user_new=null,$pwd_user_new_repeat=null,$pwd_user_current_coded=null ) {
-		$result = true;
-		if ( strlen( $pwd_user_current ) < 8 ) {
-			return Mensagem::SENHA_TAMANHO_MINIMO;
-		}
-		if ( !empty($pwd_user_new) ) {
-			if ( strlen( $pwd_user_new ) < 8 ) {
-				return Mensagem::SENHA_TAMANHO_MINIMO;
-			}
-		}
-		if ( !empty($pwd_user_new_repeat) ) {
-			if ( $pwd_user_new != $pwd_user_new_repeat ) {
-				return Mensagem::SENHAS_NAO_COINCIDEM;
-			}
-		}
-		if ( !empty($pwd_user_current) && !empty($pwd_user_current_coded) ) {
-			if ( !password_verify($pwd_user_current, $pwd_user_current_coded) ) {
-				return  Mensagem::SENHA_ATUAL_INCORRETA;
-			}
-		}
-		return $result;
+		$user = UsuarioDAO::selectByLoginAtivo( $objVo->getDslogin() );
+		self::validarSenha( $pwd_user_current,$pwd_user_new,$pwd_user_new_repeat,$user['DSSENHA'][0] );
+		$pwd_user_hash = password_hash( $pwd_user_new,PASSWORD_DEFAULT );
+		$objVo->setDssenha( $pwd_user_hash );
+		return UsuarioDAO::updatePassword( $objVo );
+	}
+	//--------------------------------------------------------------------------------
+	public static function redefinirSenha( UsuarioVO $objVo ) {
+		$pwd_user_hash = null;
+		self::validarPermissoes( $objVo );	
+		self::validarSenha( self::SENHA_PADRAO );
+		$pwd_user_hash = password_hash( self::SENHA_PADRAO,PASSWORD_DEFAULT );
+		$objVo->setDssenha( $pwd_user_hash );
+		return UsuarioDAO::updatePassword( $objVo );
 	}
 	//--------------------------------------------------------------------------------
 	private static function trataDados($dados){
@@ -145,7 +100,46 @@ class Usuario {
 	    return $dados;
 	}
 	//--------------------------------------------------------------------------------
-    private static function validarUsuario( UsuarioVO $objVo ){
+	private static function validarPermissoes( UsuarioVO $objVo,$acaoDelete=FALSE ) {
+		if ( Acesso::getUserGroup() != Acesso::USER_GRUPO_ADMIN ){
+			throw new DomainException( Mensagem::OPERACAO_NAO_PERMITIDA );
+		}
+		if ( strtolower($objVo->getDslogin()) == Acesso::USER_ADMIN && !(Acesso::isUserLoggedAdm()) ){
+			throw new DomainException( Mensagem::OPERACAO_NAO_PERMITIDA );
+		}
+		if ( (strtolower($objVo->getDslogin()) == Acesso::getUserLogin()) && 
+				($objVo->getStativo() == STATUS_INATIVO) ){
+			throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA);
+		}
+		if ($acaoDelete) {
+			if( strtolower($objVo->getDslogin()) == Acesso::getUserLogin() ){
+				throw new DomainException(Mensagem::OPERACAO_NAO_PERMITIDA); 
+			}
+		}
+	}
+    //--------------------------------------------------------------------------------
+	private static function validarSenha( $pwd_user_current,$pwd_user_new=null,$pwd_user_new_repeat=null,$pwd_user_current_coded=null ) {
+		if ( strlen( $pwd_user_current ) < self::SENHA_TAMANHO_MINIMO ) {
+			throw new DomainException(Mensagem::SENHA_TAMANHO_MINIMO);
+		}
+		if ( !empty($pwd_user_new) ) {
+			if ( strlen( $pwd_user_new ) < self::SENHA_TAMANHO_MINIMO ) {
+				throw new DomainException(Mensagem::SENHA_TAMANHO_MINIMO);
+			}
+		}
+		if ( !empty($pwd_user_current) && !empty($pwd_user_current_coded) ) {
+			if ( !password_verify($pwd_user_current, $pwd_user_current_coded) ) {
+				throw new DomainException(Mensagem::SENHA_ATUAL_INCORRETA);
+			}
+		}
+		if ( !empty($pwd_user_new_repeat) ) {
+			if ( $pwd_user_new != $pwd_user_new_repeat ) {
+				throw new DomainException(Mensagem::SENHAS_NAO_COINCIDEM);
+			}
+		}
+	}
+	//--------------------------------------------------------------------------------
+    private static function validarUsuarioJaCadastrado( UsuarioVO $objVo ){
         $dsLogin = $objVo->getDslogin();
         $where['DSLOGIN'] = $dsLogin;
         $dados = self::selectAll(null, $where);
