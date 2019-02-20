@@ -19,4 +19,6 @@ final class Mensagem {
 
     const CPFCNPJ_JA_CADASTRADO = 'O CPF/CNPJ informado já está cadastrado.';
     const EMAIL_JA_CADASTRADO = 'O e-mail informado já está cadastrado.';
+
+    const PRODUTO_JA_CADASTRADO = 'Este produto já está cadastrado.';
 }

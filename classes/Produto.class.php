@@ -12,28 +12,26 @@
 
 class Produto {
 
-
 	public function __construct(){
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$result = ProdutoDAO::selectById( $id );
-		return $result;
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$result = ProdutoDAO::selectCount( $where );
-		return $result;
+		return ProdutoDAO::selectCount( $where );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$result = ProdutoDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
-		return $result;
+	public static function selectAllPagination( $orderBy=null,$where=null,$page=null,$rowsPerPage= null){
+		$result = ProdutoDAO::selectAllPagination( $orderBy,$where,$page,$rowsPerPage );
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectAll( $orderBy=null, $where=null ){
-		$result = ProdutoDAO::selectAll( $orderBy, $where );
-		return $result;
+	public static function selectAll( $orderBy=null,$where=null ){
+		$result = ProdutoDAO::selectAll( $orderBy,$where );
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( ProdutoVO $objVo ){
@@ -41,15 +39,47 @@ class Produto {
 		if( $objVo->getIdproduto() ) {
 			$result = ProdutoDAO::update( $objVo );
 		} else {
+			self::validar( $objVo );
 			$result = ProdutoDAO::insert( $objVo );
 		}
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
-		$result = ProdutoDAO::delete( $id );
-		return $result;
+		$vo = new ProdutoVO();
+		$vo->setIdproduto( $id );
+		$vo->setStativo( STATUS_INATIVO );
+		return ProdutoDAO::updateStatus( $vo );
 	}
-
+	//--------------------------------------------------------------------------------
+	private static function trataDados( $dados ){
+		if( isset($dados) ){
+			foreach ($dados['STATIVO'] as $key => $value) {
+				$dsPrincipal = 'Erro';
+				if( $value == 'S' ){
+					$dsPrincipal = 'Sim';
+				} else {
+					$dsPrincipal = 'Não';
+				}
+				$dados['DSATIVO'][$key]  = $dsPrincipal;
+			}
+		}
+		return $dados;
+	}
+	//--------------------------------------------------------------------------------
+	private static function validar( ProdutoVO $objVo ){
+		self::validarDescricao( $objVo );
+	}
+	//--------------------------------------------------------------------------------
+	private static function validarDescricao( ProdutoVO $objVo ){
+        $nmProduto = $objVo->getNmproduto();
+		$where['NMPRODUTO'] = $nmProduto;
+        $dados = self::selectAll( null,$where );
+        if( !empty($dados) ){
+            throw new DomainException( Mensagem::PRODUTO_JA_CADASTRADO ); 
+        }
+        $where = null;
+	}
+	//--------------------------------------------------------------------------------
 }
 ?>
