@@ -1,7 +1,7 @@
 -- -----------------------------------------------------
 -- Table `seadra`.`Usuario`
 -- -----------------------------------------------------
-INSERT INTO `seadra`.`Usuario` (`nmUsuario`, `dsLogin`, `dsSenha`, `tpGrupo`) VALUES ('Administrador', 'admin', '$2y$10$88.nvxSio.DZgax.Wf2QCOhTSG5xRUNU5ljE9ba5pfjQ/Z6ha9OnW','A');
+INSERT INTO `seadra`.`Usuario` (`nmUsuario`, `dsLogin`, `dsSenha`, `tpGrupo`) VALUES ('Administrador', 'admin', '$2y$10$Pu7jakvAdT69OLkrI2S10.2t2WXOUGNJ7HHjgyFJ6R99b6l44Jipm','A');
 
 
 -- -----------------------------------------------------

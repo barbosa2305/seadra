@@ -21,6 +21,10 @@ class Acesso {
 	//--------------------------------------------------------------------------------	
 	public static function login( $login_user, $pwd_user )	{
         $result = 0;
+
+        //$where['DSLOGIN'] = $login_user;
+       // $where['STATIVO'] = STATUS_ATIVO;
+        //$user = Usuario::selectAll( null,$where );
         $user = UsuarioDAO::selectByLoginAtivo($login_user);
         if ( !empty($user) ) {
             if (password_verify($pwd_user, $user['DSSENHA'][0])) {
