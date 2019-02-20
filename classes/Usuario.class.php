@@ -27,14 +27,14 @@ class Usuario {
 		return UsuarioDAO::selectCount( $where );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$result = UsuarioDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
+	public static function selectAllPagination( $orderBy=null,$where=null,$page=null,$rowsPerPage=null){
+		$result = UsuarioDAO::selectAllPagination( $orderBy,$where,$page,$rowsPerPage );
 		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectAll( $orderBy=null, $where=null ){
-		$result = UsuarioDAO::selectAll( $orderBy, $where );
-		return self::trataDados($result);
+	public static function selectAll( $orderBy=null,$where=null ){
+		$result = UsuarioDAO::selectAll( $orderBy,$where );
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( UsuarioVO $objVo ){
@@ -57,7 +57,7 @@ class Usuario {
 		return UsuarioDAO::updateStatus( $objVo );
 	}
 	//--------------------------------------------------------------------------------
-	public static function alterarSenha( UsuarioVO $objVo, $pwd_user_current=null, $pwd_user_new=null, $pwd_user_new_repeat=null ) {
+	public static function alterarSenha( UsuarioVO $objVo,$pwd_user_current=null,$pwd_user_new=null,$pwd_user_new_repeat=null ){
 		$pwd_user_hash = null;
 		$user = UsuarioDAO::selectByLoginAtivo( $objVo->getDslogin() );
 		self::validarSenha( $pwd_user_current,$pwd_user_new,$pwd_user_new_repeat,$user['DSSENHA'][0] );
@@ -66,7 +66,7 @@ class Usuario {
 		return UsuarioDAO::updatePassword( $objVo );
 	}
 	//--------------------------------------------------------------------------------
-	public static function redefinirSenha( UsuarioVO $objVo ) {
+	public static function redefinirSenha( UsuarioVO $objVo ){
 		$pwd_user_hash = null;
 		self::validarPermissoes( $objVo );	
 		self::validarSenha( self::SENHA_PADRAO );
@@ -100,7 +100,7 @@ class Usuario {
 	    return $dados;
 	}
 	//--------------------------------------------------------------------------------
-	private static function validarPermissoes( UsuarioVO $objVo,$acaoDelete=FALSE ) {
+	private static function validarPermissoes( UsuarioVO $objVo,$acaoDelete=FALSE ){
 		if ( Acesso::getUserGroup() != Acesso::USER_GRUPO_ADMIN ){
 			throw new DomainException( Mensagem::OPERACAO_NAO_PERMITIDA );
 		}
@@ -118,7 +118,7 @@ class Usuario {
 		}
 	}
     //--------------------------------------------------------------------------------
-	private static function validarSenha( $pwd_user_current,$pwd_user_new=null,$pwd_user_new_repeat=null,$pwd_user_current_coded=null ) {
+	private static function validarSenha( $pwd_user_current,$pwd_user_new=null,$pwd_user_new_repeat=null,$pwd_user_current_coded=null ){
 		if ( strlen( $pwd_user_current ) < self::SENHA_TAMANHO_MINIMO ) {
 			throw new DomainException(Mensagem::SENHA_TAMANHO_MINIMO);
 		}
@@ -142,7 +142,7 @@ class Usuario {
     private static function validarUsuarioJaCadastrado( UsuarioVO $objVo ){
         $dsLogin = $objVo->getDslogin();
         $where['DSLOGIN'] = $dsLogin;
-        $dados = self::selectAll(null, $where);
+        $dados = self::selectAll( null,$where );
         if( !empty($dados) ){
             throw new DomainException(Mensagem::USUARIO_JA_CADASTRADO); 
         }

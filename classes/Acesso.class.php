@@ -19,13 +19,9 @@ class Acesso {
     }    
 
 	//--------------------------------------------------------------------------------	
-	public static function login( $login_user, $pwd_user )	{
+	public static function login( $login_user, $pwd_user ){
         $result = 0;
-
-        //$where['DSLOGIN'] = $login_user;
-       // $where['STATIVO'] = STATUS_ATIVO;
-        //$user = Usuario::selectAll( null,$where );
-        $user = UsuarioDAO::selectByLoginAtivo($login_user);
+        $user = UsuarioDAO::selectByLoginAtivo( $login_user );
         if ( !empty($user) ) {
             if (password_verify($pwd_user, $user['DSSENHA'][0])) {
                 $_SESSION[APLICATIVO]['USER']['IDUSUARIO'] = $user['IDUSUARIO'][0];
@@ -38,37 +34,37 @@ class Acesso {
         return $result;
     }
 
-    public static function getUserId()	{
+    public static function getUserId(){
         $userId = null;
-        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
-            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+        if ( ArrayHelper::has(APLICATIVO, $_SESSION) ){
+            $user = ArrayHelper::get( $_SESSION[APLICATIVO],'USER' );
             $userId = $user['IDUSUARIO']; 
         }
         return $userId;
     }
     
-    public static function getUserLogin() {
+    public static function getUserLogin(){
         $userLogin = null;
-        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
-            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+        if (ArrayHelper::has( APLICATIVO, $_SESSION) ){
+            $user = ArrayHelper::get( $_SESSION[APLICATIVO],'USER' );
             $userLogin = $user['LOGIN'];
         }
         return $userLogin;
     }
 
-    public static function getUserName() {
+    public static function getUserName(){
         $userName = null;
-        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
-            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+        if (ArrayHelper::has( APLICATIVO, $_SESSION) ){
+            $user = ArrayHelper::get( $_SESSION[APLICATIVO],'USER' );
             $userName = $user['NOME'];
         }
         return $userName;
     }
 
-    public static function getUserGroup() {
+    public static function getUserGroup(){
         $userGroup = null;
-        if (ArrayHelper::has(APLICATIVO, $_SESSION)) {
-            $user = ArrayHelper::get($_SESSION[APLICATIVO],'USER');
+        if (ArrayHelper::has( APLICATIVO, $_SESSION) ){
+            $user = ArrayHelper::get( $_SESSION[APLICATIVO],'USER' );
             $userGroup = $user['GRUPO'];
         }
         return $userGroup;
@@ -76,7 +72,7 @@ class Acesso {
 
 	public static function isUserLoggedAdm(){
         $result = false;     
-        if (self::getUserLogin() == self::USER_ADMIN) {
+        if ( self::getUserLogin() == self::USER_ADMIN ) {
             $result = true;
         }
         return $result;
