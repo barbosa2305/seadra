@@ -16,7 +16,7 @@ define('PORT'    , '3306');
 define('DATABASE', 'seadra');
 define('SCHEMA'  , '');
 define('USUARIO' , 'seadra_bd');
-define('SENHA'   , '@seadraadm');
+define('SENHA'   , 'jUpath6jUput');
 define('UTF8_DECODE'   , 0);
 
 ?>
