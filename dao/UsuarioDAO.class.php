@@ -8,8 +8,6 @@ class UsuarioDAO extends TPDOConnection {
 									 ,dssenha
 									 ,tpgrupo
 									 ,stativo
-									 ,dtcriacao
-									 ,dtmodificacao
 									 from seadra.usuario ';
 
 	private static function processWhereGridParameters( $whereGrid ) {
@@ -22,8 +20,6 @@ class UsuarioDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSSENHA', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'TPGRUPO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTCRIACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTMODIFICACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$result = $where;
 		}
 		return $result;
