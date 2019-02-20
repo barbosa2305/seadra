@@ -45,7 +45,9 @@ $g = $frm->addGroupField('gpx1');
 	$listUF = Unidadefederativa::selectComboSiglaUf();
 	$frm->addSelectField('DSSIGLA', 'UF:',FALSE, $listUF);
 	$frm->addSelectField('CDMUNICIPIO', 'Município:', null, null, FALSE);
-	$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipios', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- selecione --', '0', 'Nenhum município encontrado.');
+	$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipio', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- selecione --', '0', 'Nenhum município encontrado.');
+	$ativo = array('S' => 'Sim', 'N' => 'Não');
+	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
 	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 
@@ -126,6 +128,7 @@ function getWhereGridParameters(&$frm){
 				,'CDMUNICIPIO'=>$frm->get('CDMUNICIPIO')
 				,'NMMUNICIPIO'=>$frm->get('NMMUNICIPIO')
 				,'DSSIGLA'=>$frm->get('DSSIGLA')
+				,'STATIVO'=>$frm->get('STATIVO')
 
 		);
 	}
@@ -154,6 +157,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 					.',CDMUNICIPIO|CDMUNICIPIO'
 					.',NMMUNICIPIO|NMMUNICIPIO'
 					.',DSSIGLA|DSSIGLA'
+					.',STATIVO|STATIVO'
 					;
 	$gride = new TGrid( 'gd'                        // id do gride
 					   ,'Lista de clientes' // titulo do gride
@@ -174,6 +178,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('DSBAIRRO','Bairro');
 	$gride->addColumn('NMMUNICIPIO','Município');
 	$gride->addColumn('DSSIGLA','UF');
+	$gride->addColumn('DSATIVO','Ativo ?',null,'center');
 
 	$gride->show();
 	die();
@@ -203,6 +208,7 @@ $frm->show();
 						,"CDMUNICIPIO":""
 						,"NMMUNICIPIO":""
 						,"DSSIGLA":""
+						,"STATIVO":""
 						};
 		fwGetGrid('cliente.php','gride',Parameters,true);
 	}

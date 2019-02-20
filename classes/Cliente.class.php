@@ -16,22 +16,22 @@ class Cliente {
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
-		return ClienteDAO::selectById( $id );
+		$result = ClienteDAO::selectById( $id );
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$where['STATIVO'] = STATUS_ATIVO;
 		return ClienteDAO::selectCount( $where );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$where['STATIVO'] = STATUS_ATIVO;
-		return ClienteDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
+	public static function selectAllPagination( $orderBy=null,$where=null,$page=null,$rowsPerPage= null ){
+		$result = ClienteDAO::selectAllPagination( $orderBy,$where,$page,$rowsPerPage );
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
-		$where['STATIVO'] = STATUS_ATIVO;
-		return ClienteDAO::selectAll( $orderBy, $where );
+		$result = ClienteDAO::selectAll( $orderBy,$where );
+		return self::trataDados( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( ClienteVO $objVo ){
@@ -40,7 +40,7 @@ class Cliente {
 		if( $objVo->getIdcliente() ) {
 			$result = ClienteDAO::update( $objVo );
 		} else {
-			self::validarCliente( $objVo );
+			self::validar( $objVo );
 			$result = ClienteDAO::insert( $objVo );
 			if ( $result ) $objVo->setIdcliente( $result );
 		}
@@ -75,7 +75,7 @@ class Cliente {
 	private static function getIdMunicipio( ClienteVO $objVo ){
 		if ( $objVo->getCdmunicipio() ) {
 			$where = array( 'CDMUNICIPIO'=>$objVo->getCdmunicipio() );
-			$municipio = Municipio::selectAll(null,$where);
+			$municipio = Municipio::selectAll( null,$where );
 			if ( !empty($municipio) ) {
 				$idMunicipio = $municipio['IDMUNICIPIO'][0];
 				$objVo->setIdmunicipio( $idMunicipio );
@@ -83,32 +83,53 @@ class Cliente {
 		}
 	}
 	//--------------------------------------------------------------------------------
-    private static function validarCliente( ClienteVO $objVo ){
-        // CPF/CNPJ
+	private static function trataDados( $dados ){
+	    if( isset($dados) ){
+	        foreach ($dados['STATIVO'] as $key => $value) {
+	            $dsPrincipal = 'Erro';
+	            if( $value == 'S' ){
+	                $dsPrincipal = 'Sim';
+	            } else {
+	                $dsPrincipal = 'Não';
+	            }
+	            $dados['DSATIVO'][$key]  = $dsPrincipal;
+			}
+	    }
+	    return $dados;
+	}
+	//--------------------------------------------------------------------------------
+    private static function validar( ClienteVO $objVo ){
+		self::validarCpfCnpj( $objVo );
+		self::validarEmail( $objVo );
+	}
+	//--------------------------------------------------------------------------------
+    private static function validarCpfCnpj( ClienteVO $objVo ){
         $nrCpfCnpj = $objVo->getNrcpfcnpj();
 		$where['NRCPFCNPJ'] = $nrCpfCnpj;
-        $dados = self::selectAll(null, $where);
+        $dados = self::selectAll( null,$where );
         if( !empty($dados) ){
-            throw new DomainException(Mensagem::CPFCNPJ_JA_CADASTRADO); 
+            throw new DomainException( Mensagem::CPFCNPJ_JA_CADASTRADO ); 
         }
         $where = null;
-        // Email
+	}
+	//--------------------------------------------------------------------------------
+    private static function validarEmail( ClienteVO $objVo ){
         $dsEmail = $objVo->getDsemail();
         $where['DSEMAIL'] = $dsEmail;
-        $dados = self::selectAll(null, $where);
+        $dados = self::selectAll( null,$where );
         if( !empty($dados) ){
-            throw new DomainException(Mensagem::EMAIL_JA_CADASTRADO); 
+            throw new DomainException( Mensagem::EMAIL_JA_CADASTRADO ); 
         }
         $where = null;
-    }
+	}
 	//--------------------------------------------------------------------------------
-	private static function validarEndereco(EnderecoVO $objVo ){
+	private static function validarEndereco( EnderecoVO $objVo ){
 		$dsCep = $objVo->getDscep();
 		$dsLogradouro = $objVo->getDslogradouro();
 		$dsBairro = $objVo->getDsbairro();
 		$idMunicipio = $objVo->getIdmunicipio();
 	    if ( !($dsCep && $dsLogradouro && $dsBairro && $idMunicipio) ) {
-	        throw new DomainException(Mensagem::OPERACAO_FALHOU); 
+	        throw new DomainException( Mensagem::OPERACAO_FALHOU ); 
 	    }	
 	}
 

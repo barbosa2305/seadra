@@ -21,7 +21,7 @@ class ClienteDAO extends TPDOConnection {
 									 ,idunidadefederativa
 									 ,dssigla
 									 ,dsunidadefederativa
-									 from seadra.vw_clientes ';
+									 from seadra.vw_cliente ';
 
 	private static function processWhereGridParameters( $whereGrid ) {
 		$result = $whereGrid;
@@ -59,7 +59,7 @@ class ClienteDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
-		$sql = 'select count(idCliente) as qtd from seadra.vw_clientes';
+		$sql = 'select count(idCliente) as qtd from seadra.vw_cliente';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql($sql);
 		return $result['QTD'][0];
@@ -113,6 +113,7 @@ class ClienteDAO extends TPDOConnection {
 						,$objVo->getDsemail()
 						,$objVo->getNrtelefone()
 						,$objVo->getNrcelular()
+						,$objVo->getStativo()
 						,$objVo->getIdusuario()
 						,$objVo->getIdCliente() );
 		return self::executeSql('update seadra.cliente set 
@@ -121,6 +122,7 @@ class ClienteDAO extends TPDOConnection {
 								,dsemail = ?
 								,nrtelefone = ?
 								,nrcelular = ?
+								,stativo = ?
 								,idusuariomodificacao = ?
 								where idCliente = ?',$values);
 	}
