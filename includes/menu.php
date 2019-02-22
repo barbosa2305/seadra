@@ -16,6 +16,7 @@ $menu->add('1', null, 'Principal', null, null, 'menu-alt-512.png');
 $menu->add('1.0',1,'Cliente','modulos/cliente.php');
 $menu->add('1.1',1,'Produto','modulos/produto.php');
 $menu->add('1.2',1,'Pedido','modulos/pedido.php');
+$menu->add('1.3',1,'Item Pedido','modulos/itempedido.php');
 
 $menu->add('2', null, 'Acesso', null, null, 'icon-key-yellow.png');
 $menu->add('2.1',2,'Alterar Minha Senha','modulos/alterasenha.php', null, 'lock16.gif');
@@ -27,11 +28,6 @@ if ( Acesso::getUserGroup() == Acesso::USER_GRUPO_ADMIN ) {
 $menu->add('9', null, 'Sobre', 'modulos/sys_about.php', null, 'information16.gif');
 
 if (Acesso::isUserLoggedAdm()) {
-    $menu->add('1.3',1,'itempedido','modulos/itempedido.php');
-    $menu->add('1.4',1,'endereco','modulos/endereco.php');
-    $menu->add('1.5',1,'municipio','modulos/municipio.php');
-    $menu->add('1.6',1,'unidadefederativa','modulos/unidadefederativa.php');
-
     $menu->add('10',null,'Config Ambiente',null,null,'setting-gear-512.png');
     $menu->add('10.1','10','Ambiente Resumido','modulos/sys_environment_summary.php',null,'information16.gif');
     $menu->add('10.2','10','PHPInfo','modulos/sys_environment.php',null,'php_logo.png');
