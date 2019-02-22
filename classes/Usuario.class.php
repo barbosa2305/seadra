@@ -20,7 +20,7 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$result = UsuarioDAO::selectById( $id );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
@@ -29,12 +29,12 @@ class Usuario {
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null,$where=null,$page=null,$rowsPerPage=null){
 		$result = UsuarioDAO::selectAllPagination( $orderBy,$where,$page,$rowsPerPage );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null,$where=null ){
 		$result = UsuarioDAO::selectAll( $orderBy,$where );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( UsuarioVO $objVo ){
@@ -73,31 +73,6 @@ class Usuario {
 		$pwd_user_hash = password_hash( self::SENHA_PADRAO,PASSWORD_DEFAULT );
 		$objVo->setDssenha( $pwd_user_hash );
 		return UsuarioDAO::updatePassword( $objVo );
-	}
-	//--------------------------------------------------------------------------------
-	private static function trataDados($dados){
-	    if( isset($dados) ){
-	        foreach ($dados['STATIVO'] as $key => $value) {
-	            $dsPrincipal = 'Erro';
-	            if( $value == 'S' ){
-	                $dsPrincipal = 'Sim';
-	            } else {
-	                $dsPrincipal = 'Não';
-	            }
-	            $dados['DSATIVO'][$key]  = $dsPrincipal;
-			}
-
-			foreach ($dados['TPGRUPO'] as $key => $value) {
-	            $dsPrincipal = 'Erro';
-	            if( $value == 'A' ){
-	                $dsPrincipal = 'Administradores';
-	            } else {
-	                $dsPrincipal = 'Usuários';
-	            }
-	            $dados['DSGRUPO'][$key]  = $dsPrincipal;
-			}
-	    }
-	    return $dados;
 	}
 	//--------------------------------------------------------------------------------
 	private static function validarPermissoes( UsuarioVO $objVo,$acaoDelete=FALSE ){

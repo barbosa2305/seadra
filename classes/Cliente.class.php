@@ -17,7 +17,7 @@ class Cliente {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$result = ClienteDAO::selectById( $id );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
@@ -26,12 +26,12 @@ class Cliente {
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null,$where=null,$page=null,$rowsPerPage= null ){
 		$result = ClienteDAO::selectAllPagination( $orderBy,$where,$page,$rowsPerPage );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null, $where=null ){
 		$result = ClienteDAO::selectAll( $orderBy,$where );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( ClienteVO $objVo ){
@@ -81,21 +81,6 @@ class Cliente {
 				$objVo->setIdmunicipio( $idMunicipio );
 			}
 		}
-	}
-	//--------------------------------------------------------------------------------
-	private static function trataDados( $dados ){
-	    if( isset($dados) ){
-	        foreach ($dados['STATIVO'] as $key => $value) {
-	            $dsPrincipal = 'Erro';
-	            if( $value == 'S' ){
-	                $dsPrincipal = 'Sim';
-	            } else {
-	                $dsPrincipal = 'Não';
-	            }
-	            $dados['DSATIVO'][$key]  = $dsPrincipal;
-			}
-	    }
-	    return $dados;
 	}
 	//--------------------------------------------------------------------------------
     private static function validar( ClienteVO $objVo ){
