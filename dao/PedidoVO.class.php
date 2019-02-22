@@ -6,21 +6,15 @@ class PedidoVO {
 	private $vltotal = null;
 	private $vldesconto = null;
 	private $vlpago = null;
-	private $idusuariocriacao = null;
-	private $dtcriacao = null;
-	private $idusuariomodificacao = null;
-	private $dtmodificacao = null;
-	public function __construct( $idpedido=null, $idcliente=null, $dtpedido=null, $vltotal=null, $vldesconto=null, $vlpago=null, $idusuariocriacao=null, $dtcriacao=null, $idusuariomodificacao=null, $dtmodificacao=null ) {
+	private $idusuario = null;
+	public function __construct( $idpedido=null,$idcliente=null,$dtpedido=null,$vltotal=null,$vldesconto=null,$vlpago=null,$idusuario=null ){
 		$this->setIdpedido( $idpedido );
 		$this->setIdcliente( $idcliente );
 		$this->setDtpedido( $dtpedido );
 		$this->setVltotal( $vltotal );
 		$this->setVldesconto( $vldesconto );
 		$this->setVlpago( $vlpago );
-		$this->setIdusuariocriacao( $idusuariocriacao );
-		$this->setDtcriacao( $dtcriacao );
-		$this->setIdusuariomodificacao( $idusuariomodificacao );
-		$this->setDtmodificacao( $dtmodificacao );
+		$this->setIdusuario( $idusuario );
 	}
 	//--------------------------------------------------------------------------------
 	public function setIdpedido( $strNewValue = null )
@@ -77,40 +71,13 @@ class PedidoVO {
 		return $this->vlpago;
 	}
 	//--------------------------------------------------------------------------------
-	public function setIdusuariocriacao( $strNewValue = null )
+	public function setIdusuario( $strNewValue = null )
 	{
-		$this->idusuariocriacao = $strNewValue;
+		$this->idusuario = $strNewValue;
 	}
-	public function getIdusuariocriacao()
+	public function getIdusuario()
 	{
-		return $this->idusuariocriacao;
-	}
-	//--------------------------------------------------------------------------------
-	public function setDtcriacao( $strNewValue = null )
-	{
-		$this->dtcriacao = $strNewValue;
-	}
-	public function getDtcriacao()
-	{
-		return $this->dtcriacao;
-	}
-	//--------------------------------------------------------------------------------
-	public function setIdusuariomodificacao( $strNewValue = null )
-	{
-		$this->idusuariomodificacao = $strNewValue;
-	}
-	public function getIdusuariomodificacao()
-	{
-		return $this->idusuariomodificacao;
-	}
-	//--------------------------------------------------------------------------------
-	public function setDtmodificacao( $strNewValue = null )
-	{
-		$this->dtmodificacao = $strNewValue;
-	}
-	public function getDtmodificacao()
-	{
-		return $this->dtmodificacao;
+		return $this->idusuario;
 	}
 	//--------------------------------------------------------------------------------
 }

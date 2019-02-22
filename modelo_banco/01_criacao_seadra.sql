@@ -269,6 +269,23 @@ from `seadra`.`cliente` `cli`
     left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
 
 
+-- -----------------------------------------------------
+-- View `seadra`.`vw_pedido`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `seadra`.`vw_pedido` AS 
+select `ped`.`idPedido` AS `idPedido` 
+       ,`ped`.`idCliente` AS `idCliente`
+	     ,`cli`.`nmCliente` AS `nmCliente`
+       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
+       ,`ped`.`dtPedido` AS `dtPedido`
+       ,`ped`.`vlTotal` AS `vlTotal`
+       ,`ped`.`vlDesconto` AS `vlDesconto`
+       ,`ped`.`vlPago` AS `vlPago`
+from `seadra`.`pedido` `ped`    
+	inner join `seadra`.`cliente` `cli` on `ped`.`idCliente` = `cli`.`idCliente`;
+
+
+
 DROP USER IF EXISTS 'seadra_bd'@'localhost';
 CREATE USER 'seadra_bd'@'localhost' IDENTIFIED BY '!s3@dr@19';
 GRANT DELETE,EXECUTE,INSERT,SELECT,UPDATE ON seadra.* TO 'seadra_bd'@'localhost';

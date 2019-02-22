@@ -2,29 +2,37 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPEDIDO';
-$frm = new TForm('pedido',800,950);
-$frm->setFlat(true);
-$frm->setMaximize(true);
+$frm = new TForm( 'Pedido',580,850 );
+$frm->setFlat(TRUE);
+$frm->setMaximize(TRUE);
+
+$frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
+$frm->addHiddenField( $primaryKey );  // coluna chave da tabela
+
+//$frm->addGroupField('gpx1','Cliente');
+	//$g->setColumns('90,100');
+	$frm->setColumns('85,500,70,80');
+	// Inicio campo AutoComplete
+	$frm->addTextField('NMCLIENTE','Cliente:',80,TRUE,80,null,TRUE); //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('IDCLIENTE','Cód. cliente:',10,TRUE,10,null,false);  //campo obrigatorio para funcionar o autocomplete
+	$frm->setAutoComplete('NMCLIENTE','vw_cliente','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
+						  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
+	// Fim campo AutoComplete
+//$frm->closeGroup();
+
+//$g = $frm->addGroupField('gpx2','Outras informações');
+////$frm->addGroupField('gpx2', 'Outras informações');
+
+	$frm->addDateField('DTPEDIDO', 'Data:',TRUE);
+	$frm->addNumberField('VLTOTAL', 'Valor total:',10,FALSE,2)->setEnabled( FALSE );
+	$frm->addNumberField('VLDESCONTO', 'Valor desconto:',10,FALSE,2);
+	$frm->addNumberField('VLPAGO', 'Valor pago:',10,FALSE,2)->setEnabled( FALSE );
+//$frm->closeGroup();
 
 
-$frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
-$frm->addHiddenField( $primaryKey );   // coluna chave da tabela
-$listCliente = Cliente::selectAll();
-$frm->addSelectField('IDCLIENTE', 'IDCLIENTE',TRUE,$listCliente,null,null,null,null,null,null,' ',null);
-$frm->addDateField('DTPEDIDO', 'DTPEDIDO',TRUE);
-$frm->addNumberField('VLTOTAL', 'VLTOTAL',10,TRUE,2);
-$frm->addNumberField('VLDESCONTO', 'VLDESCONTO',10,FALSE,2);
-$frm->addNumberField('VLPAGO', 'VLPAGO',10,TRUE,2);
-$listUsuario = Usuario::selectAll();
-$frm->addSelectField('IDUSUARIOCRIACAO', 'IDUSUARIOCRIACAO',TRUE,$listUsuario,null,null,null,null,null,null,' ',null);
-$frm->addDateField('DTCRIACAO', 'DTCRIACAO',TRUE);
-$listUsuario = Usuario::selectAll();
-$frm->addSelectField('IDUSUARIOMODIFICACAO', 'IDUSUARIOMODIFICACAO',FALSE,$listUsuario,null,null,null,null,null,null,' ',null);
-$frm->addDateField('DTMODIFICACAO', 'DTMODIFICACAO',FALSE);
-
-$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, true, false);
-$frm->addButton('Salvar', null, 'Salvar', null, null, false, false);
-$frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
+$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
+$frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);
+$frm->addButton('Limpar', null, 'Limpar', null, null, FALSE, FALSE);
 
 
 $acao = isset($acao) ? $acao : null;
@@ -89,10 +97,6 @@ function getWhereGridParameters(&$frm){
 				,'VLTOTAL'=>$frm->get('VLTOTAL')
 				,'VLDESCONTO'=>$frm->get('VLDESCONTO')
 				,'VLPAGO'=>$frm->get('VLPAGO')
-				,'IDUSUARIOCRIACAO'=>$frm->get('IDUSUARIOCRIACAO')
-				,'DTCRIACAO'=>$frm->get('DTCRIACAO')
-				,'IDUSUARIOMODIFICACAO'=>$frm->get('IDUSUARIOMODIFICACAO')
-				,'DTMODIFICACAO'=>$frm->get('DTMODIFICACAO')
 		);
 	}
 	return $retorno;
@@ -110,13 +114,9 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 					.',VLTOTAL|VLTOTAL'
 					.',VLDESCONTO|VLDESCONTO'
 					.',VLPAGO|VLPAGO'
-					.',IDUSUARIOCRIACAO|IDUSUARIOCRIACAO'
-					.',DTCRIACAO|DTCRIACAO'
-					.',IDUSUARIOMODIFICACAO|IDUSUARIOMODIFICACAO'
-					.',DTMODIFICACAO|DTMODIFICACAO'
 					;
 	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Gride with SQL Pagination' // titulo do gride
+					   ,'Lista de pedidos' // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados
@@ -125,17 +125,12 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setUpdateFields($mixUpdateFields);
 	$gride->setUrl( 'pedido.php' );
 
-	$gride->addColumn($primaryKey,'id');
-	$gride->addColumn('IDCLIENTE','IDCLIENTE');
-	$gride->addColumn('DTPEDIDO','DTPEDIDO');
-	$gride->addColumn('VLTOTAL','VLTOTAL');
-	$gride->addColumn('VLDESCONTO','VLDESCONTO');
-	$gride->addColumn('VLPAGO','VLPAGO');
-	$gride->addColumn('IDUSUARIOCRIACAO','IDUSUARIOCRIACAO');
-	$gride->addColumn('DTCRIACAO','DTCRIACAO');
-	$gride->addColumn('IDUSUARIOMODIFICACAO','IDUSUARIOMODIFICACAO');
-	$gride->addColumn('DTMODIFICACAO','DTMODIFICACAO');
-
+	$gride->addColumn($primaryKey,'Pedido');
+	$gride->addColumnCompact('NMCLIENTE','Cliente');
+	$gride->addColumn('DTPEDIDO','Data');
+	$gride->addColumn('VLTOTAL','Valor total');
+	$gride->addColumn('VLDESCONTO','Valor desconto');
+	$gride->addColumn('VLPAGO','Valor Pago');
 
 	$gride->show();
 	die();
@@ -155,10 +150,6 @@ function init() {
 					,"VLTOTAL":""
 					,"VLDESCONTO":""
 					,"VLPAGO":""
-					,"IDUSUARIOCRIACAO":""
-					,"DTCRIACAO":""
-					,"IDUSUARIOMODIFICACAO":""
-					,"DTMODIFICACAO":""
 					};
 	fwGetGrid('pedido.php','gride',Parameters,true);
 }
