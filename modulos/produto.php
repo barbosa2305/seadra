@@ -12,8 +12,8 @@ $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 $g = $frm->addGroupField('gpx1');
 	$g->setColumns('90,160');
 	$frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,120);
-	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo:',10,TRUE,2);
-	$frm->addNumberField('VLPRECOVENDA', 'Preço venda:',10,TRUE,2);
+	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo:',10,TRUE,2)->setExampleText('R$');
+	$frm->addNumberField('VLPRECOVENDA', 'Preço venda:',10,TRUE,2)->setExampleText('R$');
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
 	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
 	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
@@ -35,6 +35,7 @@ switch( $acao ){
 			if ( $frm->validate() ){
 				$vo = new ProdutoVO();
 				$frm->setVo( $vo );
+				$vo->setIdusuario( Acesso::getUserId() );
 				$resultado = Produto::save( $vo );
 				if ( $resultado == 1 ) {
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
@@ -48,7 +49,7 @@ switch( $acao ){
 			$frm->setMessage( $e->getMessage() );
 		}
 		catch ( Exception $e ){
-			MessageHelper::logRecord($e);
+			MessageHelper::logRecord( $e );
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
@@ -69,7 +70,7 @@ switch( $acao ){
 			$frm->setMessage( $e->getMessage() );
 		}
 		catch ( Exception $e ) {
-			MessageHelper::logRecord($e);
+			MessageHelper::logRecord( $e );
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;

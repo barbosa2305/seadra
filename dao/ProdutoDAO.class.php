@@ -4,8 +4,8 @@ class ProdutoDAO extends TPDOConnection {
 	private static $sqlBasicSelect = 'select
 									  idproduto
 									 ,nmproduto
-									 ,vlprecocusto
-									 ,vlprecovenda
+									 ,format(vlprecocusto,2,\'de_DE\') as vlprecocusto
+									 ,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
 									 ,stativo
 									 from seadra.produto ';
 
@@ -56,10 +56,10 @@ class ProdutoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function insert( ProdutoVO $objVo ){
-		$values = array( trim($objVo->getNmproduto())
-						, $objVo->getVlprecocusto() 
-						, $objVo->getVlprecovenda() 
-						, $objVo->getIdusuario() 
+		$values = array( trim( $objVo->getNmproduto() )
+						,TrataDados::converteMoeda( $objVo->getVlprecocusto() ) 
+						,TrataDados::converteMoeda( $objVo->getVlprecovenda() ) 
+						,$objVo->getIdusuario() 
 						);
 		return self::executeSql('insert into seadra.produto(
 								 nmproduto
@@ -71,8 +71,8 @@ class ProdutoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function update ( ProdutoVO $objVo ){
 		$values = array( trim($objVo->getNmproduto())
-						,$objVo->getVlprecocusto()
-						,$objVo->getVlprecovenda()
+						,TrataDados::converteMoeda( $objVo->getVlprecocusto() ) 
+						,TrataDados::converteMoeda( $objVo->getVlprecovenda() ) 
 						,$objVo->getStativo()
 						,$objVo->getIdusuario()
 						,$objVo->getIdProduto() );

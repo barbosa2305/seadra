@@ -17,7 +17,7 @@ class Produto {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$result = ProdutoDAO::selectById( $id );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
@@ -26,12 +26,12 @@ class Produto {
 	//--------------------------------------------------------------------------------
 	public static function selectAllPagination( $orderBy=null,$where=null,$page=null,$rowsPerPage= null){
 		$result = ProdutoDAO::selectAllPagination( $orderBy,$where,$page,$rowsPerPage );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectAll( $orderBy=null,$where=null ){
 		$result = ProdutoDAO::selectAll( $orderBy,$where );
-		return self::trataDados( $result );
+		return TrataDados::converte( $result );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( ProdutoVO $objVo ){
@@ -50,21 +50,6 @@ class Produto {
 		$vo->setIdproduto( $id );
 		$vo->setStativo( STATUS_INATIVO );
 		return ProdutoDAO::updateStatus( $vo );
-	}
-	//--------------------------------------------------------------------------------
-	private static function trataDados( $dados ){
-		if( isset($dados) ){
-			foreach ($dados['STATIVO'] as $key => $value) {
-				$dsPrincipal = 'Erro';
-				if( $value == 'S' ){
-					$dsPrincipal = 'Sim';
-				} else {
-					$dsPrincipal = 'Não';
-				}
-				$dados['DSATIVO'][$key]  = $dsPrincipal;
-			}
-		}
-		return $dados;
 	}
 	//--------------------------------------------------------------------------------
 	private static function validar( ProdutoVO $objVo ){
