@@ -35,6 +35,7 @@ $app->setLoginInfo(Acesso::getUserName());
 
 $app->setMainMenuFile('includes/menu.php');
 //$app->setWaterMark('images/bg_transparencia.jpg');
+$app->setDefaultModule('pedido.php');
 
 $app->run();
 ?>
