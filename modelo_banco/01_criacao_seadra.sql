@@ -168,9 +168,9 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Pedido` (
   `idPedido` INT NOT NULL AUTO_INCREMENT,
   `idCliente` INT NOT NULL,
   `dtPedido` DATE NOT NULL,
-  `vlTotal` DECIMAL(10,2) NOT NULL,
+  `vlTotal` DECIMAL(10,2) NULL,
   `vlDesconto` DECIMAL(10,2) NULL,
-  `vlPago` DECIMAL(10,2) NOT NULL,
+  `vlPago` DECIMAL(10,2) NULL,
   `idUsuarioCriacao` INT NOT NULL,
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
   `idUsuarioModificacao` INT NULL,
@@ -277,7 +277,7 @@ select `ped`.`idPedido` AS `idPedido`
        ,`ped`.`idCliente` AS `idCliente`
 	     ,`cli`.`nmCliente` AS `nmCliente`
        ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
-       ,`ped`.`dtPedido` AS `dtPedido`
+       ,DATE_FORMAT(`ped`.`dtPedido`,'%d/%m/%Y') AS `dtPedido`
        ,`ped`.`vlTotal` AS `vlTotal`
        ,`ped`.`vlDesconto` AS `vlDesconto`
        ,`ped`.`vlPago` AS `vlPago`
