@@ -16,10 +16,9 @@ $menu->add('1', null, 'Principal', null, null, 'menu-alt-512.png');
 $menu->add('1.0',1,'Cliente','modulos/cliente.php');
 $menu->add('1.1',1,'Produto','modulos/produto.php');
 $menu->add('1.2',1,'Pedido','modulos/pedido.php');
-$menu->add('1.3',1,'Item Pedido','modulos/itempedido.php');
 
 $menu->add('2', null, 'Acesso', null, null, 'icon-key-yellow.png');
-$menu->add('2.1',2,'Alterar Minha Senha','modulos/alterasenha.php', null, 'lock16.gif');
+$menu->add('2.1',2,'Alterar minha senha','modulos/alterasenha.php', null, 'lock16.gif');
 
 if ( Acesso::getUserGroup() == Acesso::USER_GRUPO_ADMIN ) {
     $menu->add('2.2',2,'Usuário','modulos/usuario.php');
