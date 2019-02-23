@@ -44,6 +44,6 @@ class Pedido {
 	public static function delete( $id ){
 		return PedidoDAO::delete( $id );
 	}
-
+	//--------------------------------------------------------------------------------
 }
 ?>

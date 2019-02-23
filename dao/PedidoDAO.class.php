@@ -99,8 +99,18 @@ class PedidoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
+		$result = null;
 		$values = array( $id );
-		return self::executeSql( 'delete from seadra.pedido where idPedido = ?',$values );
+		self::beginTransaction();
+		$result = self::executeSql( 'delete from seadra.itempedido where idPedido = ?',$values );
+		$result = self::executeSql( 'delete from seadra.pedido where idPedido = ?',$values );
+		self::commit();
+		$erro =self::getError();
+		if ( $erro ) {
+			self::rollBack();
+			throw new Exception( $erro );
+		}
+		return $result;
 	}
 	//--------------------------------------------------------------------------------
 }
