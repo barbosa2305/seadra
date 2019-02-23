@@ -3,7 +3,7 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
 
-$frm = new TForm('Alterar a senha',200,400);
+$frm = new TForm('Alterar minha senha',200,400);
 $frm->setFlat(true);
 $frm->setMaximize(true);
 $frm->setColumns('110');
