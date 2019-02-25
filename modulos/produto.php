@@ -120,7 +120,8 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 	$gride->setRealTotalRowsSqlPaginator( $realTotalRowsSqlPaginator );
 	$gride->setMaxRows( $maxRows );
 	$gride->setUpdateFields( $mixUpdateFields );
-	$gride->setUrl( 'produto.php' );
+    $gride->setUrl( 'produto.php' );
+    $gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código');
 	$gride->addColumnCompact('NMPRODUTO','Descrição');
