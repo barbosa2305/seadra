@@ -12,32 +12,28 @@
 
 class Itempedido {
 
-
 	public function __construct(){
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
-		$result = ItempedidoDAO::selectById( $id );
-		return $result;
+		return ItempedidoDAO::selectById( $id );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
-		$result = ItempedidoDAO::selectCount( $where );
-		return $result;
+		return ItempedidoDAO::selectCount( $where );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectAllPagination( $orderBy=null, $where=null, $page=null,  $rowsPerPage= null){
-		$result = ItempedidoDAO::selectAllPagination( $orderBy, $where, $page,  $rowsPerPage );
-		return $result;
+	public static function selectAllPagination( $orderBy=null,$where=null,$page=null,$rowsPerPage=null ){
+		return ItempedidoDAO::selectAllPagination( $orderBy,$where,$page,$rowsPerPage );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectAll( $orderBy=null, $where=null ){
-		$result = ItempedidoDAO::selectAll( $orderBy, $where );
-		return $result;
+	public static function selectAll( $orderBy=null,$where=null ){
+		return ItempedidoDAO::selectAll( $orderBy,$where );
 	}
 	//--------------------------------------------------------------------------------
 	public static function save( ItempedidoVO $objVo ){
 		$result = null;
+		self::calcularValores( $objVo );
 		if( $objVo->getIditempedido() ) {
 			$result = ItempedidoDAO::update( $objVo );
 		} else {
@@ -47,9 +43,17 @@ class Itempedido {
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
-		$result = ItempedidoDAO::delete( $id );
-		return $result;
+		return ItempedidoDAO::delete( $id );
 	}
+	//--------------------------------------------------------------------------------
+	private static function calcularValores( ItempedidoVO $voItemPedido ){
+		
+		
+		
+		
+		return null;
+	}
+	//--------------------------------------------------------------------------------
 
 }
 ?>

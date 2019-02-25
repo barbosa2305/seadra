@@ -2,49 +2,66 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDITEMPEDIDO';
-$frm = new TForm('itempedido',800,950);
-$frm->setFlat(true);
-$frm->setMaximize(true);
+$frm = new TForm( 'Itens do pedido',580,850 );
+$frm->setFlat( TRUE );
+$frm->setMaximize( TRUE );
 
+$frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
+$frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 
-$frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
-$frm->addHiddenField( $primaryKey );   // coluna chave da tabela
-$listPedido = Pedido::selectAll();
-$frm->addSelectField('IDPEDIDO', 'IDPEDIDO',TRUE,$listPedido,null,null,null,null,null,null,' ',null);
-$listProduto = Produto::selectAll();
-$frm->addSelectField('IDPRODUTO', 'IDPRODUTO',TRUE,$listProduto,null,null,null,null,null,null,' ',null);
-$frm->addNumberField('QTITEMPEDIDO', 'QTITEMPEDIDO',10,TRUE,0);
+$g = $frm->addGroupField('gpx1');
+	$g->setColumns('65,80,45,80,62');
+	$frm->addTextField('IDPEDIDO','Pedido:',12,TRUE)->setEnabled( FALSE );
+	$frm->addTextField('NMCLIENTE','Cliente:',94,FALSE,94,null,FALSE)->setEnabled( FALSE );
+	$frm->addTextField('DTPEDIDO','Data:',12,FALSE,12,null,TRUE)->setEnabled( FALSE );
+	// Inicio campo AutoComplete
+	$frm->addTextField('IDPRODUTO','Produto:',12,TRUE,12,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('NMPRODUTO',null,70,FALSE,70,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->addNumberField('VLPRECOVENDA', 'Preço (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->setAutoComplete('NMPRODUTO','produto','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
+						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
+	// Fim campo AutoComplete
+	$frm->addNumberField('QTITEMPEDIDO','Quantidade:',12,TRUE,0);
+	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
+$g->closeGroup();
 
-$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, true, false);
-$frm->addButton('Salvar', null, 'Salvar', null, null, false, false);
-$frm->addButton('Limpar', null, 'Limpar', null, null, false, false);
+$frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
+$frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);
+$frm->addButton('Limpar',null,'Limpar',null,null,FALSE,FALSE);
+$frm->addButton('Voltar para pedido','Voltar','btnVoltar',null,null,FALSE,FALSE);
+$frm->addButton('Ir para produto','Produto','btnProduto',null,null,FALSE,TRUE);
 
+function getCamposNaoLimpar() {
+    return array( 'IDPEDIDO','NMCLIENTE','DTPEDIDO' );
+}
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
 	//--------------------------------------------------------------------------------
 	case 'Limpar':
-		$frm->clearFields();
+		$naoLimpar = getCamposNaoLimpar();
+		$frm->clearFields( null,$naoLimpar );
 	break;
 	case 'Salvar':
 		try{
-			if ( $frm->validate() ) {
+			if ( $frm->validate() ){
 				$vo = new ItempedidoVO();
 				$frm->setVo( $vo );
 				$resultado = Itempedido::save( $vo );
-				if($resultado==1) {
-					$frm->setMessage('Registro gravado com sucesso!!!');
-					$frm->clearFields();
-				}else{
-					$frm->setMessage($resultado);
+				if ( $resultado == 1){
+					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
+					$naoLimpar = getCamposNaoLimpar();
+            		$frm->clearFields( null,$naoLimpar );
+				} else {
+					$frm->setMessage( $resultado );
 				}
 			}
 		}
-		catch (DomainException $e) {
+		catch ( DomainException $e ){
 			$frm->setMessage( $e->getMessage() );
 		}
-		catch (Exception $e) {
-			MessageHelper::logRecord($e);
+		catch ( Exception $e ){
+			MessageHelper::logRecord( $e );
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
@@ -52,71 +69,87 @@ switch( $acao ) {
 	case 'gd_excluir':
 		try{
 			$id = $frm->get( $primaryKey ) ;
-			$resultado = Itempedido::delete( $id );;
-			if($resultado==1) {
-				$frm->setMessage('Registro excluido com sucesso!!!');
-				$frm->clearFields();
-			}else{
-				$frm->clearFields();
-				$frm->setMessage($resultado);
+			$resultado = Itempedido::delete( $id );
+			if ( $resultado == 1 ){
+				$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
+				$naoLimpar = getCamposNaoLimpar();
+				$frm->clearFields( null,$naoLimpar );
+			} else {
+				$frm->setMessage( $resultado );
 			}
 		}
-		catch (DomainException $e) {
+		catch ( DomainException $e ){
 			$frm->setMessage( $e->getMessage() );
 		}
-		catch (Exception $e) {
-			MessageHelper::logRecord($e);
+		catch ( Exception $e ){
+			MessageHelper::logRecord( $e );
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
+	//--------------------------------------------------------------------------------
+	case 'Voltar':
+		$frm->setFieldValue( 'BUSCAR',null );
+		$frm->setFieldValue( 'IDPEDIDO',null );
+		$frm->setFieldValue( 'NMCLIENTE',null );
+		$frm->setFieldValue( 'DTPEDIDO',null );
+		$frm->redirect( 'pedido.php',null,TRUE );
+	break;
+	//--------------------------------------------------------------------------------
+	case 'Produto':
+		$frm->setFieldValue( 'BUSCAR',null );
+		$frm->setFieldValue( 'IDPRODUTO',null );
+		$frm->setFieldValue( 'NMPRODUTO',null );
+		$frm->redirect( 'produto.php',null,TRUE );
+	break;
+	//--------------------------------------------------------------------------------
 }
-
 
 function getWhereGridParameters(&$frm){
 	$retorno = null;
-	if($frm->get('BUSCAR') == 1 ){
+	if ( $frm->get('BUSCAR') == 1 ){
 		$retorno = array(
 				'IDITEMPEDIDO'=>$frm->get('IDITEMPEDIDO')
 				,'IDPEDIDO'=>$frm->get('IDPEDIDO')
-				,'IDPEDIDO'=>$frm->get('IDPEDIDO')
-				,'IDPRODUTO'=>$frm->get('IDPRODUTO')
-				,'IDPRODUTO'=>$frm->get('IDPRODUTO')
+				,'IDPRODUTO'=>$frm->get('IDPRODUTO') 
 				,'QTITEMPEDIDO'=>$frm->get('QTITEMPEDIDO')
 		);
 	}
 	return $retorno;
 }
 
-if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
-	$maxRows = ROWS_PER_PAGE;
-	$whereGrid = getWhereGridParameters($frm);
-	$page = PostHelper::get('page');
-	$dados = Itempedido::selectAllPagination( $primaryKey, $whereGrid, $page,  $maxRows);
-	$realTotalRowsSqlPaginator = Itempedido::selectCount( $whereGrid );
-	$mixUpdateFields = $primaryKey.'|'.$primaryKey
-					.',IDPEDIDO|IDPEDIDO'
-					.',IDPEDIDO|IDPEDIDO'
-					.',IDPRODUTO|IDPRODUTO'
-					.',IDPRODUTO|IDPRODUTO'
-					.',QTITEMPEDIDO|QTITEMPEDIDO'
-					;
-	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Gride with SQL Pagination' // titulo do gride
-					   );
-	$gride->addKeyField( $primaryKey ); // chave primaria
-	$gride->setData( $dados ); // array de dados
-	$gride->setRealTotalRowsSqlPaginator( $realTotalRowsSqlPaginator );
-	$gride->setMaxRows( $maxRows );
-	$gride->setUpdateFields($mixUpdateFields);
-	$gride->setUrl( 'itempedido.php' );
+if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
+	if ( !empty($frm->get('IDPEDIDO')) ) {
+		$maxRows = ROWS_PER_PAGE;
+		$whereGrid = getWhereGridParameters( $frm );
+		$whereGrid['IDPEDIDO'] = $frm->get('IDPEDIDO');
+		$page = PostHelper::get('page');
+		$dados = Itempedido::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
+		$realTotalRowsSqlPaginator = Itempedido::selectCount( $whereGrid );
+		$mixUpdateFields = $primaryKey.'|'.$primaryKey
+						.',IDPEDIDO|IDPEDIDO'
+						.',IDPRODUTO|IDPRODUTO'
+						.',NMPRODUTO|NMPRODUTO'
+						.',VLPRECOVENDA|VLPRECOVENDA'
+						.',QTITEMPEDIDO|QTITEMPEDIDO' 
+						;
+		$gride = new TGrid( 'gd'                        // id do gride
+						,'Lista de itens do pedido' // titulo do gride
+						);
+		$gride->addKeyField( $primaryKey ); // chave primaria
+		$gride->setData( $dados ); // array de dados
+		$gride->setRealTotalRowsSqlPaginator( $realTotalRowsSqlPaginator );
+		$gride->setMaxRows( $maxRows );
+		$gride->setUpdateFields( $mixUpdateFields );
+		$gride->setUrl( 'itempedido.php' );
+	} else {
+		$gride = new TGrid( 'gd','Lista de itens do pedido');
+	}
 
-	$gride->addColumn($primaryKey,'id');
-	$gride->addColumn('IDPEDIDO','IDPEDIDO');
-	$gride->addColumn('IDPEDIDO','IDPEDIDO');
-	$gride->addColumn('IDPRODUTO','IDPRODUTO');
-	$gride->addColumn('IDPRODUTO','IDPRODUTO');
-	$gride->addColumn('QTITEMPEDIDO','QTITEMPEDIDO');
-
+	$gride->addColumn('NRITEM','Item');
+	$gride->addColumnCompact('NMPRODUTO','Produto');
+	$gride->addColumn('QTITEMPEDIDO','Quantidade');
+	$gride->addColumn('VLPRECOVENDA','Valor unitário (R$)');
+	$gride->addColumn('VLTOTALITEM','Valor total (R$)');
 
 	$gride->show();
 	die();
@@ -132,9 +165,9 @@ function init() {
 	var Parameters = {"BUSCAR":""
 					,"IDITEMPEDIDO":""
 					,"IDPEDIDO":""
-					,"IDPEDIDO":""
 					,"IDPRODUTO":""
-					,"IDPRODUTO":""
+					,"NMPRODUTO":""
+					,"VLPRECOVENDA":""
 					,"QTITEMPEDIDO":""
 					};
 	fwGetGrid('itempedido.php','gride',Parameters,true);

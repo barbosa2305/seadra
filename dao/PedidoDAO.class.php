@@ -7,9 +7,9 @@ class PedidoDAO extends TPDOConnection {
 									 ,nmcliente
 									 ,nrcpfcnpj
 									 ,dtpedido
-									 ,vltotal
-									 ,vldesconto
-									 ,vlpago
+									 ,format(vltotal,2,\'de_DE\') as vltotal
+									 ,format(vldesconto,2,\'de_DE\') as vldesconto
+									 ,format(vlpago,2,\'de_DE\') as vlpago
 									 from seadra.vw_pedido ';
 
 	private static function processWhereGridParameters( $whereGrid ){
@@ -64,9 +64,9 @@ class PedidoDAO extends TPDOConnection {
 	public static function insert( PedidoVO $objVo ){
 		$values = array( $objVo->getIdcliente() 
 						 ,$objVo->getDtpedido() 
-						 ,$objVo->getVltotal() 
-						 ,$objVo->getVldesconto() 
-						 ,$objVo->getVlpago() 
+						 ,TrataDados::converteMoeda( $objVo->getVltotal() ) 
+						 ,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
+						 ,TrataDados::converteMoeda( $objVo->getVlpago() )
 						 ,$objVo->getIdusuario() 
 						);
 		return self::executeSql( 'insert into seadra.pedido(
@@ -79,20 +79,29 @@ class PedidoDAO extends TPDOConnection {
 								 ) values (?,?,?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
-	public static function update ( PedidoVO $objVo ){
+	public static function update( PedidoVO $objVo ){
 		$values = array( $objVo->getIdcliente()
 						 ,$objVo->getDtpedido()
-						 ,$objVo->getVltotal()
-						 ,$objVo->getVldesconto()
-						 ,$objVo->getVlpago()
+						 ,TrataDados::converteMoeda( $objVo->getVldesconto() )
 						 ,$objVo->getIdusuario()
 						 ,$objVo->getIdPedido() 
 					    );
 		return self::executeSql( 'update seadra.pedido set 
 								  idcliente = ?
 							  	 ,dtpedido = ?
-								 ,vltotal = ?
 								 ,vldesconto = ?
+								 ,idusuariomodificacao = ?
+								 where idPedido = ?',$values );
+	}
+	//--------------------------------------------------------------------------------
+	public static function updateValores( PedidoVO $objVo ){
+		$values = array( TrataDados::converteMoeda( $objVo->getVltotal() )
+						 ,TrataDados::converteMoeda( $objVo->getVlpago() )
+						 ,$objVo->getIdusuario()
+						 ,$objVo->getIdPedido() 
+					    );
+		return self::executeSql( 'update seadra.pedido set 
+								  vltotal = ?
 								 ,vlpago = ?
 								 ,idusuariomodificacao = ?
 								 where idPedido = ?',$values );
@@ -102,7 +111,7 @@ class PedidoDAO extends TPDOConnection {
 		$result = null;
 		$values = array( $id );
 		self::beginTransaction();
-		$result = self::executeSql( 'delete from seadra.itempedido where idPedido = ?',$values );
+		$result = ItempedidoDAO::deleteIdPedido( $id );
 		$result = self::executeSql( 'delete from seadra.pedido where idPedido = ?',$values );
 		self::commit();
 		$erro =self::getError();

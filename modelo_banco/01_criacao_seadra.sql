@@ -284,6 +284,19 @@ select `ped`.`idPedido` AS `idPedido`
 from `seadra`.`pedido` `ped`    
 	inner join `seadra`.`cliente` `cli` on `ped`.`idCliente` = `cli`.`idCliente`;
 
+-- -----------------------------------------------------
+-- View `seadra`.`vw_itempedido`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `seadra`.`vw_itempedido` AS 
+select `ite`.`idItemPedido` AS `idItemPedido`
+	     ,`ite`.`idPedido` AS `idPedido` 
+       ,`ite`.`idProduto` AS `idProduto`
+	     ,`pro`.`nmProduto` AS `nmProduto`
+       ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
+       ,`ite`.`qtItemPedido` AS `qtItemPedido`
+from `seadra`.`itempedido` `ite`
+	inner join `seadra`.`pedido` `ped`  on  `ite`.`idPedido` = `ped`.`idPedido`
+	inner join `seadra`.`produto` `pro` on `ite`.`idProduto` = `pro`.`idProduto`;
 
 
 DROP USER IF EXISTS 'seadra_bd'@'localhost';

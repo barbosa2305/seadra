@@ -9,21 +9,25 @@ $frm->setMaximize( TRUE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );  // coluna chave da tabela
 
-$frm->setColumns('82,500,68,80');
-// Inicio campo AutoComplete
-$frm->addTextField('IDCLIENTE','Cód. cliente:',10,TRUE,10,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-$frm->addTextField('NMCLIENTE','Cliente:',80,TRUE,80,null,TRUE); //campo obrigatorio para funcionar o autocomplete
-$frm->setAutoComplete('NMCLIENTE','vw_cliente','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
-					  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
-// Fim campo AutoComplete
-$frm->addDateField('DTPEDIDO','Data:',TRUE);
+$g = $frm->addGroupField('gpx1');
+	$g->setColumns('80,110,85');
+	// Inicio campo AutoComplete
+	$frm->addTextField('IDCLIENTE','Cliente:',13,TRUE,13,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('NMCLIENTE',null,100,FALSE,100,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->setAutoComplete('NMCLIENTE','vw_cliente','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
+						  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
+	// Fim campo AutoComplete
+	$frm->addDateField('DTPEDIDO','Data:',TRUE,null);
+	//$frm->addNumberField('VLTOTAL', 'Valor total (R$):',14,FALSE,2)->setEnabled( FALSE );
+	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',10,FALSE,2,TRUE);
+	//$frm->addNumberField('VLPAGO', 'Valor pago (R$):',14,FALSE,2)->setEnabled( FALSE );
+	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
+$g->closeGroup();
 
-$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
-$frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);
-$frm->addButton('Limpar', null, 'Limpar', null, null, FALSE, FALSE);
-$frm->addButton('Cliente', null, 'btnCliente', null, null, FALSE, FALSE);
-$frm->addButton('Produto', null, 'btnProduto', null, null, FALSE, FALSE);
-
+$frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
+$frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);
+$frm->addButton('Limpar',null,'Limpar',null,null,FALSE,FALSE);
+$frm->addButton('Ir para cliente','Cliente','btnCliente',null,null,FALSE,TRUE);
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
@@ -110,11 +114,10 @@ switch( $acao ) {
 	break;
 	//--------------------------------------------------------------------------------
 	case 'Cliente':
+		$frm->setFieldValue( 'BUSCAR',null );
+		$frm->setFieldValue( 'IDCLIENTE',null );
+		$frm->setFieldValue( 'NMCLIENTE',null );
 		$frm->redirect( 'cliente.php',null,TRUE );
-	break;
-	//--------------------------------------------------------------------------------
-	case 'Produto':
-		$frm->redirect( 'produto.php',null,TRUE );
 	break;
 	//--------------------------------------------------------------------------------
 }
@@ -126,6 +129,7 @@ function getWhereGridParametersPedido( &$frm ){
 				'IDPEDIDO'=>$frm->get('IDPEDIDO')
 				,'IDCLIENTE'=>$frm->get('IDCLIENTE')
 				,'DTPEDIDO'=>$frm->get('DTPEDIDO')
+				,'VLDESCONTO'=>TrataDados::converteMoeda( $frm->get('VLDESCONTO') )
 		);
 	}
 	return $retorno;
@@ -141,6 +145,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 					.',IDCLIENTE|IDCLIENTE'
 					.',NMCLIENTE|NMCLIENTE'
 					.',DTPEDIDO|DTPEDIDO'
+					.',VLDESCONTO|VLDESCONTO'
 					;
 	$gride = new TGrid( 'gd'                // id do gride
 					   ,'Lista de pedidos' // titulo do gride
@@ -156,9 +161,9 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$gride->addColumnCompact('NMCLIENTE','Cliente');
 	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ');
 	$gride->addColumn('DTPEDIDO','Data');
-	$gride->addColumn('VLTOTAL','Valor total');
-	$gride->addColumn('VLDESCONTO','Valor desconto');
-	$gride->addColumn('VLPAGO','Valor pago');
+	$gride->addColumn('VLTOTAL','Valor total (R$)');
+	$gride->addColumn('VLDESCONTO','Valor desconto (R$)');
+	$gride->addColumn('VLPAGO','Valor pago (R$)');
 
 	$gride->addButton('Adicionar itens no pedido','gd_itens','btnItens',null,null,'images/gtk_add_17px.png');
 	$gride->addButton('Gerar orçamento','gd_imprimir','btnImprimir',null,null,'print16.gif');
@@ -179,7 +184,9 @@ function init() {
 	var Parameters = {"BUSCAR":""
 					,"IDPEDIDO":""
 					,"IDCLIENTE":""
+					,"NMCLIENTE":""
 					,"DTPEDIDO":""
+					,"VLDESCONTO":""
 					};
 	fwGetGrid('pedido.php','gride',Parameters,true);
 }
