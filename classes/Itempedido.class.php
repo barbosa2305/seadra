@@ -33,11 +33,15 @@ class Itempedido {
 	//--------------------------------------------------------------------------------
 	public static function save( ItempedidoVO $objVo ){
 		$result = null;
-		self::calcularValores( $objVo );
 		if( $objVo->getIditempedido() ) {
 			$result = ItempedidoDAO::update( $objVo );
 		} else {
 			$result = ItempedidoDAO::insert( $objVo );
+		}
+		if ($result) {
+			$idPedido = $objVo->getIdpedido();
+			$idUsuario = $objVo->getIdusuario();
+			$result = PedidoDAO::updateValores( $idPedido,$idUsuario );
 		}
 		return $result;
 	}
@@ -46,14 +50,5 @@ class Itempedido {
 		return ItempedidoDAO::delete( $id );
 	}
 	//--------------------------------------------------------------------------------
-	private static function calcularValores( ItempedidoVO $voItemPedido ){
-		
-		
-		
-		
-		return null;
-	}
-	//--------------------------------------------------------------------------------
-
 }
 ?>

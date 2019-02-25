@@ -2,7 +2,7 @@
 class ItempedidoDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
-									 @contador:=@contador+1 as `nritem`
+									 @contador:=@contador+1 as nritem
 									 ,iditempedido
 									 ,idpedido
 									 ,idproduto
@@ -64,8 +64,7 @@ class ItempedidoDAO extends TPDOConnection {
 	public static function insert( ItempedidoVO $objVo ){
 		$values = array( $objVo->getIdpedido() 
 						,$objVo->getIdproduto() 
-						,$objVo->getQtitempedido() 
-						);
+						,$objVo->getQtitempedido() );
 		return self::executeSql('insert into seadra.itempedido(
 								idpedido
 								,idproduto

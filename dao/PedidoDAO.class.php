@@ -64,19 +64,15 @@ class PedidoDAO extends TPDOConnection {
 	public static function insert( PedidoVO $objVo ){
 		$values = array( $objVo->getIdcliente() 
 						 ,$objVo->getDtpedido() 
-						 ,TrataDados::converteMoeda( $objVo->getVltotal() ) 
 						 ,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
-						 ,TrataDados::converteMoeda( $objVo->getVlpago() )
 						 ,$objVo->getIdusuario() 
 						);
 		return self::executeSql( 'insert into seadra.pedido(
 								  idcliente
 								 ,dtpedido
-							 	 ,vltotal
 								 ,vldesconto
-								 ,vlpago
 								 ,idusuariocriacao
-								 ) values (?,?,?,?,?,?)', $values );
+								 ) values (?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update( PedidoVO $objVo ){
@@ -94,17 +90,22 @@ class PedidoDAO extends TPDOConnection {
 								 where idPedido = ?',$values );
 	}
 	//--------------------------------------------------------------------------------
-	public static function updateValores( PedidoVO $objVo ){
-		$values = array( TrataDados::converteMoeda( $objVo->getVltotal() )
-						 ,TrataDados::converteMoeda( $objVo->getVlpago() )
-						 ,$objVo->getIdusuario()
-						 ,$objVo->getIdPedido() 
-					    );
-		return self::executeSql( 'update seadra.pedido set 
-								  vltotal = ?
-								 ,vlpago = ?
-								 ,idusuariomodificacao = ?
-								 where idPedido = ?',$values );
+	public static function updateValores( $idPedido,$idUsuario ){
+		$values = array( $idPedido
+						,$idUsuario );
+		$sql = 'update `seadra`.`pedido` as `p`
+				inner join (
+					select `idPedido`
+					,sum(`vlPrecoVenda` * `qtItemPedido`) as `vlTotalPedido`
+					,sum(`vlPrecoVenda` * `qtItemPedido`) - IFNULL(`vlDesconto`, 0) as `vlPagoPedido`
+						from `seadra`.`vw_itempedido`
+						where `idPedido` = ?
+						group by `idPedido`
+				) as `t` on `p`.`idPedido` = `t`.`idPedido`
+					set `p`.`vlTotal` = `t`.`vlTotalPedido`
+						,`p`.`vlPago` = `t`.`vlPagoPedido` 
+						,`p`.`idUsuarioModificacao` = ?';				
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){

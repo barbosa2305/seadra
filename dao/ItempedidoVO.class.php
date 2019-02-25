@@ -4,14 +4,14 @@ class ItempedidoVO {
 	private $idpedido = null;
 	private $idproduto = null;
 	private $qtitempedido = null;
-	private $vltotalitem = null;
+	private $idusuario = null; // usuario que será gravado no pedido
 	//--------------------------------------------------------------------------------
-	public function __construct( $iditempedido=null,$idpedido=null,$idproduto=null,$qtitempedido=null,$vltotalitem=null ){
+	public function __construct( $iditempedido=null,$idpedido=null,$idproduto=null,$qtitempedido=null,$idusuario=null ){
 		$this->setIditempedido( $iditempedido );
 		$this->setIdpedido( $idpedido );
 		$this->setIdproduto( $idproduto );
 		$this->setQtitempedido( $qtitempedido );
-		$this->setVltotalitem( $vltotalitem );
+		$this->setIdusuario( $idusuario );
 	}
 	//--------------------------------------------------------------------------------
 	public function setIditempedido( $strNewValue = null )
@@ -50,13 +50,13 @@ class ItempedidoVO {
 		return $this->qtitempedido;
 	}
 	//--------------------------------------------------------------------------------
-	public function setVltotalitem( $strNewValue = null )
+	public function setIdusuario( $strNewValue = null )
 	{
-		$this->vltotalitem = $strNewValue;
+		$this->idusuario = $strNewValue;
 	}
-	public function getVltotalitem()
+	public function getIdusuario()
 	{
-		return $this->vltotalitem;
+		return $this->idusuario;
 	}
 	//--------------------------------------------------------------------------------
 }

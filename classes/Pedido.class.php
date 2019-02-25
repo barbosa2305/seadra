@@ -38,6 +38,11 @@ class Pedido {
 		} else {
 			$result = PedidoDAO::insert( $objVo );
 		}
+		if ($result) {
+			$idPedido = $objVo->getIdpedido();
+			$idUsuario = $objVo->getIdusuario();
+			$result = PedidoDAO::updateValores( $idPedido,$idUsuario );
+		}
 		return $result;
 	}
 	//--------------------------------------------------------------------------------

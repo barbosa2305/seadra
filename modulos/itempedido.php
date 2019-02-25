@@ -47,6 +47,7 @@ switch( $acao ) {
 			if ( $frm->validate() ){
 				$vo = new ItempedidoVO();
 				$frm->setVo( $vo );
+				$vo->setIdusuario( Acesso::getUserId() ); // IdUsuario que será gravado em Pedido
 				$resultado = Itempedido::save( $vo );
 				if ( $resultado == 1){
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );

@@ -294,6 +294,7 @@ select `ite`.`idItemPedido` AS `idItemPedido`
 	     ,`pro`.`nmProduto` AS `nmProduto`
        ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
+       ,`ped`.`vlDesconto` AS `vlDesconto`
 from `seadra`.`itempedido` `ite`
 	inner join `seadra`.`pedido` `ped`  on  `ite`.`idPedido` = `ped`.`idPedido`
 	inner join `seadra`.`produto` `pro` on `ite`.`idProduto` = `pro`.`idProduto`;
