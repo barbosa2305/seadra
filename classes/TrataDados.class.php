@@ -39,7 +39,11 @@ class TrataDados {
 	 * Converte um valor moeda (pt_BR) para o valor em formato americano.
 	 **/
 	public static function converteMoeda( $valor ){
-		return str_replace( array(".", ","), array(",", "."), $valor );
+		$result = null;
+		if ( !empty($valor) && floatval($valor) > 0 ){
+			$result = str_replace( array(".", ","), array(",", "."), $valor );
+		}
+		return $result;
 	}
 	//--------------------------------------------------------------------------------
 }

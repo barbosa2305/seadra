@@ -18,7 +18,7 @@ $g = $frm->addGroupField('gpx1');
 	$frm->addSelectField('TPGRUPO', 'Grupo:',TRUE,$grupo,null,null,null,null,null,null,null,'U');
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
 	$frm->addSelectField('STATIVO', 'Ativo ?',TRUE,$ativo,null,null,null,null,null,null,null,'S');
-	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
+	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);

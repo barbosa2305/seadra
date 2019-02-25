@@ -48,12 +48,13 @@ $g = $frm->addGroupField('gpx1');
 	$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipio', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- selecione --', '0', 'Nenhum município encontrado.');
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
 	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
-	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
+	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
 $frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);
 $frm->addButton('Limpar', null, 'Limpar', null, null, FALSE, FALSE);
+$frm->addButton('Ir para pedido','Pedido',null,null,null,FALSE,TRUE);
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
@@ -105,8 +106,15 @@ switch( $acao ) {
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
+	//--------------------------------------------------------------------------------
+	case 'Pedido':
+		$frm->setFieldValue( 'BUSCAR',null );
+		$frm->setFieldValue( 'IDCLIENTE',null );
+		$frm->setFieldValue( 'NMCLIENTE',null );
+		$frm->redirect( 'pedido.php',null,TRUE );
+	break;
+	//--------------------------------------------------------------------------------
 }
-
 
 function getWhereGridParameters(&$frm){
 	$retorno = null;
@@ -171,7 +179,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 
 	$gride->addColumn($primaryKey,'Código');
 	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ');
-	$gride->addColumn('NMCLIENTE','Nome');
+	$gride->addColumnCompact('NMCLIENTE','Nome');
 	$gride->addColumn('DSEMAIL','E-mail');
 	$gride->addColumn('NRTELEFONE','Telefone');
 	$gride->addColumn('NRCELULAR','Celular');
