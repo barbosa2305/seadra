@@ -5,6 +5,7 @@ $primaryKey = 'IDITEMPEDIDO';
 $frm = new TForm( 'Itens do pedido',580,850 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
+$frm->setShowCloseButton( FALSE );
 
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
@@ -12,7 +13,7 @@ $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 $g = $frm->addGroupField('gpx1');
 	$g->setColumns('65,80,45,80,62');
 	$frm->addTextField('IDPEDIDO','Pedido:',12,TRUE)->setEnabled( FALSE );
-	$frm->addTextField('NMCLIENTE','Cliente:',94,FALSE,94,null,FALSE)->setEnabled( FALSE );
+	$frm->addTextField('NMCLIENTE','Cliente:',93,FALSE,93,null,FALSE)->setEnabled( FALSE );
 	$frm->addTextField('DTPEDIDO','Data:',12,FALSE,12,null,TRUE)->setEnabled( FALSE );
 	// Inicio campo AutoComplete
 	$frm->addTextField('IDPRODUTO','Produto:',12,TRUE,12,null,TRUE);  //campo obrigatorio para funcionar o autocomplete

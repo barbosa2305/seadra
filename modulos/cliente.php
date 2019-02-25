@@ -3,8 +3,9 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
 $frm = new TForm('Cliente',580,1000);
-$frm->setFlat(TRUE);
-$frm->setMaximize(TRUE);
+$frm->setFlat( TRUE );
+$frm->setMaximize( TRUE );
+$frm->setShowCloseButton( FALSE );
 
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela

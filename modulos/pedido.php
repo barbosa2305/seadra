@@ -5,6 +5,7 @@ $primaryKey = 'IDPEDIDO';
 $frm = new TForm( 'Pedido',580,850 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
+$frm->setShowCloseButton( FALSE );
 
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );  // coluna chave da tabela
@@ -13,14 +14,12 @@ $g = $frm->addGroupField('gpx1');
 	$g->setColumns('80,110,85');
 	// Inicio campo AutoComplete
 	$frm->addTextField('IDCLIENTE','Cliente:',13,TRUE,13,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-	$frm->addTextField('NMCLIENTE',null,100,FALSE,100,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('NMCLIENTE',null,85,FALSE,85,null,FALSE); //campo obrigatorio para funcionar o autocomplete
 	$frm->setAutoComplete('NMCLIENTE','vw_cliente','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
 						  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 	// Fim campo AutoComplete
 	$frm->addDateField('DTPEDIDO','Data:',TRUE,null);
-	//$frm->addNumberField('VLTOTAL', 'Valor total (R$):',14,FALSE,2)->setEnabled( FALSE );
 	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',10,FALSE,2,TRUE);
-	//$frm->addNumberField('VLPAGO', 'Valor pago (R$):',14,FALSE,2)->setEnabled( FALSE );
 	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 

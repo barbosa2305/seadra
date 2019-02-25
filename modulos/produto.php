@@ -5,6 +5,7 @@ $primaryKey = 'IDPRODUTO';
 $frm = new TForm( 'Produto',580,950 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
+$frm->setShowCloseButton( FALSE );
 
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela

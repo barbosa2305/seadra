@@ -4,8 +4,9 @@ defined('APLICATIVO') or die();
 $primaryKey = 'IDUSUARIO';
 
 $frm = new TForm('Usuário',500,700);
-$frm->setFlat(TRUE);
-$frm->setMaximize(TRUE);
+$frm->setFlat( TRUE );
+$frm->setMaximize( TRUE );
+$frm->setShowCloseButton( FALSE );
 
 $frm->addHiddenField( 'BUSCAR' ); // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // Coluna chave da tabela
