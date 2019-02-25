@@ -10,18 +10,19 @@ $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 
 $g = $frm->addGroupField('gpx1');
-	$g->setColumns('90,160');
+	$g->setColumns('100,160');
 	$frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,120);
-	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo:',10,TRUE,2)->setExampleText('R$');
-	$frm->addNumberField('VLPRECOVENDA', 'Preço venda:',10,TRUE,2)->setExampleText('R$');
+	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo (R$):',10,TRUE,2);
+	$frm->addNumberField('VLPRECOVENDA', 'Preço venda (R$):',10,TRUE,2);
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
 	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
-	$frm->addHtmlField('html1', '<br>* Campos obrigatórios estão marcados em vermelho.', null, null, null, null)->setCss('color', 'red');
+	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 
-$frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
-$frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);
-$frm->addButton('Limpar', null, 'Limpar', null, null, FALSE, FALSE);
+$frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
+$frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);
+$frm->addButton('Limpar',null,'Limpar',null,null,FALSE,FALSE);
+$frm->addButton('Ir para pedido','Pedido',null,null,null,FALSE,TRUE);
 
 $acao = isset($acao) ? $acao : null;
 switch( $acao ){
@@ -75,6 +76,13 @@ switch( $acao ){
 		}
 	break;
 	//--------------------------------------------------------------------------------
+	case 'Pedido':
+		$frm->setFieldValue( 'BUSCAR',null );
+		$frm->setFieldValue( 'IDPRODUTO',null );
+		$frm->setFieldValue( 'NMPRODUTO',null );
+		$frm->redirect( 'pedido.php',null,TRUE );
+	break;
+	//--------------------------------------------------------------------------------
 }
 
 function getWhereGridParameters(&$frm){
@@ -83,8 +91,8 @@ function getWhereGridParameters(&$frm){
 		$retorno = array(
 				'IDPRODUTO'=>$frm->get('IDPRODUTO')
 				,'NMPRODUTO'=>$frm->get('NMPRODUTO')
-				,'VLPRECOCUSTO'=>$frm->get('VLPRECOCUSTO')
-				,'VLPRECOVENDA'=>$frm->get('VLPRECOVENDA')
+				,'VLPRECOCUSTO'=>TrataDados::converteMoeda( $frm->get('VLPRECOCUSTO') )
+				,'VLPRECOVENDA'=>TrataDados::converteMoeda( $frm->get('VLPRECOVENDA') )
 				,'STATIVO'=>$frm->get('STATIVO')
 		);
 	}
@@ -114,9 +122,9 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 	$gride->setUrl( 'produto.php' );
 
 	$gride->addColumn($primaryKey,'Código');
-	$gride->addColumn('NMPRODUTO','Descrição');
-	$gride->addColumn('VLPRECOCUSTO','Preço custo');
-	$gride->addColumn('VLPRECOVENDA','Preço venda');
+	$gride->addColumnCompact('NMPRODUTO','Descrição');
+	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)');
+	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)');
 	$gride->addColumn('DSATIVO','Ativo ?');
 
 	$gride->show();
