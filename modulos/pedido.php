@@ -93,15 +93,17 @@ switch( $acao ) {
 		}
 	break;
 	//--------------------------------------------------------------------------------
+	/*
 	case 'gd_imprimir':
 		try {
-			/*
+			
 			$_SESSION[APLICATIVO]['RELATORIO'] = null;
 			$_SESSION[APLICATIVO]['RELATORIO']['IDPEDIDO'] = $frm->getFieldValue('IDPEDIDO');
 			$_SESSION[APLICATIVO]['RELATORIO']['NOM_PESSOA'] = $frm->getFieldValue('NOM_PESSOA');
 			$_SESSION[APLICATIVO]['RELATORIO']['DAT_PEDIDO'] = $frm->getFieldValue('DAT_PEDIDO');
 			$frm->redirect('relatorio.php');
-			*/
+			
+			
 		}
 		catch ( DomainException $e ){
 			$frm->setMessage( $e->getMessage() );
@@ -111,6 +113,7 @@ switch( $acao ) {
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
+	*/
 	//--------------------------------------------------------------------------------
 	case 'Cliente':
 		$frm->setFieldValue( 'BUSCAR',null );
@@ -165,7 +168,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$gride->addColumn('VLPAGO','Valor pago (R$)');
 
 	$gride->addButton('Adicionar itens no pedido','gd_itens','btnItens',null,null,'images/gtk_add_17px.png');
-	$gride->addButton('Gerar orçamento','gd_imprimir','btnImprimir',null,null,'print16.gif');
+	$gride->addButton('Gerar orçamento',null,'btnImprimir','exibir_pdf()',null,'print16.gif');
 	$gride->addButton('Alterar','gd_alterar','btnAlterar',null,null,'alterar.gif');
 	$gride->addButton('Excluir','gd_excluir','btnExcluir',null,'Confirma a exclusão do pedido?','lixeira.gif');
 
@@ -192,5 +195,8 @@ function init() {
 function buscar() {
 	jQuery("#BUSCAR").val(1);
 	init();
+}
+function exibir_pdf() {
+	fwShowPdf({"modulo":"relatorios/rel_orcamento.php","rel_idpedido":jQuery("#IDPEDIDO").val()});
 }
 </script>
