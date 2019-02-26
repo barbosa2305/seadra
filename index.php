@@ -10,9 +10,6 @@
  * System seadra created in: 2018-12-03 21:17:31
  */
 
-//Constantes e configurações
-require_once('classes/ServidorConfig.class.php');
-
 require_once('includes/constantes.php');
 require_once('includes/config_conexao.php');
 
@@ -34,7 +31,6 @@ $app->setLoginFile('includes/tela_login.php');
 $app->setLoginInfo(Acesso::getUserName());
 
 $app->setMainMenuFile('includes/menu.php');
-//$app->setWaterMark('images/bg_transparencia.jpg');
 $app->setDefaultModule('pedido.php');
 
 $app->run();
