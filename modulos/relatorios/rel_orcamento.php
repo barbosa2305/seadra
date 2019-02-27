@@ -120,10 +120,7 @@ function getValueSession($attribute){
     return $result;
 }
 
-d($_REQUEST);
-d($_POST);
-
-
+/*
 $msgErro = 'Informação para o relatório, não carregada';
 if( !ArrayHelper::has('RELATORIO', $_SESSION[APLICATIVO]) ){
     //echo( $_POST['IDPEDIDO'] ); 
@@ -137,8 +134,18 @@ if( !ArrayHelper::has('RELATORIO', $_SESSION[APLICATIVO]) ){
     if( empty($idPedido) ){
         echo ($msgErro);
     }else{
-        $dados = Pedido_item::selectByIdPedido($idPedido);
+*/
+        //$dados = Pedido_item::selectByIdPedido($idPedido);
         $pdf = new RelOrcamento('P');
+        $pdf->AddPage();
+
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->ln(3);
+        $pdf->multiCell(0, 4, utf8_decode( print_r($_REQUEST, true)) , 1);
+        $pdf->ln(2);
+        $pdf->multiCell(0, 4, utf8_decode( print_r($_REQUEST['IDPEDIDO'], true)) , 1);
+ 
+/*
         $pdf->setIdPedido($idPedido);
         $pdf->AddPage();
         $pdf->ln(5);
@@ -147,20 +154,25 @@ if( !ArrayHelper::has('RELATORIO', $_SESSION[APLICATIVO]) ){
         $pdf->ln(2);
         $pdf->dadosBasicaos($idPedido, $nomPessoa,$datPedido);
         $pdf->itens();
+*/
         $pdf->show();
+/*
     }
 }
-
+*/
 // função chamada automaticamente pela classe TPDF quando existir
 function cabecalho(TPDF $pdf)
 {
+    /*
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->Image('images/appv1_logo.png',10,6,30);
     $pdf->cell(0, 5, utf8_decode('Relatorio exemplo em FormDin'), 0, 1, 'C');
+    */
 }
 // função chamada automaticamente pela classe TPDF quando existir
 function rodape(TPDF $pdf)
 {   
+    /*
     $fs=$pdf->getFontSize();
     $pdf->SetY(-9);
     $pdf->SetFont('Arial', '', 7);
@@ -168,4 +180,5 @@ function rodape(TPDF $pdf)
     $pdf->setx(0);
     $pdf->Cell(0, 5, utf8_decode('Página ').$pdf->PageNo().'/{nb}', 0, 0, 'R');
     $pdf->setfont('', '', $fs);
+    */
 }

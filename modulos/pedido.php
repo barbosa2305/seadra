@@ -168,7 +168,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$gride->addColumn('VLPAGO','Valor pago (R$)');
 
 	$gride->addButton('Adicionar itens no pedido','gd_itens','btnItens',null,null,'images/gtk_add_17px.png');
-	$gride->addButton('Gerar orçamento',null,'btnImprimir','exibir_pdf()',null,'print16.gif');
+	$gride->addButton('Gerar orçamento',null,'btnImprimir','openModalPDF('.$primaryKey.','.$primaryKey.')',null,'print16.gif');
 	$gride->addButton('Alterar','gd_alterar','btnAlterar',null,null,'alterar.gif');
 	$gride->addButton('Excluir','gd_excluir','btnExcluir',null,'Confirma a exclusão do pedido?','lixeira.gif');
 
@@ -196,7 +196,13 @@ function buscar() {
 	jQuery("#BUSCAR").val(1);
 	init();
 }
-function exibir_pdf() {
-	fwShowPdf({"modulo":"relatorios/rel_orcamento.php","rel_idpedido":jQuery("#IDPEDIDO").val()});
+function openModalPDF(campo,valor) {
+	var dados = fwFV2O(campo,valor); // tranforma os parametros enviados pelo gride em um objeto 
+	console.log(dados);
+	var jsonParams = {"modulo" : "relatorios/rel_orcamento.php"
+		             ,"titulo" : "Pedido Nr. " + dados['IDPEDIDO'] + " - " + dados['NMCLIENTE']
+		             ,"dados"  :dados
+		            };
+	fwShowPdf(jsonParams);
 }
 </script>
