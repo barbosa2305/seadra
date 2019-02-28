@@ -277,6 +277,7 @@ select `ped`.`idPedido` AS `idPedido`
        ,`ped`.`idCliente` AS `idCliente`
 	     ,`cli`.`nmCliente` AS `nmCliente`
        ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
+       ,`cli`.`stAtivo` AS `stAtivo`
        ,DATE_FORMAT(`ped`.`dtPedido`,'%d/%m/%Y') AS `dtPedido`
        ,`ped`.`vlTotal` AS `vlTotal`
        ,`ped`.`vlDesconto` AS `vlDesconto`
@@ -293,6 +294,7 @@ select `ite`.`idItemPedido` AS `idItemPedido`
        ,`ite`.`idProduto` AS `idProduto`
 	     ,`pro`.`nmProduto` AS `nmProduto`
        ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
+       ,`pro`.`stAtivo` AS `stAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
        ,`ped`.`vlDesconto` AS `vlDesconto`
 from `seadra`.`itempedido` `ite`

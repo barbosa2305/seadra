@@ -140,6 +140,7 @@ function getWhereGridParametersPedido( &$frm ){
 if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$maxRows = ROWS_PER_PAGE;
 	$whereGrid = getWhereGridParametersPedido( $frm );
+	$whereGrid['STATIVO'] = STATUS_ATIVO;
 	$page = PostHelper::get('page');
 	$dados = Pedido::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
 	$realTotalRowsSqlPaginator = Pedido::selectCount( $whereGrid );
@@ -200,7 +201,7 @@ function openModalPDF(campo,valor) {
 	var dados = fwFV2O(campo,valor); // tranforma os parametros enviados pelo gride em um objeto 
 	console.log(dados);
 	var jsonParams = {"modulo" : "relatorios/rel_orcamento.php"
-		             ,"titulo" : "Pedido Nr. " + dados['IDPEDIDO'] + " - " + dados['NMCLIENTE']
+		             ,"titulo" : "Pedido Nr. " + dados['IDPEDIDO'] 
 		             ,"dados"  :dados
 		            };
 	fwShowPdf(jsonParams);

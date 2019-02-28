@@ -124,6 +124,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 		$maxRows = ROWS_PER_PAGE;
 		$whereGrid = getWhereGridParameters( $frm );
 		$whereGrid['IDPEDIDO'] = $frm->get('IDPEDIDO');
+		$whereGrid['STATIVO'] = STATUS_ATIVO;
 		$page = PostHelper::get('page');
 		$dados = Itempedido::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
 		$realTotalRowsSqlPaginator = Itempedido::selectCount( $whereGrid );

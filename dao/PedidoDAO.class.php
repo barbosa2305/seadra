@@ -6,6 +6,7 @@ class PedidoDAO extends TPDOConnection {
 									 ,idcliente
 									 ,nmcliente
 									 ,nrcpfcnpj
+									 ,stativo
 									 ,dtpedido
 									 ,format(vltotal,2,\'de_DE\') as vltotal
 									 ,format(vldesconto,2,\'de_DE\') as vldesconto
@@ -20,6 +21,7 @@ class PedidoDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDCLIENTE', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMCLIENTE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRCPFCNPJ', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTPEDIDO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLTOTAL', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLDESCONTO', SqlHelper::SQL_TYPE_NUMERIC);
@@ -37,7 +39,7 @@ class PedidoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters( $where );
-		$sql = 'select count(idPedido) as qtd from seadra.pedido';
+		$sql = 'select count(idPedido) as qtd from seadra.vw_pedido';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql( $sql );
 		return $result['QTD'][0];
