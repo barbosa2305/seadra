@@ -12,7 +12,7 @@ class PedidoDAO extends TPDOConnection {
 									 ,format(vldesconto,2,\'de_DE\') as vldesconto
 									 ,format(vlpago,2,\'de_DE\') as vlpago
 									 from seadra.vw_pedido ';
-
+	//--------------------------------------------------------------------------------
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
 		if ( is_array($whereGrid) ){
@@ -26,6 +26,18 @@ class PedidoDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLTOTAL', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLDESCONTO', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPAGO', SqlHelper::SQL_TYPE_NUMERIC);
+			$result = $where;
+		}
+		return $result;
+	}
+	//--------------------------------------------------------------------------------
+	private static function processWhereRelOrcamentoParameters( $whereGrid ){
+		$result = $whereGrid;
+		if ( is_array($whereGrid) ){
+			$where = ' 1=1 ';
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDPEDIDO', SqlHelper::SQL_TYPE_NUMERIC);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STCLIENTEATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STPRODUTOATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$result = $where;
 		}
 		return $result;
@@ -58,6 +70,37 @@ class PedidoDAO extends TPDOConnection {
 	public static function selectAll( $orderBy=null,$where=null ){
 		$where = self::processWhereGridParameters( $where );
 		$sql = self::$sqlBasicSelect
+		.( ($where)? ' where '.$where:'')
+		.( ($orderBy) ? ' order by '.$orderBy:'');
+		return self::executeSql( $sql );
+	}
+	//--------------------------------------------------------------------------------
+	public static function selectRelOrcamento( $orderBy=null,$where=null ){
+		$where = self::processWhereRelOrcamentoParameters( $where );
+		$sql = 'select 
+				idcliente
+				,nmcliente
+				,nrcpfcnpj
+				,nrtelefone
+				,nrcelular
+				,stclienteativo
+				,dscep
+				,dslogradouro
+				,dscomplemento
+				,dsbairro
+				,nmmunicipio
+				,dssigla
+				,idpedido
+				,dtpedido
+				,vltotal
+				,vldesconto
+				,vlpago
+				,idproduto
+				,nmproduto
+				,vlprecovenda
+				,stprodutoativo
+				,qtitempedido 
+			    from vw_rel_orcamento '
 		.( ($where)? ' where '.$where:'')
 		.( ($orderBy) ? ' order by '.$orderBy:'');
 		return self::executeSql( $sql );

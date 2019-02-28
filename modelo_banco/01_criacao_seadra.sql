@@ -285,6 +285,7 @@ select `ped`.`idPedido` AS `idPedido`
 from `seadra`.`pedido` `ped`    
 	inner join `seadra`.`cliente` `cli` on `ped`.`idCliente` = `cli`.`idCliente`;
 
+
 -- -----------------------------------------------------
 -- View `seadra`.`vw_itempedido`
 -- -----------------------------------------------------
@@ -300,6 +301,42 @@ select `ite`.`idItemPedido` AS `idItemPedido`
 from `seadra`.`itempedido` `ite`
 	inner join `seadra`.`pedido` `ped`  on  `ite`.`idPedido` = `ped`.`idPedido`
 	inner join `seadra`.`produto` `pro` on `ite`.`idProduto` = `pro`.`idProduto`;
+
+
+-- -----------------------------------------------------
+-- View `seadra`.`vw_rel_orcamento`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `seadra`.`vw_rel_orcamento` AS 
+select `cli`.`idCliente` AS `idCliente`
+	   ,`cli`.`nmCliente` AS `nmCliente`
+       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
+       ,`cli`.`nrTelefone` AS `nrTelefone`
+       ,`cli`.`nrCelular` AS `nrCelular`
+	   ,`cli`.`stAtivo` AS `stClienteAtivo`
+       ,`end`.`dsCep` AS `dsCep`
+       ,`end`.`dsLogradouro` AS `dsLogradouro`
+       ,`end`.`dsComplemento` AS `dsComplemento`
+       ,`end`.`dsBairro` AS `dsBairro`
+       ,`mun`.`nmMunicipio` AS `nmMunicipio`
+       ,`ufe`.`dsSigla` AS `dsSigla`
+       ,`ped`.`idPedido` AS `idPedido` 
+       ,DATE_FORMAT(`ped`.`dtPedido`,'%d/%m/%Y') AS `dtPedido`
+       ,`ped`.`vlTotal` AS `vlTotal`
+       ,`ped`.`vlDesconto` AS `vlDesconto`
+       ,`ped`.`vlPago` AS `vlPago`
+	   ,`ite`.`idProduto` AS `idProduto`
+	   ,`pro`.`nmProduto` AS `nmProduto`
+       ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
+       ,`pro`.`stAtivo` AS `stProdutoAtivo`
+       ,`ite`.`qtItemPedido` AS `qtItemPedido`
+from `seadra`.`itempedido` `ite`
+	inner join `seadra`.`pedido` `ped`  on  `ite`.`idPedido` = `ped`.`idPedido`
+	inner join `seadra`.`produto` `pro` on `ite`.`idProduto` = `pro`.`idProduto`
+	inner join `seadra`.`cliente` `cli` on `ped`.`idCliente` = `cli`.`idCliente` 
+	left join `seadra`.`endereco` `end` on `cli`.`idCliente` = `end`.`idCliente`
+    left join `seadra`.`municipio` `mun` on `mun`.`idMunicipio` = `end`.`idMunicipio`
+    left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
+
 
 
 DROP USER IF EXISTS 'seadra_bd'@'localhost';

@@ -31,6 +31,10 @@ class Pedido {
 		return PedidoDAO::selectAll( $orderBy,$where );
 	}
 	//--------------------------------------------------------------------------------
+	public static function selectRelOrcamento( $orderBy=null,$where=null ){
+		return PedidoDAO::selectRelOrcamento( $orderBy,$where );
+	}
+	//--------------------------------------------------------------------------------
 	public static function save( PedidoVO $objVo ){
 		$result = null;
 		if ( $objVo->getIdpedido() ) {
