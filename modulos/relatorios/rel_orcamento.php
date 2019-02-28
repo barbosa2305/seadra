@@ -2,12 +2,21 @@
 
 class RelOrcamento extends TPDF
 {
+    private $dados;
     private $idPedido;
     private $cellHeight = 4;
     private $gridFontTipo = 'arial';
     private $gridFontTamanho = 8;
     private $gridFontCor = 'black';
     
+    public function getDados()
+    {
+        return $this->dados;
+    }
+    public function setDados($dados)
+    {
+        $this->dados = $dados;
+    }
     public function getIdPedido()
     {
         return $this->idPedido;
@@ -129,10 +138,13 @@ if ( !ArrayHelper::validateUndefined($_REQUEST,'IDPEDIDO') ){
 
     $pdf = new RelOrcamento('P');
     $pdf->setIdPedido($idPedido);
+    $pdf->setDados($dados);
     $pdf->AddPage();
     
     //$pdf->dadosBasicos($idPedido, $nomPessoa,$datPedido);
     //$pdf->itens();
+
+    //$pdf->AddPage();
 
     $pdf->show();
 }
@@ -140,16 +152,40 @@ if ( !ArrayHelper::validateUndefined($_REQUEST,'IDPEDIDO') ){
 // função chamada automaticamente pela classe TPDF quando existir
 function cabecalho(TPDF $pdf)
 {
+    $dados = $pdf->getDados();
+
     $pdf->ln(5);
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->linha(0, 5, 'PEDIDO DE VENDA', 1, 1, 'C');
-    $textoFixo = nl2br('NÃO É DOCUMENTO FISCAL\n NÃO É VÁLIDO COMO RECIBO E COMO GARANTIA DE MERCADORIA - NÃO COMPROVA PAGAMENTO');
-    echo $textoFixo;
+    $pdf->SetFont('Arial', 'B', 12);
+    $pdf->linha(0, 6, 'PEDIDO DE VENDA', 1, 1, 'C');
+    $textoFixo = "NÃO É DOCUMENTO FISCAL\nNÃO É VÁLIDO COMO RECIBO E COMO GARANTIA DE MERCADORIA\nNÃO COMPROVA PAGAMENTO";
+    $pdf->SetFont('Arial',null,7);
+    $pdf->MultiCell(0, 6, utf8_decode($textoFixo), 1, 'C');
+
+    $pdf->SetFont('Arial', null, 10);
+    $empresa = 'MARTINS TEXTIL LTDA';
+    $emitente = 'Emitente: '.$empresa;
+    $cnpjEmitente = 'CNPJ: 07.882.295/0001-16';
+    $pdf->linha(95, 6, $emitente, 1, 0);
+    $pdf->linha(0, 6, $cnpjEmitente, 1, 1);
+
+    $enderecoEmitente = "Rua dos Missionarios, 643 - Qd.31, Lt.22\nRodoviario - Goiania - GO\nTelefone: (62) 3271-1912";
+    $textoLogotipo = "\n".$empresa."\n\n".$enderecoEmitente;
+    $pdf->MultiCell(95,4.5,utf8_decode($textoLogotipo), 1, 'C');
+    $pdf->SetXY(105,40);
     /*
-    $pdf->SetFont('Arial', '', 11);
-    $pdf->MultiCell(0, 5,utf8_decode($textoFixo), 1, 1);
+    $idPedidoFormatado = str_pad((int) $dados['IDPEDIDO'][0],10,"0",STR_PAD_LEFT);
+    $pdf->linha(95,16,'Nr. documento: '.$idPedidoFormatado,1,0,'C');
+    $pdf->SetXY(105,56);
+    $pdf->linha(95,14,'Data: '.$dados['DTPEDIDO'][0],1,0,'C');
+
+    $pdf->SetXY(10,70);
+    $pdf->linha(105,6,'Cliente: '.strtoupper($dados['NMCLIENTE'][0]),1,0);
+    $pdf->linha(0,6,'CPF/CNPJ: '.$dados['NRCPFCNPJ'][0],1,1);
+*/
+
+
     $pdf->ln(2);
-    */
+   
     
     
     
@@ -165,6 +201,15 @@ function rodape(TPDF $pdf)
     $pdf->setx(0);
     $pdf->Cell(0, 5, utf8_decode('Página ').$pdf->PageNo().'/{nb}', 0, 0, 'R');
     $pdf->setfont('', '', $fs);
+
+
+    $l=5;
+    $pdf->SetFont('Arial','B',10);
+    $pdf->Cell(20,$l,'Dados 1:',0,0,'L');
+    $pdf->Cell(100,$l,'','B',0,'L');
+    $pdf->Cell(35,$l,'',0,0,'L');
+    $pdf->Cell(15,$l,'Data:',0,0,'L');
+    $pdf->Cell(20,$l,date('d/m/Y'),'B',0,'L'); 
     */
     
 }
