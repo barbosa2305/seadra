@@ -59,7 +59,7 @@ class RelOrcamento extends TPDF
         $this->y0 = $this->GetY();
     }
     
-    public function dadosBasicaos($idPedido, $nomPessoa,$datPedido)
+    public function dadosBasicos($idPedido, $nomPessoa,$datPedido)
     {
         $this->estiloTexto();
         $this->ln(1);
@@ -99,7 +99,7 @@ class RelOrcamento extends TPDF
     }
     
     public function sem_dados(){
-        $this->linha(0, $this->getCellHeight(), 'Não existem dados cadastrados', 1, 1, 'C');
+        $this->linha(0, $this->getCellHeight(), 'Não existem dados cadastrados.', 1, 1, 'C');
     }
     
     public function itens()
@@ -115,64 +115,49 @@ class RelOrcamento extends TPDF
     }
 }
 
-function getValueSession($attribute){
-    $result = (ArrayHelper::has('RELATORIO', $_SESSION[APLICATIVO]) ? $_SESSION[APLICATIVO]['RELATORIO'][$attribute]:null);
-    return $result;
+if ( !ArrayHelper::validateUndefined($_REQUEST,'IDPEDIDO') ){
+    echo Mensagem::RELATORIO_DADOS_INEXISTENTES;
+} else {
+    $idPedido = $_REQUEST['IDPEDIDO'];
+    $where = array( 
+                    'IDPEDIDO'=>$idPedido
+                    ,'STCLIENTEATIVO'=>STATUS_ATIVO
+                    ,'STPRODUTOATIVO'=>STATUS_ATIVO
+                  );
+    $orderBy = 'NMPRODUTO';
+    $dados = Pedido::selectRelOrcamento( $orderBy,$where );
+
+    $pdf = new RelOrcamento('P');
+    $pdf->setIdPedido($idPedido);
+    $pdf->AddPage();
+    
+    //$pdf->dadosBasicos($idPedido, $nomPessoa,$datPedido);
+    //$pdf->itens();
+
+    $pdf->show();
 }
 
-/*
-$msgErro = 'Informação para o relatório, não carregada';
-if( !ArrayHelper::has('RELATORIO', $_SESSION[APLICATIVO]) ){
-    //echo( $_POST['IDPEDIDO'] ); 
-    $_REQUEST['rel_idpedido'] = isset($_REQUEST['rel_idpedido']) ? $_REQUEST['rel_idpedido'] : 'nao achou';
-    echo( $_REQUEST['rel_idpedido']  );
-    echo ($msgErro);
-}else{
-    $idPedido  = getValueSession('IDPEDIDO');
-    $nomPessoa = getValueSession('NOM_PESSOA');
-    $datPedido = getValueSession('DAT_PEDIDO');
-    if( empty($idPedido) ){
-        echo ($msgErro);
-    }else{
-*/
-        //$dados = Pedido_item::selectByIdPedido($idPedido);
-        $pdf = new RelOrcamento('P');
-        $pdf->AddPage();
-
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->ln(3);
-        $pdf->multiCell(0, 4, utf8_decode( print_r($_REQUEST, true)) , 1);
-        $pdf->ln(2);
-        $pdf->multiCell(0, 4, utf8_decode( print_r($_REQUEST['IDPEDIDO'], true)) , 1);
- 
-/*
-        $pdf->setIdPedido($idPedido);
-        $pdf->AddPage();
-        $pdf->ln(5);
-        $pdf->SetFont('Arial', '', 12);
-        $pdf->linha(0, 5, 'Ficha do Pedido', 1, 1, 'C');
-        $pdf->ln(2);
-        $pdf->dadosBasicaos($idPedido, $nomPessoa,$datPedido);
-        $pdf->itens();
-*/
-        $pdf->show();
-/*
-    }
-}
-*/
 // função chamada automaticamente pela classe TPDF quando existir
 function cabecalho(TPDF $pdf)
 {
+    $pdf->ln(5);
+    $pdf->SetFont('Arial', '', 11);
+    $pdf->linha(0, 5, 'PEDIDO DE VENDA', 1, 1, 'C');
+    $textoFixo = nl2br('NÃO É DOCUMENTO FISCAL\n NÃO É VÁLIDO COMO RECIBO E COMO GARANTIA DE MERCADORIA - NÃO COMPROVA PAGAMENTO');
+    echo $textoFixo;
     /*
-    $pdf->SetFont('Arial', 'B', 10);
-    $pdf->Image('images/appv1_logo.png',10,6,30);
-    $pdf->cell(0, 5, utf8_decode('Relatorio exemplo em FormDin'), 0, 1, 'C');
+    $pdf->SetFont('Arial', '', 11);
+    $pdf->MultiCell(0, 5,utf8_decode($textoFixo), 1, 1);
+    $pdf->ln(2);
     */
+    
+    
+    
 }
 // função chamada automaticamente pela classe TPDF quando existir
 function rodape(TPDF $pdf)
 {   
-    /*
+/*
     $fs=$pdf->getFontSize();
     $pdf->SetY(-9);
     $pdf->SetFont('Arial', '', 7);
@@ -181,4 +166,5 @@ function rodape(TPDF $pdf)
     $pdf->Cell(0, 5, utf8_decode('Página ').$pdf->PageNo().'/{nb}', 0, 0, 'R');
     $pdf->setfont('', '', $fs);
     */
+    
 }

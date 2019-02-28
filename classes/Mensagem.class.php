@@ -21,4 +21,6 @@ final class Mensagem {
     const EMAIL_JA_CADASTRADO = 'O e-mail informado já está cadastrado.';
 
     const PRODUTO_JA_CADASTRADO = 'Este produto já está cadastrado.';
+
+    const RELATORIO_DADOS_INEXISTENTES = 'Informação para o relatório não carregada.';
 }
