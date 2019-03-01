@@ -1,81 +1,35 @@
 <?php
 
-class RelOrcamento extends TPDF
-{
+class RelOrcamento extends TPDF {
     private $dados;
-    //private $idPedido;
-    private $cellHeight = 4;
     private $gridFontTipo = 'Arial';
     private $gridFontTamanho = 8;
     private $gridFontCor = 'Black';
     
-    public function getDados()
-    {
+    public function getDados(){
         return $this->dados;
     }
-    public function setDados($dados)
-    {
+    public function setDados( $dados ){
         $this->dados = $dados;
     }
-    /*
-    public function getIdPedido()
-    {
-        return $this->idPedido;
-    }
-    public function setIdPedido($idPedido)
-    {
-        $this->idPedido = $idPedido;
-    }
-    */
-    public function getCellHeight()
-    {
-        return $this->cellHeight;
-    }    
-    public function setCellHeight($cellHeight)
-    {
-        $this->cellHeight = $cellHeight;
-    }
-
-    public function linha($w,$h=0,$txt='',$border=0,$ln=0,$align='L',$fill=false){
+    public function linha( $w,$h=0,$txt='',$border=0,$ln=0,$align='L',$fill=false ){
         $txt = utf8_decode(trim($txt));
         $this->cell($w,$h,$txt,$border,$ln,$align,$fill);
     }
-    public function estiloTexto(){
-        $this->SetFont('Arial','',8);
-        $this->SetTextColor(0,0,0);
-    }
-    public function tituloH1($label)
-    {
-        // Title
-        $this->Ln(6);
-        $this->SetFont('Arial','',11);
-        //$this->SetFillColor(200,220,255);
-        $this->SetFillColor(105,105,105);
-        $this->SetTextColor(255,255,255);
-        $this->linha(0,$this->getCellHeight()+2,"$label",0,1,'L',true);
-        $this->estiloTexto();
-        $this->Ln(1);
-        // Save ordinate
-        $this->y0 = $this->GetY();
-    }
-
-    public function convertArrayUtf8ParaIso($arrayUtf8){
+    public function convertArrayUtf8ParaIso( $arrayUtf8 ){
         $arrayIso = null;
-        if( !is_array($arrayUtf8) ){
+        if ( !is_array($arrayUtf8) ){
             $arrayIso = $arrayUtf8;
-        }else{
-            foreach( $arrayUtf8 as $key => $arr ) {
-                foreach( $arr as $index => $value ) {
-                    $arrayIso[$key][$index] = strtoupper( utf8_decode($value) );
+        } else {
+            foreach ( $arrayUtf8 as $key => $arr ){
+                foreach ( $arr as $index => $value ){
+                    $arrayIso[$key][$index] = strtoupper(utf8_decode(trim($value)));
                 }
             }
         }
         return $arrayIso;
     }
-
-    public function itens()
-    {
-        //$this->tituloH1('Itens');
+    public function Itens(){
         $dados =$this->getDados();
 
         $dados = $this->convertArrayUtf8ParaIso($dados);
@@ -85,10 +39,13 @@ class RelOrcamento extends TPDF
 
         $this->clearColumns();
         $this->setData( $dados );
-        $this->addColumn(utf8_decode('id Item'),10,'C', 'NRANO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('id Produto'),20,'L', 'IDPRODUTO'	,null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Quantidade'),60 ,'L', 'QTITEMPDIDO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Preço'),20,'C', 'PRECO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Item'),10,'C','NRITEM',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Código'),15,'C','IDPRODUTO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Descrição'),75,'L','NMPRODUTO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Unidade'),15,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Qtd'),15,'C','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Valor Unitário'),30,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Valor Total'),30,'R','VLTOTALITEM',null,null,$tamanho,$fontCor,$tipo);
         $this->printRows();
     }
 }
@@ -108,10 +65,9 @@ if ( !ArrayHelper::validateUndefined($_REQUEST,'IDPEDIDO') ){
         echo Mensagem::RELATORIO_DADOS_INEXISTENTES;
     } else {
         $pdf = new RelOrcamento('P');
-        //$pdf->setIdPedido($idPedido);
         $pdf->setDados($dados);
         $pdf->AddPage();
-        $pdf->itens(); 
+        $pdf->Itens(); 
         $pdf->show();
     }
 }
@@ -134,9 +90,7 @@ function cabecalho(TPDF $pdf)
     $pdf->SetFont('Arial', null, 9);
     $empresa = 'MARTINS TEXTIL LTDA';
     $emitente = 'Emitente: '.$empresa;
-    $cnpjEmitente = 'CNPJ: 07.882.295/0001-16';
-    $pdf->linha(125, 6, $emitente, 1, 0);
-    $pdf->linha(0, 6, $cnpjEmitente, 1, 1);
+    $pdf->linha(0, 6, $emitente, 1, 1);
 
     $enderecoEmitente = "Rua dos Missionários, 643\nQd.31, Lt.22 - St. Rodoviário - Goiânia - GO\nTelefone: (62) 3271-1912\n ";
     $textoLogotipo = "\n".$empresa."\n\n".$enderecoEmitente;
@@ -182,10 +136,11 @@ function rodape(TPDF $pdf)
     $pdf->linha(132,6,'Total(R$): ',1,0,'R');
     $pdf->linha(0,6,$dados['VLPAGO'][0],1,1,'R');
 
-    $pdf->Ln(12);
     $pdf->SetFont('Arial',null,10);
-    $pdf->linha(56,6,'',0,0,'L');
-    $pdf->linha(80,6,'Assinatura do cliente','T',0,'C');  
+    $pdf->SetXY(16,145);
+    $pdf->linha(80,6,'Assinatura do vendedor','T',1,'C');  
+    $pdf->SetXY(114,145);
+    $pdf->linha(80,6,'Assinatura do cliente','T',1,'C');
 }
 
 function mask($val, $mask)
