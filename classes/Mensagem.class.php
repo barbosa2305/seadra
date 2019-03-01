@@ -22,5 +22,5 @@ final class Mensagem {
 
     const PRODUTO_JA_CADASTRADO = 'Este produto já está cadastrado.';
 
-    const RELATORIO_DADOS_INEXISTENTES = 'Informação para o relatório não carregada.';
+    const RELATORIO_DADOS_INEXISTENTES = 'Nenhuma informação foi encontrada.';
 }
