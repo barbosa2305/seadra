@@ -2,18 +2,19 @@
 class ItempedidoDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
-									 @contador:=@contador+1 as nritem
+									 @contador := @contador + 1 as nritem
 									 ,iditempedido
 									 ,idpedido
 									 ,idproduto
-									 ,nmproduto
+                                     ,nmproduto
+                                     ,dsunidademedida
 									 ,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
 									 ,stativo
 									 ,qtitempedido
 									 ,format((vlprecovenda * qtitempedido),2,\'de_DE\') as vltotalitem
 									 from 
-									 (select @contador:=0) as zeracontador,
-									 seadra.vw_itempedido ';
+									 (select @contador:=0) as zeracontador
+									 ,seadra.vw_itempedido ';
 
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
@@ -22,7 +23,7 @@ class ItempedidoDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDITEMPEDIDO', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDPEDIDO', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDPRODUTO', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMPRODUTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+            $where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMPRODUTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPRECOVENDA', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'QTITEMPEDIDO', SqlHelper::SQL_TYPE_NUMERIC);

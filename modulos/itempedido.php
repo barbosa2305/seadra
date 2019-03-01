@@ -17,7 +17,7 @@ $g = $frm->addGroupField('gpx1');
 	$frm->addTextField('DTPEDIDO','Data:',12,FALSE,12,null,TRUE)->setEnabled( FALSE );
 	// Inicio campo AutoComplete
 	$frm->addTextField('IDPRODUTO','Produto:',12,TRUE,12,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-	$frm->addTextField('NMPRODUTO',null,70,FALSE,70,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+    $frm->addTextField('NMPRODUTO',null,70,FALSE,70,null,FALSE); //campo obrigatorio para funcionar o autocomplete
 	$frm->addNumberField('VLPRECOVENDA', 'Preço (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->setAutoComplete('NMPRODUTO','produto','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
 						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
@@ -100,7 +100,8 @@ switch( $acao ) {
 	case 'Produto':
 		$frm->setFieldValue( 'BUSCAR',null );
 		$frm->setFieldValue( 'IDPRODUTO',null );
-		$frm->setFieldValue( 'NMPRODUTO',null );
+        $frm->setFieldValue( 'NMPRODUTO',null );
+        $frm->setFieldValue( 'VLPRECOVENDA',null );
 		$frm->redirect( 'produto.php',null,TRUE );
 	break;
 	//--------------------------------------------------------------------------------
@@ -149,7 +150,8 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 	}
 
 	$gride->addColumn('NRITEM','Item');
-	$gride->addColumnCompact('NMPRODUTO','Produto');
+    $gride->addColumnCompact('NMPRODUTO','Produto',null,null,60);
+    $gride->addColumn('DSUNIDADEMEDIDA','Unidade');
 	$gride->addColumn('QTITEMPEDIDO','Quantidade');
 	$gride->addColumn('VLPRECOVENDA','Valor unitário (R$)');
 	$gride->addColumn('VLTOTALITEM','Valor total (R$)');

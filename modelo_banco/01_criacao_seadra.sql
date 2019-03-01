@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Usuario` (
   `nmUsuario` VARCHAR(255) NOT NULL,
   `dsLogin` VARCHAR(20) NOT NULL,
   `dsSenha` VARCHAR(255) NULL,
-  `tpGrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT '\'U\' = Usuarios, \'A\' = Administradores',
+  `tpGrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT 'U=Usuarios, A=Administradores',
   `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
   `dtModificacao` DATETIME NULL ON UPDATE NOW(),
@@ -134,6 +134,7 @@ CREATE UNIQUE INDEX `uk_dsEmail` ON `seadra`.`cliente` (`dsEmail` ASC);
 CREATE TABLE IF NOT EXISTS `seadra`.`Produto` (
   `idProduto` INT NOT NULL AUTO_INCREMENT,
   `nmProduto` VARCHAR(255) NOT NULL,
+  `dsUnidadeMedida` VARCHAR(4) NOT NULL COMMENT 'Unidade de medida do produto: UN=Unidade, MT=Metro, M2=Metro quadrado, M3=Metro cubico',
   `vlPrecoCusto` DECIMAL(10,2) NOT NULL,
   `vlPrecoVenda` DECIMAL(10,2) NOT NULL,
   `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
@@ -294,6 +295,7 @@ select `ite`.`idItemPedido` AS `idItemPedido`
 	     ,`ite`.`idPedido` AS `idPedido` 
        ,`ite`.`idProduto` AS `idProduto`
 	     ,`pro`.`nmProduto` AS `nmProduto`
+         ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
        ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
        ,`pro`.`stAtivo` AS `stAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
@@ -326,6 +328,7 @@ select `cli`.`idCliente` AS `idCliente`
        ,`ped`.`vlPago` AS `vlPago`
 	   ,`ite`.`idProduto` AS `idProduto`
 	   ,`pro`.`nmProduto` AS `nmProduto`
+       ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
        ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
        ,`pro`.`stAtivo` AS `stProdutoAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`

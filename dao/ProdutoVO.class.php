@@ -1,14 +1,16 @@
 <?php
 class ProdutoVO {
 	private $idproduto = null;
-	private $nmproduto = null;
+    private $nmproduto = null;
+    private $dsunidademedida = null;
 	private $vlprecocusto = null;
 	private $vlprecovenda = null;
 	private $stativo = null;
 	private $idusuario = null;
-	public function __construct( $idproduto=null, $nmproduto=null, $vlprecocusto=null, $vlprecovenda=null, $stativo=null, $idusuario=null ) {
+	public function __construct( $idproduto=null,$nmproduto=null,$dsunidademedida=null,$vlprecocusto=null,$vlprecovenda=null,$stativo=null,$idusuario=null ) {
 		$this->setIdproduto( $idproduto );
-		$this->setNmproduto( $nmproduto );
+        $this->setNmproduto( $nmproduto );
+        $this->setDsunidademedida( $dsunidademedida );
 		$this->setVlprecocusto( $vlprecocusto );
 		$this->setVlprecovenda( $vlprecovenda );
 		$this->setStativo( $stativo );
@@ -31,6 +33,15 @@ class ProdutoVO {
 	public function getNmproduto()
 	{
 		return $this->nmproduto;
+    }
+    //--------------------------------------------------------------------------------
+	public function setDsunidademedida( $strNewValue = null )
+	{
+		$this->dsunidademedida = $strNewValue;
+	}
+	public function getDsunidademedida()
+	{
+		return $this->dsunidademedida;
 	}
 	//--------------------------------------------------------------------------------
 	public function setVlprecocusto( $strNewValue = null )

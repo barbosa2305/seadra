@@ -3,7 +3,8 @@ class ProdutoDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
 									  idproduto
-									 ,nmproduto
+                                     ,nmproduto
+                                     ,dsunidademedida
 									 ,format(vlprecocusto,2,\'de_DE\') as vlprecocusto
 									 ,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
 									 ,stativo
@@ -14,7 +15,8 @@ class ProdutoDAO extends TPDOConnection {
 		if ( is_array($whereGrid) ){
 			$where = ' 1=1 ';
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDPRODUTO', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMPRODUTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+            $where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMPRODUTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+            $where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSUNIDADEMEDIDA', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPRECOCUSTO', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPRECOVENDA', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
@@ -56,13 +58,15 @@ class ProdutoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function insert( ProdutoVO $objVo ){
-		$values = array( trim( $objVo->getNmproduto() )
+        $values = array( trim( $objVo->getNmproduto() )
+                        ,strtoupper(trim( $objVo->getDsunidademedida() ))
 						,TrataDados::converteMoeda( $objVo->getVlprecocusto() ) 
 						,TrataDados::converteMoeda( $objVo->getVlprecovenda() ) 
 						,$objVo->getIdusuario() 
 						);
 		return self::executeSql('insert into seadra.produto(
-								 nmproduto
+                                 nmproduto
+                                ,dsunidademedida
 								,vlprecocusto
 								,vlprecovenda
 								,idusuariocriacao
@@ -70,14 +74,16 @@ class ProdutoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( ProdutoVO $objVo ){
-		$values = array( trim($objVo->getNmproduto())
+        $values = array( trim($objVo->getNmproduto())
+                        ,strtoupper(trim( $objVo->getDsunidademedida() ))   
 						,TrataDados::converteMoeda( $objVo->getVlprecocusto() ) 
 						,TrataDados::converteMoeda( $objVo->getVlprecovenda() ) 
 						,$objVo->getStativo()
 						,$objVo->getIdusuario()
 						,$objVo->getIdProduto() );
 		return self::executeSql('update seadra.produto set 
-								 nmproduto = ?
+                                 nmproduto = ?
+                                ,dsunidademedida = ? 
 								,vlprecocusto = ?
 								,vlprecovenda = ?
 								,stativo = ?

@@ -12,7 +12,9 @@ $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 
 $g = $frm->addGroupField('gpx1');
 	$g->setColumns('100,160');
-	$frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,120);
+    $frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,120);
+    $unidadeMedida = array('MT'=>'Metro','M2'=>'Metro quadrado','M3'=>'Metro cubico','UN'=>'Unidade');
+    $frm->addSelectField('DSUNIDADEMEDIDA', 'Unidade medida:',TRUE,$unidadeMedida,null,null,null,null,null,null,null,null);
 	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo (R$):',10,TRUE,2);
 	$frm->addNumberField('VLPRECOVENDA', 'Preço venda (R$):',10,TRUE,2);
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
@@ -107,9 +109,10 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 	$dados = Produto::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
 	$realTotalRowsSqlPaginator = Produto::selectCount( $whereGrid );
 	$mixUpdateFields = $primaryKey.'|'.$primaryKey
-					.',NMPRODUTO|NMPRODUTO'
+                    .',NMPRODUTO|NMPRODUTO'
+                    .',DSUNIDADEMEDIDA|DSUNIDADEMEDIDA'
 					.',VLPRECOCUSTO|VLPRECOCUSTO'
-					.',VLPRECOVENDA|VLPRECOVENDA'
+                    .',VLPRECOVENDA|VLPRECOVENDA'
 					.',STATIVO|STATIVO'
 					;
 	$gride = new TGrid( 'gd'                        // id do gride
@@ -124,7 +127,8 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código');
-	$gride->addColumnCompact('NMPRODUTO','Descrição');
+    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,80);
+    $gride->addColumn('DSUNIDADEMEDIDA','Unidade');
 	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)');
 	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)');
 	$gride->addColumn('DSATIVO','Ativo ?');
