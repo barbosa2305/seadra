@@ -100,12 +100,14 @@ class Cliente {
 	//--------------------------------------------------------------------------------
     private static function validarEmail( ClienteVO $objVo ){
         $dsEmail = $objVo->getDsemail();
-        $where['DSEMAIL'] = $dsEmail;
-        $dados = self::selectAll( null,$where );
-        if( !empty($dados) ){
-            throw new DomainException( Mensagem::EMAIL_JA_CADASTRADO ); 
+        if ( !empty($dsEmail) ){
+            $where['DSEMAIL'] = $dsEmail;
+            $dados = self::selectAll( null,$where );
+            if( !empty($dados) ){
+                throw new DomainException( Mensagem::EMAIL_JA_CADASTRADO ); 
+            }
+            $where = null;
         }
-        $where = null;
 	}
 	//--------------------------------------------------------------------------------
 	private static function validarEndereco( EnderecoVO $objVo ){
