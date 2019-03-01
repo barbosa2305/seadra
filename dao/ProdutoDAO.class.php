@@ -70,7 +70,7 @@ class ProdutoDAO extends TPDOConnection {
 								,vlprecocusto
 								,vlprecovenda
 								,idusuariocriacao
-								) values (?,?,?,?)', $values );
+								) values (?,?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( ProdutoVO $objVo ){
