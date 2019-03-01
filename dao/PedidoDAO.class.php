@@ -92,15 +92,15 @@ class PedidoDAO extends TPDOConnection {
 				,dssigla
 				,idpedido
 				,dtpedido
-				,vltotal
-				,vldesconto
-				,vlpago
+				,format(vltotal,2,\'de_DE\') as vltotal
+				,format(vldesconto,2,\'de_DE\') as vldesconto
+				,format(vlpago,2,\'de_DE\') as vlpago
 				,idproduto
 				,nmproduto
-				,vlprecovenda
+				,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
 				,stprodutoativo
 				,qtitempedido 
-			    from vw_rel_orcamento '
+				from vw_rel_orcamento '	
 		.( ($where)? ' where '.$where:'')
 		.( ($orderBy) ? ' order by '.$orderBy:'');
 		return self::executeSql( $sql );
