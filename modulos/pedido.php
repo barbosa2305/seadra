@@ -14,7 +14,7 @@ $g = $frm->addGroupField('gpx1');
 	$g->setColumns('80,110,85');
 	// Inicio campo AutoComplete
 	$frm->addTextField('IDCLIENTE','Cliente:',13,TRUE,13,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-	$frm->addTextField('NMCLIENTE',null,85,FALSE,85,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('NMCLIENTE',null,255,FALSE,85,null,FALSE); //campo obrigatorio para funcionar o autocomplete
 	$frm->setAutoComplete('NMCLIENTE','vw_cliente','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
 						  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 	// Fim campo AutoComplete

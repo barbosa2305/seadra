@@ -14,10 +14,10 @@ $g = $frm->addGroupField('gpx1');
 	$g->setColumns('65,80,45,80,62');
 	$frm->addTextField('IDPEDIDO','Pedido:',12,TRUE)->setEnabled( FALSE );
 	$frm->addTextField('NMCLIENTE','Cliente:',93,FALSE,93,null,FALSE)->setEnabled( FALSE );
-	$frm->addTextField('DTPEDIDO','Data:',12,FALSE,12,null,TRUE)->setEnabled( FALSE );
+    $frm->addTextField('DTPEDIDO','Data:',12,FALSE,12,null,TRUE)->setEnabled( FALSE );
 	// Inicio campo AutoComplete
 	$frm->addTextField('IDPRODUTO','Produto:',12,TRUE,12,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-    $frm->addTextField('NMPRODUTO',null,70,FALSE,70,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+    $frm->addTextField('NMPRODUTO',null,255,FALSE,70,null,FALSE); //campo obrigatorio para funcionar o autocomplete
 	$frm->addNumberField('VLPRECOVENDA', 'Preço (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->setAutoComplete('NMPRODUTO','produto','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
 						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
