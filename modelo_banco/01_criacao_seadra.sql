@@ -169,9 +169,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Pedido` (
   `idPedido` INT NOT NULL AUTO_INCREMENT,
   `idCliente` INT NOT NULL,
   `dtPedido` DATE NOT NULL,
-  `vlTotal` DECIMAL(10,2) NULL,
   `vlDesconto` DECIMAL(10,2) NULL,
-  `vlPago` DECIMAL(10,2) NULL,
   `idUsuarioCriacao` INT NOT NULL,
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
   `idUsuarioModificacao` INT NULL,
@@ -233,19 +231,21 @@ CREATE UNIQUE INDEX `uk_idPedido_idProduto` ON `seadra`.`itempedido` (`idPedido`
 -- View `seadra`.`vw_municipio`
 -- -----------------------------------------------------
 CREATE OR REPLACE VIEW `seadra`.`vw_municipio` AS 
-select `ufe`.`idUnidadeFederativa` AS `idUnidadeFederativa`
+SELECT `ufe`.`idUnidadeFederativa` AS `idUnidadeFederativa`
        ,`ufe`.`dsSigla` AS `dsSigla`
+       ,`ufe`.`dsNome` AS `dsUnidadeFederativa`
+       ,`mun`.`idMunicipio` AS `idMunicipio`
        ,`mun`.`cdMunicipio` AS `cdMunicipio`
 	   ,`mun`.`nmMunicipio` AS `nmMunicipio`
-from `seadra`.`municipio` `mun`, `seadra`.`unidadefederativa` `ufe`
-where `mun`.`idUnidadeFederativa` = `ufe`.`idUnidadeFederativa`;
+FROM `seadra`.`municipio` `mun`
+	INNER JOIN `seadra`.`unidadefederativa` `ufe` ON `mun`.`idUnidadeFederativa` = `ufe`.`idUnidadeFederativa`;
 
 
 -- -----------------------------------------------------
 -- View `seadra`.`vw_cliente`
 -- -----------------------------------------------------
 CREATE OR REPLACE VIEW `seadra`.`vw_cliente` AS 
-select `cli`.`idCliente` AS `idCliente`
+SELECT `cli`.`idCliente` AS `idCliente`
 	   ,`cli`.`nmCliente` AS `nmCliente`
        ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
        ,`cli`.`dsEmail` AS `dsEmail`
@@ -261,84 +261,53 @@ select `cli`.`idCliente` AS `idCliente`
        ,`mun`.`idMunicipio` AS `idMunicipio`
 	   ,`mun`.`cdMunicipio` AS `cdMunicipio`
        ,`mun`.`nmMunicipio` AS `nmMunicipio`
-       ,`ufe`.`idUnidadeFederativa` AS `idUnidadeFederativa`
-       ,`ufe`.`dsSigla` AS `dsSigla`
-       ,`ufe`.`dsNome` AS `dsUnidadeFederativa`
-from `seadra`.`cliente` `cli` 
-	left join `seadra`.`endereco` `end` on `cli`.`idCliente` = `end`.`idCliente`
-    left join `seadra`.`municipio` `mun` on `mun`.`idMunicipio` = `end`.`idMunicipio`
-    left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
+       ,`mun`.`idUnidadeFederativa` AS `idUnidadeFederativa`
+       ,`mun`.`dsSigla` AS `dsSigla`
+       ,`mun`.`dsUnidadeFederativa` AS `dsUnidadeFederativa`
+FROM `seadra`.`cliente` `cli` 
+	LEFT JOIN `seadra`.`endereco` `end` ON `cli`.`idCliente` = `end`.`idCliente`
+    LEFT JOIN `seadra`.`vw_municipio` `mun` ON `mun`.`idMunicipio` = `end`.`idMunicipio`;
 
 
 -- -----------------------------------------------------
 -- View `seadra`.`vw_pedido`
 -- -----------------------------------------------------
 CREATE OR REPLACE VIEW `seadra`.`vw_pedido` AS 
-select `ped`.`idPedido` AS `idPedido` 
-       ,`ped`.`idCliente` AS `idCliente`
-	     ,`cli`.`nmCliente` AS `nmCliente`
-       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
-       ,`cli`.`stAtivo` AS `stAtivo`
-       ,DATE_FORMAT(`ped`.`dtPedido`,'%d/%m/%Y') AS `dtPedido`
-       ,`ped`.`vlTotal` AS `vlTotal`
-       ,`ped`.`vlDesconto` AS `vlDesconto`
-       ,`ped`.`vlPago` AS `vlPago`
-from `seadra`.`pedido` `ped`    
-	inner join `seadra`.`cliente` `cli` on `ped`.`idCliente` = `cli`.`idCliente`;
-
-
--- -----------------------------------------------------
--- View `seadra`.`vw_itempedido`
--- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_itempedido` AS 
-select `ite`.`idItemPedido` AS `idItemPedido`
-	     ,`ite`.`idPedido` AS `idPedido` 
-       ,`ite`.`idProduto` AS `idProduto`
-	     ,`pro`.`nmProduto` AS `nmProduto`
-         ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
-       ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
-       ,`pro`.`stAtivo` AS `stAtivo`
-       ,`ite`.`qtItemPedido` AS `qtItemPedido`
-       ,`ped`.`vlDesconto` AS `vlDesconto`
-from `seadra`.`itempedido` `ite`
-	inner join `seadra`.`pedido` `ped`  on  `ite`.`idPedido` = `ped`.`idPedido`
-	inner join `seadra`.`produto` `pro` on `ite`.`idProduto` = `pro`.`idProduto`;
-
-
--- -----------------------------------------------------
--- View `seadra`.`vw_rel_orcamento`
--- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_rel_orcamento` AS 
-select `cli`.`idCliente` AS `idCliente`
+SELECT `cli`.`idCliente` AS `idCliente`
 	   ,`cli`.`nmCliente` AS `nmCliente`
        ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
        ,`cli`.`nrTelefone` AS `nrTelefone`
        ,`cli`.`nrCelular` AS `nrCelular`
 	   ,`cli`.`stAtivo` AS `stClienteAtivo`
-       ,`end`.`dsCep` AS `dsCep`
-       ,`end`.`dsLogradouro` AS `dsLogradouro`
-       ,`end`.`dsComplemento` AS `dsComplemento`
-       ,`end`.`dsBairro` AS `dsBairro`
-       ,`mun`.`nmMunicipio` AS `nmMunicipio`
-       ,`ufe`.`dsSigla` AS `dsSigla`
+       ,`cli`.`dsCep` AS `dsCep`
+       ,`cli`.`dsLogradouro` AS `dsLogradouro`
+       ,`cli`.`dsComplemento` AS `dsComplemento`
+       ,`cli`.`dsBairro` AS `dsBairro`
+       ,`cli`.`nmMunicipio` AS `nmMunicipio`
+       ,`cli`.`dsSigla` AS `dsSigla`
        ,`ped`.`idPedido` AS `idPedido` 
-       ,DATE_FORMAT(`ped`.`dtPedido`,'%d/%m/%Y') AS `dtPedido`
-       ,`ped`.`vlTotal` AS `vlTotal`
+       ,`ped`.`dtPedido` AS `dtPedido`
        ,`ped`.`vlDesconto` AS `vlDesconto`
-       ,`ped`.`vlPago` AS `vlPago`
+       ,`vlr`.`vlTotal` AS `vlTotal`
+       ,`vlr`.`vlPago` AS `vlPago`
 	   ,`ite`.`idProduto` AS `idProduto`
 	   ,`pro`.`nmProduto` AS `nmProduto`
        ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
        ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
        ,`pro`.`stAtivo` AS `stProdutoAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
-from `seadra`.`itempedido` `ite`
-	inner join `seadra`.`pedido` `ped`  on  `ite`.`idPedido` = `ped`.`idPedido`
-	inner join `seadra`.`produto` `pro` on `ite`.`idProduto` = `pro`.`idProduto`
-	inner join `seadra`.`cliente` `cli` on `ped`.`idCliente` = `cli`.`idCliente` 
-	left join `seadra`.`endereco` `end` on `cli`.`idCliente` = `end`.`idCliente`
-    left join `seadra`.`municipio` `mun` on `mun`.`idMunicipio` = `end`.`idMunicipio`
-    left join `seadra`.`unidadefederativa` `ufe` on `ufe`.`idUnidadeFederativa` = `mun`.`idUnidadeFederativa`;
+       ,(`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) AS `as vlTotalItem`  
+FROM `seadra`.`pedido` `ped`
+	INNER JOIN `seadra`.`vw_cliente` `cli` ON `ped`.`idCliente` = `cli`.`idCliente` 
+	LEFT JOIN `seadra`.`itempedido` `ite` ON  `ite`.`idPedido` = `ped`.`idPedido`
+	LEFT JOIN `seadra`.`produto` `pro` ON `ite`.`idProduto` = `pro`.`idProduto`
+    LEFT JOIN (SELECT `pe`.`idPedido`
+						,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) AS `vlTotal`
+						,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) - IFNULL(`pe`.`vlDesconto`, 0) AS `vlPago`  
+				FROM `seadra`.`itempedido` `it`
+					INNER JOIN `seadra`.`pedido` `pe` ON `it`.`idPedido` = `pe`.`idPedido`
+					INNER JOIN `seadra`.`produto` `pr` ON `it`.`idProduto` = `pr`.`idProduto`
+				GROUP BY `pe`.`idPedido`) AS `vlr` ON `vlr`.`idPedido` = `ped`.`idPedido`;
 
 
 
