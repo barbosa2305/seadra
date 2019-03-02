@@ -21,7 +21,7 @@ require_once('classes/autoload_seadra.php');
 $app = new TApplication(); // criar uma instancia do objeto aplicacao
 $app->setAppRootDir(__DIR__);
 $app->setTitle('');
-//$app->setTitle(SYSTEM_NAME);
+$app->setTitle(SYSTEM_NAME);
 $app->setSubtitle(SYSTEM_NAME_SUB);
 $app->setSigla('');
 $app->setVersionSystem(SYSTEM_VERSION);
