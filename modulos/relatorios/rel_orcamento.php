@@ -56,11 +56,9 @@ if ( !ArrayHelper::validateUndefined($_REQUEST,'IDPEDIDO') ){
     $idPedido = $_REQUEST['IDPEDIDO'];
     $where = array( 
                     'IDPEDIDO'=>$idPedido
-                    ,'STCLIENTEATIVO'=>STATUS_ATIVO
-                    ,'STPRODUTOATIVO'=>STATUS_ATIVO
                   );
     $orderBy = 'NMPRODUTO';
-    $dados = Pedido::selectRelOrcamento( $orderBy,$where );
+    $dados = Itempedido::selectAll( $orderBy,$where );
     if ( empty($dados) ){
         echo Mensagem::RELATORIO_DADOS_INEXISTENTES;
     } else {

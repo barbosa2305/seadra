@@ -7,11 +7,8 @@ class PedidoDAO extends TPDOConnection {
 									 ,nmcliente
 									 ,nrcpfcnpj
 									 ,stativo
-									 ,dtpedido
-									 ,format(vltotal,2,\'de_DE\') as vltotal
-									 ,format(vldesconto,2,\'de_DE\') as vldesconto
-									 ,format(vlpago,2,\'de_DE\') as vlpago
-									 from seadra.vw_pedido ';
+									 ,DATE_FORMAT(dtpedido,\'%d/%m/%Y\') as dtpedido
+									 from seadra.vw_pedido_cliente ';
 	//--------------------------------------------------------------------------------
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
@@ -22,10 +19,10 @@ class PedidoDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMCLIENTE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRCPFCNPJ', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DTPEDIDO', SqlHelper::SQL_TYPE_TEXT_LIKE);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLTOTAL', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLDESCONTO', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPAGO', SqlHelper::SQL_TYPE_NUMERIC);
+			if ( !empty($whereGrid['DTPEDIDO']) ){
+				$dtPedido = DateTimeHelper::date2Mysql( $whereGrid['DTPEDIDO'] );
+				$where = $where.( paginationSQLHelper::attributeIssetOrNotZero($whereGrid,'DTPEDIDO',' AND DTPEDIDO = \''.$dtPedido.'\' ',null) );
+			}
 			$result = $where;
 		}
 		return $result;
@@ -51,7 +48,7 @@ class PedidoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters( $where );
-		$sql = 'select count(idPedido) as qtd from seadra.vw_pedido';
+		$sql = 'select count(idPedido) as qtd from seadra.vw_pedido_cliente ';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql( $sql );
 		return $result['QTD'][0];
@@ -113,47 +110,35 @@ class PedidoDAO extends TPDOConnection {
 	public static function insert( PedidoVO $objVo ){
 		$values = array( $objVo->getIdcliente() 
 						 ,$objVo->getDtpedido() 
-						 ,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
 						 ,$objVo->getIdusuario() 
 						);
 		return self::executeSql( 'insert into seadra.pedido(
 								  idcliente
 								 ,dtpedido
-								 ,vldesconto
 								 ,idusuariocriacao
-								 ) values (?,?,?,?)', $values );
+								 ) values (?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update( PedidoVO $objVo ){
 		$values = array( $objVo->getIdcliente()
 						 ,$objVo->getDtpedido()
-						 ,TrataDados::converteMoeda( $objVo->getVldesconto() )
 						 ,$objVo->getIdusuario()
 						 ,$objVo->getIdPedido() 
 					    );
 		return self::executeSql( 'update seadra.pedido set 
 								  idcliente = ?
 							  	 ,dtpedido = ?
-								 ,vldesconto = ?
 								 ,idusuariomodificacao = ?
 								 where idPedido = ?',$values );
 	}
 	//--------------------------------------------------------------------------------
-	public static function updateValores( $idPedido,$idUsuario ){
-		$values = array( $idPedido
-						,$idUsuario );
-		$sql = 'update `seadra`.`pedido` as `p`
-				inner join (
-					select `idPedido`
-					,sum(`vlPrecoVenda` * `qtItemPedido`) as `vlTotalPedido`
-					,sum(`vlPrecoVenda` * `qtItemPedido`) - IFNULL(`vlDesconto`, 0) as `vlPagoPedido`
-						from `seadra`.`vw_itempedido`
-						where `idPedido` = ?
-						group by `idPedido`
-				) as `t` on `p`.`idPedido` = `t`.`idPedido`
-					set `p`.`vlTotal` = `t`.`vlTotalPedido`
-						,`p`.`vlPago` = `t`.`vlPagoPedido` 
-						,`p`.`idUsuarioModificacao` = ?';				
+	public static function updateDesconto( $idPedido,$vlDesconto ){
+		$values = array( TrataDados::converteMoeda( $vlDesconto )
+						,$idPedido
+					   );
+		$sql = 'update seadra.pedido 
+			    set vlDesconto = ?
+				where idPedido = ?';				
 		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------

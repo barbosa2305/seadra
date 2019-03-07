@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
-$frm = new TForm('Cliente',580,1000);
+$frm = new TForm('Cliente',580,950);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -178,9 +178,9 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setUpdateFields($mixUpdateFields);
 	$gride->setUrl( 'cliente.php' );
 
-	$gride->addColumn($primaryKey,'Código');
-	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ');
-	$gride->addColumnCompact('NMCLIENTE','Nome');
+	$gride->addColumn($primaryKey,'Código',null,'center');
+	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ',null,'center');
+	$gride->addColumnCompact('NMCLIENTE','Nome',null,null,50);
 	$gride->addColumn('DSEMAIL','E-mail');
 	$gride->addColumn('NRTELEFONE','Telefone');
 	$gride->addColumn('NRCELULAR','Celular');

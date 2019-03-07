@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPEDIDO';
-$frm = new TForm( 'Pedido',580,850 );
+$frm = new TForm( 'Pedido',580,800 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -11,15 +11,14 @@ $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );  // coluna chave da tabela
 
 $g = $frm->addGroupField('gpx1');
-	$g->setColumns('80,110,85');
+	$g->setColumns('45,35,50');
 	// Inicio campo AutoComplete
-	$frm->addTextField('IDCLIENTE','Cliente:',13,TRUE,13,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-	$frm->addTextField('NMCLIENTE',null,255,FALSE,85,null,FALSE); //campo obrigatorio para funcionar o autocomplete
-	$frm->setAutoComplete('NMCLIENTE','vw_cliente','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
+	$frm->addTextField('IDCLIENTE','Cliente:',6,TRUE,6,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('NMCLIENTE',null,255,FALSE,75,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->setAutoComplete('NMCLIENTE','vw_cliente_ativo','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
 						  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 	// Fim campo AutoComplete
-	$frm->addDateField('DTPEDIDO','Data:',TRUE,null);
-	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',10,FALSE,2,TRUE);
+	$frm->addDateField('DTPEDIDO','Data:',TRUE,FALSE);
 	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 $g->closeGroup();
 
@@ -93,28 +92,6 @@ switch( $acao ) {
 		}
 	break;
 	//--------------------------------------------------------------------------------
-	/*
-	case 'gd_imprimir':
-		try {
-			
-			$_SESSION[APLICATIVO]['RELATORIO'] = null;
-			$_SESSION[APLICATIVO]['RELATORIO']['IDPEDIDO'] = $frm->getFieldValue('IDPEDIDO');
-			$_SESSION[APLICATIVO]['RELATORIO']['NOM_PESSOA'] = $frm->getFieldValue('NOM_PESSOA');
-			$_SESSION[APLICATIVO]['RELATORIO']['DAT_PEDIDO'] = $frm->getFieldValue('DAT_PEDIDO');
-			$frm->redirect('relatorio.php');
-			
-			
-		}
-		catch ( DomainException $e ){
-			$frm->setMessage( $e->getMessage() );
-		}
-		catch ( Exception $e ){
-			MessageHelper::logRecord( $e );
-			$frm->setMessage( $e->getMessage() );
-		}
-	break;
-	*/
-	//--------------------------------------------------------------------------------
 	case 'Cliente':
 		$frm->setFieldValue( 'BUSCAR',null );
 		$frm->setFieldValue( 'IDCLIENTE',null );
@@ -131,7 +108,6 @@ function getWhereGridParametersPedido( &$frm ){
 				'IDPEDIDO'=>$frm->get('IDPEDIDO')
 				,'IDCLIENTE'=>$frm->get('IDCLIENTE')
 				,'DTPEDIDO'=>$frm->get('DTPEDIDO')
-				,'VLDESCONTO'=>TrataDados::converteMoeda( $frm->get('VLDESCONTO') )
 		);
 	}
 	return $retorno;
@@ -148,7 +124,6 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 					.',IDCLIENTE|IDCLIENTE'
 					.',NMCLIENTE|NMCLIENTE'
 					.',DTPEDIDO|DTPEDIDO'
-					.',VLDESCONTO|VLDESCONTO'
 					;
 	$gride = new TGrid( 'gd'                // id do gride
 					   ,'Lista de pedidos' // titulo do gride
@@ -160,16 +135,12 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$gride->setUpdateFields( $mixUpdateFields );
 	$gride->setUrl( 'pedido.php' );
 
-	$gride->addColumn($primaryKey,'Pedido');
-	$gride->addColumnCompact('NMCLIENTE','Cliente');
-	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ');
-	$gride->addColumn('DTPEDIDO','Data');
-	$gride->addColumn('VLTOTAL','Valor total (R$)');
-	$gride->addColumn('VLDESCONTO','Valor desconto (R$)');
-	$gride->addColumn('VLPAGO','Valor pago (R$)');
+	$gride->addColumn($primaryKey,'Pedido',null,'center');
+	$gride->addColumnCompact('NMCLIENTE','Cliente',null,null,80);
+	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ',null,'center');
+	$gride->addColumn('DTPEDIDO','Data',null,'center');
 
 	$gride->addButton('Adicionar itens no pedido','gd_itens','btnItens',null,null,'images/gtk_add_17px.png');
-	$gride->addButton('Gerar orçamento',null,'btnImprimir','openModalPDF('.$primaryKey.','.$primaryKey.')',null,'print16.gif');
 	$gride->addButton('Alterar','gd_alterar','btnAlterar',null,null,'alterar.gif');
 	$gride->addButton('Excluir','gd_excluir','btnExcluir',null,'Confirma a exclusão do pedido?','lixeira.gif');
 
@@ -189,21 +160,11 @@ function init() {
 					,"IDCLIENTE":""
 					,"NMCLIENTE":""
 					,"DTPEDIDO":""
-					,"VLDESCONTO":""
 					};
 	fwGetGrid('pedido.php','gride',Parameters,true);
 }
 function buscar() {
 	jQuery("#BUSCAR").val(1);
 	init();
-}
-function openModalPDF(campo,valor) {
-	var dados = fwFV2O(campo,valor); // tranforma os parametros enviados pelo gride em um objeto 
-	console.log(dados);
-	var jsonParams = {"modulo" : "relatorios/rel_orcamento.php"
-		             ,"titulo" : "Pedido Nr. " + dados['IDPEDIDO'] 
-		             ,"dados"  :dados
-		            };
-	fwShowPdf(jsonParams);
 }
 </script>

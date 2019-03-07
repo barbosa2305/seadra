@@ -236,7 +236,7 @@ SELECT `ufe`.`idUnidadeFederativa` AS `idUnidadeFederativa`
        ,`ufe`.`dsNome` AS `dsUnidadeFederativa`
        ,`mun`.`idMunicipio` AS `idMunicipio`
        ,`mun`.`cdMunicipio` AS `cdMunicipio`
-	   ,`mun`.`nmMunicipio` AS `nmMunicipio`
+	     ,`mun`.`nmMunicipio` AS `nmMunicipio`
 FROM `seadra`.`municipio` `mun`
 	INNER JOIN `seadra`.`unidadefederativa` `ufe` ON `mun`.`idUnidadeFederativa` = `ufe`.`idUnidadeFederativa`;
 
@@ -246,12 +246,12 @@ FROM `seadra`.`municipio` `mun`
 -- -----------------------------------------------------
 CREATE OR REPLACE VIEW `seadra`.`vw_cliente` AS 
 SELECT `cli`.`idCliente` AS `idCliente`
-	   ,`cli`.`nmCliente` AS `nmCliente`
+	     ,`cli`.`nmCliente` AS `nmCliente`
        ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
        ,`cli`.`dsEmail` AS `dsEmail`
        ,`cli`.`nrTelefone` AS `nrTelefone`
        ,`cli`.`nrCelular` AS `nrCelular`
-	   ,`cli`.`stAtivo` AS `stAtivo`
+	     ,`cli`.`stAtivo` AS `stAtivo`
        ,`end`.`idEndereco` AS `idEndereco`
        ,`end`.`dsCep` AS `dsCep`
        ,`end`.`dsLogradouro` AS `dsLogradouro`
@@ -259,7 +259,7 @@ SELECT `cli`.`idCliente` AS `idCliente`
        ,`end`.`dsBairro` AS `dsBairro`
        ,`end`.`dsLocalidade` AS `dsLocalidade`
        ,`mun`.`idMunicipio` AS `idMunicipio`
-	   ,`mun`.`cdMunicipio` AS `cdMunicipio`
+	     ,`mun`.`cdMunicipio` AS `cdMunicipio`
        ,`mun`.`nmMunicipio` AS `nmMunicipio`
        ,`mun`.`idUnidadeFederativa` AS `idUnidadeFederativa`
        ,`mun`.`dsSigla` AS `dsSigla`
@@ -270,15 +270,51 @@ FROM `seadra`.`cliente` `cli`
 
 
 -- -----------------------------------------------------
--- View `seadra`.`vw_pedido`
+-- View `seadra`.`vw_cliente_ativo`
 -- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_pedido` AS 
+CREATE OR REPLACE VIEW `seadra`.`vw_cliente_ativo` AS 
 SELECT `cli`.`idCliente` AS `idCliente`
 	   ,`cli`.`nmCliente` AS `nmCliente`
        ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
+FROM `seadra`.`cliente` `cli` 
+WHERE `cli`.`stAtivo` = 'S';
+
+
+-- -----------------------------------------------------
+-- View `seadra`.`vw_produto_ativo`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `seadra`.`vw_produto_ativo` AS 
+SELECT `pro`.`idProduto` AS `idProduto`
+	   ,`pro`.`nmProduto` AS `nmProduto`
+     ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
+FROM `seadra`.`produto` `pro` 
+WHERE `pro`.`stAtivo` = 'S';
+
+
+-- -----------------------------------------------------
+-- View `seadra`.`vw_pedido_cliente`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `seadra`.`vw_pedido_cliente` AS 
+SELECT `ped`.`idPedido` AS `idPedido`
+	     ,`cli`.`idCliente` AS `idCliente`
+	     ,`cli`.`nmCliente` AS `nmCliente`
+       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
+       ,`cli`.`stAtivo` AS `stAtivo`
+       ,`ped`.`dtPedido` AS `dtPedido`
+FROM `seadra`.`pedido` `ped`
+	INNER JOIN `seadra`.`cliente` `cli` ON `ped`.`idCliente` = `cli`.`idCliente`;		
+
+
+-- -----------------------------------------------------
+-- View `seadra`.`vw_pedido_itens`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `seadra`.`vw_pedido_itens` AS 
+SELECT `cli`.`idCliente` AS `idCliente`
+	     ,`cli`.`nmCliente` AS `nmCliente`
+       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
        ,`cli`.`nrTelefone` AS `nrTelefone`
        ,`cli`.`nrCelular` AS `nrCelular`
-	   ,`cli`.`stAtivo` AS `stClienteAtivo`
+	     ,`cli`.`stAtivo` AS `stClienteAtivo`
        ,`cli`.`dsCep` AS `dsCep`
        ,`cli`.`dsLogradouro` AS `dsLogradouro`
        ,`cli`.`dsComplemento` AS `dsComplemento`
@@ -290,13 +326,14 @@ SELECT `cli`.`idCliente` AS `idCliente`
        ,`ped`.`vlDesconto` AS `vlDesconto`
        ,`vlr`.`vlTotal` AS `vlTotal`
        ,`vlr`.`vlPago` AS `vlPago`
-	   ,`ite`.`idProduto` AS `idProduto`
-	   ,`pro`.`nmProduto` AS `nmProduto`
+       ,`ite`.`idItemPedido` AS `idItemPedido`
+	     ,`ite`.`idProduto` AS `idProduto`
+	     ,`pro`.`nmProduto` AS `nmProduto`
        ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
        ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
        ,`pro`.`stAtivo` AS `stProdutoAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
-       ,(`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) AS `as vlTotalItem`  
+       ,(`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) AS `vlTotalItem`  
 FROM `seadra`.`pedido` `ped`
 	INNER JOIN `seadra`.`vw_cliente` `cli` ON `ped`.`idCliente` = `cli`.`idCliente` 
 	LEFT JOIN `seadra`.`itempedido` `ite` ON  `ite`.`idPedido` = `ped`.`idPedido`
@@ -307,7 +344,8 @@ FROM `seadra`.`pedido` `ped`
 				FROM `seadra`.`itempedido` `it`
 					INNER JOIN `seadra`.`pedido` `pe` ON `it`.`idPedido` = `pe`.`idPedido`
 					INNER JOIN `seadra`.`produto` `pr` ON `it`.`idProduto` = `pr`.`idProduto`
-				GROUP BY `pe`.`idPedido`) AS `vlr` ON `vlr`.`idPedido` = `ped`.`idPedido`;
+				GROUP BY `pe`.`idPedido`) AS `vlr` ON `vlr`.`idPedido` = `ped`.`idPedido`
+  WHERE `cli`.`stAtivo` = 'S' AND `pro`.`stAtivo` = 'S' ;
 
 
 

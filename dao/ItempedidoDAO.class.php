@@ -3,18 +3,32 @@ class ItempedidoDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
 									 @contador := @contador + 1 as nritem
-									 ,iditempedido
+									 ,idcliente
+									 ,nmcliente
+									 ,nrcpfcnpj
+									 ,nrtelefone
+									 ,nrcelular
+									 ,dscep
+									 ,dslogradouro
+									 ,dscomplemento
+									 ,dsbairro
+									 ,nmmunicipio
+									 ,dssigla
 									 ,idpedido
+									 ,DATE_FORMAT(dtpedido,\'%d/%m/%Y\') as dtpedido
+									 ,format(vltotal,2,\'de_DE\') as vltotal
+									 ,format(vldesconto,2,\'de_DE\') as vldesconto
+									 ,format(vlpago,2,\'de_DE\') as vlpago
+									 ,iditempedido
 									 ,idproduto
-                                     ,nmproduto
-                                     ,dsunidademedida
+									 ,nmproduto
+									 ,dsunidademedida
 									 ,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
-									 ,stativo
 									 ,qtitempedido
-									 ,format((vlprecovenda * qtitempedido),2,\'de_DE\') as vltotalitem
+									 ,format(vltotalitem,2,\'de_DE\') as vltotalitem
 									 from 
 									 (select @contador:=0) as zeracontador
-									 ,seadra.vw_itempedido ';
+									 ,seadra.vw_pedido_itens ' ;
 
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
@@ -25,8 +39,13 @@ class ItempedidoDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDPRODUTO', SqlHelper::SQL_TYPE_NUMERIC);
             $where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMPRODUTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPRECOVENDA', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			//$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'QTITEMPEDIDO', SqlHelper::SQL_TYPE_NUMERIC);
+/*
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLTOTAL', SqlHelper::SQL_TYPE_NUMERIC);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLDESCONTO', SqlHelper::SQL_TYPE_NUMERIC);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPAGO', SqlHelper::SQL_TYPE_NUMERIC);
+	*/
 			$result = $where;
 		}
 		return $result;
@@ -40,7 +59,7 @@ class ItempedidoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
-		$sql = 'select count(idItemPedido) as qtd from seadra.vw_itempedido';
+		$sql = 'select count(idItemPedido) as qtd from seadra.vw_pedido_itens';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql( $sql );
 		return $result['QTD'][0];
