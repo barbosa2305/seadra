@@ -328,6 +328,7 @@ SELECT `cli`.`idCliente` AS `idCliente`
        ,`vlr`.`vlPago` AS `vlPago`
        ,`ite`.`idItemPedido` AS `idItemPedido`
 	     ,`ite`.`idProduto` AS `idProduto`
+         ,lpad(`ite`.`idProduto`,5,'0') AS `idProdutoFormatado`
 	     ,`pro`.`nmProduto` AS `nmProduto`
        ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
        ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`

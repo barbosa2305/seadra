@@ -2,8 +2,7 @@
 class ItempedidoDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
-									 @contador := @contador + 1 as nritem
-									 ,idcliente
+									 idcliente
 									 ,nmcliente
 									 ,nrcpfcnpj
 									 ,nrtelefone
@@ -19,8 +18,10 @@ class ItempedidoDAO extends TPDOConnection {
 									 ,format(vltotal,2,\'de_DE\') as vltotal
 									 ,format(vldesconto,2,\'de_DE\') as vldesconto
 									 ,format(vlpago,2,\'de_DE\') as vlpago
-									 ,iditempedido
-									 ,idproduto
+                                     ,iditempedido
+                                     ,@contador := @contador + 1 as nritem
+                                     ,idproduto
+                                     ,idprodutoformatado
 									 ,nmproduto
 									 ,dsunidademedida
 									 ,format(vlprecovenda,2,\'de_DE\') as vlprecovenda

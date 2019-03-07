@@ -10,40 +10,41 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 
-//$g = $frm->addGroupField('gpPedido','Pedido');
-	//$g->setColumns('60,80,60,70,80,60,80,80,60');  // '95,80,90,80,62'
-	//$frm->setColumns('40');
 $frm->setColumns('50,50,45,50,35');
 $frm->addGroupField('gpPedido','Pedido');
 	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,5)->setEnabled( FALSE );
 	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,100,null,FALSE)->setEnabled( FALSE );
 	$frm->addTextField('DTPEDIDO','Data:',10,FALSE,13,null,FALSE)->setEnabled( FALSE );
-	//$frm->addNumberField('VLTOTAL', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	//$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
-	//$frm->addButton('Salvar desconto',null,'btnSalvarDesconto','salvarDesconto()',null,FALSE,FALSE);
-	//$frm->addNumberField('VLPAGO', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-//$g->closeGroup();
 $frm->closeGroup();
 	
-//$g = $frm->addGroupField('gpItens','Itens');
-//	$g->setColumns('50,40,50,50,65,60,85');
 $frm->setColumns('50,50,80,50,70,60,85');
 $frm->addGroupField('gpItens','Itens');
-//$frm->setColumns('100');
-//$frm->setColumns('60,80,60,70');
-	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,5,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-    $frm->addTextField('NMPRODUTO',null,255,FALSE,70,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,5,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
+    $frm->addTextField('NMPRODUTO',null,255,FALSE,70,null,FALSE); // campo obrigatorio para funcionar o autocomplete
 	$frm->addNumberField('QTITEMPEDIDO','Quantidade:',10,TRUE,0,FALSE);
 	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',7,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->setAutoComplete('NMPRODUTO','vw_produto_ativo','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
 						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
-//$g->closeGroup();
+$frm->closeGroup();
+
+$frm->setColumns('60,50');
+$frm->addGroupField('gpValores','Totais do pedido');
+	$frm->addNumberField('VLTOTAL', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
+	$frm->addButton('Salvar desconto','SalvarDesconto',null,null,null,FALSE,FALSE);
+	$frm->addNumberField('VLPAGO', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 $frm->closeGroup();
 
 $frm->addHtmlField('html1', '<br>', null, null, null, null)->setCss('color', 'red');
 $frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
 $frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);
-$frm->addButton('Imprimir',null,'btnImprimir','openModalPDF('.$frm->getFieldValue('IDPEDIDO').','.$frm->getFieldValue('IDPEDIDO').')',null,FALSE,FALSE);
+
+if ( !empty($frm->get('IDPEDIDO')) ) {
+    $frm->addButton('Imprimir',null,'btnImprimir','exibir_pdf()',null,FALSE,FALSE)->setEnabled( TRUE );
+} else {
+    $frm->addButton('Imprimir',null,'btnImprimir','exibir_pdf()',null,FALSE,FALSE)->setEnabled( FALSE );
+}
+
 $frm->addButton('Limpar',null,'Limpar',null,null,FALSE,FALSE);
 $frm->addButton('Voltar para pedido','Voltar','btnVoltar',null,null,FALSE,FALSE);
 $frm->addButton('Ir para produto','Produto','btnProduto',null,null,FALSE,TRUE);
@@ -154,7 +155,6 @@ function getWhereGridParameters(&$frm){
 				,'IDPEDIDO'=>$frm->get('IDPEDIDO')
 				,'IDPRODUTO'=>$frm->get('IDPRODUTO') 
 				,'QTITEMPEDIDO'=>$frm->get('QTITEMPEDIDO')
-				//,'VLDESCONTO'=>TrataDados::converteMoeda( $frm->get('VLDESCONTO') )
 		);
 	}
 	return $retorno;
@@ -165,7 +165,6 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 		$maxRows = ROWS_PER_PAGE;
 		$whereGrid = getWhereGridParameters( $frm );
 		$whereGrid['IDPEDIDO'] = $frm->get('IDPEDIDO');
-		//$whereGrid['STATIVO'] = STATUS_ATIVO;
 		$page = PostHelper::get('page');
 		$dados = Itempedido::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
 		$realTotalRowsSqlPaginator = Itempedido::selectCount( $whereGrid );
@@ -185,8 +184,6 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 		$gride->setMaxRows( $maxRows );
 		$gride->setUpdateFields( $mixUpdateFields );
 		$gride->setUrl( 'itempedido.php' );
-
-		//$frm->setFieldValue('VLTOTAL',$dados['VLTOTAL'][0]);
 	} else {
 		$gride = new TGrid( 'gd','Lista de itens do pedido');
 	}
@@ -206,15 +203,6 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 }
 
 $frm->addHtmlField('gride');
-
-$frm->setColumns('60,50');
-$frm->addGroupField('gpValores','Desconto');
-	$frm->addNumberField('VLTOTAL', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
-	$frm->addButton('Salvar desconto','SalvarDesconto',null,null,null,FALSE,FALSE);
-	$frm->addNumberField('VLPAGO', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-$frm->closeGroup();
-
 $frm->addJavascript('init()');
 $frm->show();
 
@@ -235,13 +223,12 @@ function buscar() {
 	jQuery("#BUSCAR").val(1);
 	init();
 }
-function openModalPDF(campo,valor) {
-	var dados = fwFV2O(campo,valor); // tranforma os parametros enviados pelo gride em um objeto 
-	console.log(dados);
-	var jsonParams = {"modulo" : "relatorios/rel_orcamento.php"
-		             ,"titulo" : "Pedido Nr. " + dados['IDPEDIDO'] 
-		             ,"dados"  :dados
-		            };
-	fwShowPdf(jsonParams);
+function exibir_pdf() {
+    var jsonParams = {
+                        "modulo" : "relatorios/rel_orcamento.php"
+                        ,"titulo" : "Pedido Nr. " + jQuery("#IDPEDIDO").val() 
+                        ,"IDPEDIDO" : jQuery("#IDPEDIDO").val()
+                    };
+    fwShowPdf(jsonParams);
 }
 </script>

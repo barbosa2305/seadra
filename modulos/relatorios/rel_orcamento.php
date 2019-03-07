@@ -40,7 +40,7 @@ class RelOrcamento extends TPDF {
         $this->clearColumns();
         $this->setData( $dados );
         $this->addColumn(utf8_decode('Item'),10,'C','NRITEM',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Código'),15,'C','IDPRODUTO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Código'),15,'C','IDPRODUTOFORMATADO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Descrição'),75,'L','NMPRODUTO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Unidade'),15,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Qtd'),15,'C','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
@@ -103,7 +103,7 @@ function cabecalho(TPDF $pdf)
 
     $pdf->SetXY(10,61);
     $pdf->SetFont('Arial', null, 9);
-    $pdf->linha(132,6,'Cliente: '.strtoupper($dados['NMCLIENTE'][0]),1,0);
+    $pdf->linha(132,6,'Cliente: '.$dados['NMCLIENTE'][0],1,0);
     $cpfCnpj = $dados['NRCPFCNPJ'][0];
     if (strlen($cpfCnpj) == 11) {
         $cpfCnpj = mask($cpfCnpj,'###.###.###-##');
