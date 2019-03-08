@@ -169,7 +169,6 @@ CREATE TABLE IF NOT EXISTS `seadra`.`Pedido` (
   `idPedido` INT NOT NULL AUTO_INCREMENT,
   `idCliente` INT NOT NULL,
   `dtPedido` DATE NOT NULL,
-  `vlDesconto` DECIMAL(10,2) NULL,
   `idUsuarioCriacao` INT NOT NULL,
   `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
   `idUsuarioModificacao` INT NULL,
@@ -207,6 +206,7 @@ CREATE TABLE IF NOT EXISTS `seadra`.`ItemPedido` (
   `idPedido` INT NOT NULL,
   `idProduto` INT NOT NULL,
   `qtItemPedido` INT NOT NULL,
+  `vlDesconto` DECIMAL(10,2) NULL,
   PRIMARY KEY (`idItemPedido`),
   CONSTRAINT `fk_ItemPedido_Produto`
     FOREIGN KEY (`idProduto`)
@@ -323,30 +323,33 @@ SELECT `cli`.`idCliente` AS `idCliente`
        ,`cli`.`dsSigla` AS `dsSigla`
        ,`ped`.`idPedido` AS `idPedido` 
        ,`ped`.`dtPedido` AS `dtPedido`
-       ,`ped`.`vlDesconto` AS `vlDesconto`
-       ,`vlr`.`vlTotal` AS `vlTotal`
-       ,`vlr`.`vlPago` AS `vlPago`
+       ,DATE_FORMAT(`dtPedido`,\'%d/%m/%Y\') AS `dtPedidoFormatada`
        ,`ite`.`idItemPedido` AS `idItemPedido`
 	     ,`ite`.`idProduto` AS `idProduto`
-         ,lpad(`ite`.`idProduto`,5,'0') AS `idProdutoFormatado`
+       ,LPAD(`ite`.`idProduto`,5,'0') AS `idProdutoFormatado`
 	     ,`pro`.`nmProduto` AS `nmProduto`
        ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
-       ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
+       ,FORMAT(`pro`.`vlPrecoVenda`,2,\'de_DE\') AS `vlPrecoVenda`
        ,`pro`.`stAtivo` AS `stProdutoAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
-       ,(`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) AS `vlTotalItem`  
+       ,FORMAT(IFNULL(`ite`.`vlDesconto`, 0),2,\'de_DE\') AS `vlDesconto`
+       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) - IFNULL(`ite`.`vlDesconto`, 0),2,\'de_DE\') AS `vlTotalItem` 
+       ,FORMAT(`vlr`.`vlPedido`,2,\'de_DE\') AS `vlPedido`
+       ,FORMAT(`vlr`.`vlTotalDesconto`,2,\'de_DE\') AS `vlTotalDesconto`
+       ,FORMAT(`vlr`.`vlTotal`,2,\'de_DE\') AS `vlTotal` 
 FROM `seadra`.`pedido` `ped`
 	INNER JOIN `seadra`.`vw_cliente` `cli` ON `ped`.`idCliente` = `cli`.`idCliente` 
 	LEFT JOIN `seadra`.`itempedido` `ite` ON  `ite`.`idPedido` = `ped`.`idPedido`
 	LEFT JOIN `seadra`.`produto` `pro` ON `ite`.`idProduto` = `pro`.`idProduto`
-    LEFT JOIN (SELECT `pe`.`idPedido`
-						,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) AS `vlTotal`
-						,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) - IFNULL(`pe`.`vlDesconto`, 0) AS `vlPago`  
-				FROM `seadra`.`itempedido` `it`
-					INNER JOIN `seadra`.`pedido` `pe` ON `it`.`idPedido` = `pe`.`idPedido`
-					INNER JOIN `seadra`.`produto` `pr` ON `it`.`idProduto` = `pr`.`idProduto`
-				GROUP BY `pe`.`idPedido`) AS `vlr` ON `vlr`.`idPedido` = `ped`.`idPedido`
-  WHERE `cli`.`stAtivo` = 'S' AND `pro`.`stAtivo` = 'S' ;
+  LEFT JOIN (SELECT `pe`.`idPedido`
+						        ,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) AS `vlPedido`
+                    ,SUM(`it`.`vlDesconto`) AS `vlTotalDesconto`
+						        ,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) - IFNULL(SUM(`it`.`vlDesconto`), 0) AS `vlTotal`  
+				    FROM `seadra`.`itempedido` `it`
+					      INNER JOIN `seadra`.`pedido` `pe` ON `it`.`idPedido` = `pe`.`idPedido`
+					      INNER JOIN `seadra`.`produto` `pr` ON `it`.`idProduto` = `pr`.`idProduto`
+				    GROUP BY `pe`.`idPedido`) AS `vlr` ON `vlr`.`idPedido` = `ped`.`idPedido`
+WHERE `cli`.`stAtivo` = 'S' AND `pro`.`stAtivo` = 'S' ;
 
 
 

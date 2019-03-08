@@ -14,19 +14,21 @@ class ItempedidoDAO extends TPDOConnection {
 									 ,nmmunicipio
 									 ,dssigla
 									 ,idpedido
-									 ,DATE_FORMAT(dtpedido,\'%d/%m/%Y\') as dtpedido
-									 ,format(vltotal,2,\'de_DE\') as vltotal
-									 ,format(vldesconto,2,\'de_DE\') as vldesconto
-									 ,format(vlpago,2,\'de_DE\') as vlpago
+									 ,dtpedido
+									 ,dtpedidoformatada
                                      ,iditempedido
                                      ,@contador := @contador + 1 as nritem
                                      ,idproduto
                                      ,idprodutoformatado
 									 ,nmproduto
 									 ,dsunidademedida
-									 ,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
+									 ,vlprecovenda
 									 ,qtitempedido
-									 ,format(vltotalitem,2,\'de_DE\') as vltotalitem
+									 ,vldesconto
+									 ,vltotalitem
+									 ,vlpedido
+									 ,vltotaldesconto
+									 ,vltotal 
 									 from 
 									 (select @contador:=0) as zeracontador
 									 ,seadra.vw_pedido_itens ' ;
@@ -40,13 +42,8 @@ class ItempedidoDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDPRODUTO', SqlHelper::SQL_TYPE_NUMERIC);
             $where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NMPRODUTO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPRECOVENDA', SqlHelper::SQL_TYPE_NUMERIC);
-			//$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'STATIVO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'QTITEMPEDIDO', SqlHelper::SQL_TYPE_NUMERIC);
-/*
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLTOTAL', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLDESCONTO', SqlHelper::SQL_TYPE_NUMERIC);
-			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'VLPAGO', SqlHelper::SQL_TYPE_NUMERIC);
-	*/
 			$result = $where;
 		}
 		return $result;
@@ -85,25 +82,33 @@ class ItempedidoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function insert( ItempedidoVO $objVo ){
-		$values = array( $objVo->getIdpedido() 
+		$values = array( 
+						$objVo->getIdpedido() 
 						,$objVo->getIdproduto() 
-						,$objVo->getQtitempedido() );
+						,$objVo->getQtitempedido()
+						,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
+						);
 		return self::executeSql('insert into seadra.itempedido(
 								idpedido
 								,idproduto
 								,qtitempedido
-								) values (?,?,?)', $values );
+								,vldesconto
+								) values (?,?,?,?)', $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update( ItempedidoVO $objVo ){
-		$values = array( $objVo->getIdpedido()
+		$values = array( 
+						$objVo->getIdpedido()
 						,$objVo->getIdproduto()
 						,$objVo->getQtitempedido()
-						,$objVo->getIdItemPedido() );
+						,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
+						,$objVo->getIdItemPedido() 
+						);
 		return self::executeSql('update seadra.itempedido set 
 								idpedido = ?
 								,idproduto = ?
 								,qtitempedido = ?
+								,vldesconto = ?
 								where idItemPedido = ?',$values);
 	}
 	//--------------------------------------------------------------------------------

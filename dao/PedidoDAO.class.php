@@ -72,41 +72,6 @@ class PedidoDAO extends TPDOConnection {
 		return self::executeSql( $sql );
 	}
 	//--------------------------------------------------------------------------------
-	public static function selectRelOrcamento( $orderBy=null,$where=null ){
-		$where = self::processWhereRelOrcamentoParameters( $where );
-		$sql = 'select 
-				idcliente
-				,nmcliente
-				,nrcpfcnpj
-				,nrtelefone
-				,nrcelular
-				,stclienteativo
-				,dscep
-				,dslogradouro
-				,dscomplemento
-				,dsbairro
-				,nmmunicipio
-				,dssigla
-				,idpedido
-				,dtpedido
-				,format(vltotal,2,\'de_DE\') as vltotal
-				,format(vldesconto,2,\'de_DE\') as vldesconto
-                ,format(vlpago,2,\'de_DE\') as vlpago
-                ,@contador := @contador + 1 as nritem
-				,lpad(idproduto, 5, "0") as idproduto
-                ,nmproduto
-                ,dsunidademedida
-				,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
-				,stprodutoativo
-                ,qtitempedido
-                ,format((vlprecovenda * qtitempedido),2,\'de_DE\') as vltotalitem 
-                from (select @contador:=0) as zeracontador
-                ,seadra.vw_rel_orcamento '	
-		.( ($where)? ' where '.$where:'')
-		.( ($orderBy) ? ' order by '.$orderBy:'');
-		return self::executeSql( $sql );
-	}
-	//--------------------------------------------------------------------------------
 	public static function insert( PedidoVO $objVo ){
 		$values = array( $objVo->getIdcliente() 
 						 ,$objVo->getDtpedido() 
@@ -130,16 +95,6 @@ class PedidoDAO extends TPDOConnection {
 							  	 ,dtpedido = ?
 								 ,idusuariomodificacao = ?
 								 where idPedido = ?',$values );
-	}
-	//--------------------------------------------------------------------------------
-	public static function updateDesconto( $idPedido,$vlDesconto ){
-		$values = array( TrataDados::converteMoeda( $vlDesconto )
-						,$idPedido
-					   );
-		$sql = 'update seadra.pedido 
-			    set vlDesconto = ?
-				where idPedido = ?';				
-		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){

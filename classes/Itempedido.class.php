@@ -41,14 +41,6 @@ class Itempedido {
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
-	public static function saveDesconto( $idPedido,$vlDesconto ){
-		$result = null;
-		if( !empty( $idPedido ) && !empty( $vlDesconto ) ) {
-			$result = PedidoDAO::updateDesconto( $idPedido,$vlDesconto );
-		}
-		return $result;
-	}
-	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
 		return ItempedidoDAO::delete( $id );
 	}

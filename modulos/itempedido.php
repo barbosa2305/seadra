@@ -15,6 +15,9 @@ $frm->addGroupField('gpPedido','Pedido');
 	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,5)->setEnabled( FALSE );
 	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,100,null,FALSE)->setEnabled( FALSE );
 	$frm->addTextField('DTPEDIDO','Data:',10,FALSE,13,null,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,TRUE)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTALDESCONTO', 'Descontos (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 $frm->closeGroup();
 	
 $frm->setColumns('50,50,80,50,70,60,85');
@@ -22,18 +25,20 @@ $frm->addGroupField('gpItens','Itens');
 	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,5,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
     $frm->addTextField('NMPRODUTO',null,255,FALSE,70,null,FALSE); // campo obrigatorio para funcionar o autocomplete
 	$frm->addNumberField('QTITEMPEDIDO','Quantidade:',10,TRUE,0,FALSE);
+	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
 	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',7,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->setAutoComplete('NMPRODUTO','vw_produto_ativo','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
 						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 $frm->closeGroup();
-
+/*
 $frm->setColumns('60,50');
 $frm->addGroupField('gpValores','Totais do pedido');
-	$frm->addNumberField('VLTOTAL', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
 	$frm->addButton('Salvar desconto','SalvarDesconto',null,null,null,FALSE,FALSE);
-	$frm->addNumberField('VLPAGO', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 $frm->closeGroup();
+*/
 
 $frm->addHtmlField('html1', '<br>', null, null, null, null)->setCss('color', 'red');
 $frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
@@ -85,6 +90,7 @@ switch( $acao ) {
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
+	/*
 	//--------------------------------------------------------------------------------
 	case 'SalvarDesconto':
 		try{
@@ -108,6 +114,7 @@ switch( $acao ) {
 		}
 	break;
 	//--------------------------------------------------------------------------------
+	*/
 	case 'gd_excluir':
 		try{
 			$id = $frm->get( $primaryKey ) ;
@@ -151,11 +158,12 @@ function getWhereGridParameters(&$frm){
 	$retorno = null;
 	if ( $frm->get('BUSCAR') == 1 ){
 		$retorno = array(
-				'IDITEMPEDIDO'=>$frm->get('IDITEMPEDIDO')
-				,'IDPEDIDO'=>$frm->get('IDPEDIDO')
-				,'IDPRODUTO'=>$frm->get('IDPRODUTO') 
-				,'QTITEMPEDIDO'=>$frm->get('QTITEMPEDIDO')
-		);
+						'IDITEMPEDIDO'=>$frm->get('IDITEMPEDIDO')
+						,'IDPEDIDO'=>$frm->get('IDPEDIDO')
+						,'IDPRODUTO'=>$frm->get('IDPRODUTO') 
+						,'QTITEMPEDIDO'=>$frm->get('QTITEMPEDIDO')
+						,'VLDESCONTO'=>$frm->get('VLDESCONTO')
+						);
 	}
 	return $retorno;
 }
@@ -174,9 +182,10 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 						.',NMPRODUTO|NMPRODUTO'
 						.',VLPRECOVENDA|VLPRECOVENDA'
 						.',QTITEMPEDIDO|QTITEMPEDIDO' 
+						.',VLDESCONTO|VLDESCONTO'
 						;
 		$gride = new TGrid( 'gd'                        // id do gride
-						,'Lista de itens do pedido' // titulo do gride
+						,'Lista de itens do pedido -'.' Quantidade: '.$realTotalRowsSqlPaginator // titulo do gride
 						);
 		$gride->addKeyField( $primaryKey ); // chave primaria
 		$gride->setData( $dados ); // array de dados
@@ -193,10 +202,11 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->addColumn('DSUNIDADEMEDIDA','Unidade',null,'center');
 	$gride->addColumn('QTITEMPEDIDO','Quantidade',null,'center');
 	$gride->addColumn('VLPRECOVENDA','Valor unitário (R$)',null,'right');
+	$gride->addColumn('VLDESCONTO','Desconto (R$)',null,'right');
 	$gride->addColumn('VLTOTALITEM','Total item(R$)',null,'right');
-	$gride->addColumn('VLTOTAL','Valor pedido(R$)',null,'right');
-	$gride->addColumn('VLDESCONTO','Desconto(R$)',null,'right');
-	$gride->addColumn('VLPAGO','Total pedido(R$)',null,'right');
+	//$gride->addColumn('VLPEDIDO','Total dos produtos(R$)',null,'right');
+	//$gride->addColumn('VLTOTALDESCONTO','Descontos(R$)',null,'right');
+	//$gride->addColumn('VLTOTAL','Total(R$)',null,'right');
 
 	$gride->show();
 	die();
@@ -209,13 +219,15 @@ $frm->show();
 ?>
 <script>
 function init() {
-	var Parameters = {"BUSCAR":""
+	var Parameters = {
+					"BUSCAR":""
 					,"IDITEMPEDIDO":""
 					,"IDPEDIDO":""
 					,"IDPRODUTO":""
 					,"NMPRODUTO":""
 					,"VLPRECOVENDA":""
 					,"QTITEMPEDIDO":""
+					,"VLDESCONTO":""
 					};
 	fwGetGrid('itempedido.php','gride',Parameters,true);
 }

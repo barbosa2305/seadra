@@ -3,17 +3,11 @@ class PedidoVO {
 	private $idpedido = null;
 	private $idcliente = null;
 	private $dtpedido = null;
-	private $vltotal = null;
-	private $vldesconto = null;
-	private $vlpago = null;
 	private $idusuario = null;
-	public function __construct( $idpedido=null,$idcliente=null,$dtpedido=null,$vltotal=null,$vldesconto=null,$vlpago=null,$idusuario=null ){
+	public function __construct( $idpedido=null,$idcliente=null,$dtpedido=null,$idusuario=null ){
 		$this->setIdpedido( $idpedido );
 		$this->setIdcliente( $idcliente );
 		$this->setDtpedido( $dtpedido );
-		$this->setVltotal( $vltotal );
-		$this->setVldesconto( $vldesconto );
-		$this->setVlpago( $vlpago );
 		$this->setIdusuario( $idusuario );
 	}
 	//--------------------------------------------------------------------------------
@@ -42,33 +36,6 @@ class PedidoVO {
 	public function getDtpedido()
 	{
 		return $this->dtpedido;
-	}
-	//--------------------------------------------------------------------------------
-	public function setVltotal( $strNewValue = null )
-	{
-		$this->vltotal = $strNewValue;
-	}
-	public function getVltotal()
-	{
-		return $this->vltotal;
-	}
-	//--------------------------------------------------------------------------------
-	public function setVldesconto( $strNewValue = null )
-	{
-		$this->vldesconto = $strNewValue;
-	}
-	public function getVldesconto()
-	{
-		return $this->vldesconto;
-	}
-	//--------------------------------------------------------------------------------
-	public function setVlpago( $strNewValue = null )
-	{
-		$this->vlpago = $strNewValue;
-	}
-	public function getVlpago()
-	{
-		return $this->vlpago;
 	}
 	//--------------------------------------------------------------------------------
 	public function setIdusuario( $strNewValue = null )

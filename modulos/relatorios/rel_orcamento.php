@@ -23,7 +23,7 @@ class RelOrcamento extends TPDF {
         } else {
             foreach ( $arrayUtf8 as $key => $arr ){
                 foreach ( $arr as $index => $value ){
-                    $arrayIso[$key][$index] = strtoupper(utf8_decode(trim($value)));
+                    $arrayIso[$key][$index] = utf8_decode(trim($value));
                 }
             }
         }
@@ -45,6 +45,7 @@ class RelOrcamento extends TPDF {
         $this->addColumn(utf8_decode('Unidade'),15,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Qtd'),15,'C','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Valor Unitário'),30,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Desconto'),20,'R','VLDESCONTO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Valor Total'),30,'R','VLTOTALITEM',null,null,$tamanho,$fontCor,$tipo);
         $this->printRows();
     }
@@ -127,12 +128,12 @@ function rodape(TPDF $pdf)
 
     $pdf->SetFont('Arial', null, 9);
     $pdf->linha(132,6,'Total dos produtos(R$): ',1,0,'R');
-    $pdf->linha(0,6,$dados['VLTOTAL'][0],1,1,'R');
-    $pdf->linha(132,6,'Desconto(R$): ',1,0,'R');
-    $pdf->linha(0,6,$dados['VLDESCONTO'][0],1,1,'R');
+    $pdf->linha(0,6,$dados['VLPEDIDO'][0],1,1,'R');
+    $pdf->linha(132,6,'Descontos(R$): ',1,0,'R');
+    $pdf->linha(0,6,$dados['VLTOTALDESCONTO'][0],1,1,'R');
     $pdf->SetFont('Arial', 'B', 10);
     $pdf->linha(132,6,'Total(R$): ',1,0,'R');
-    $pdf->linha(0,6,$dados['VLPAGO'][0],1,1,'R');
+    $pdf->linha(0,6,$dados['VLTOTAL'][0],1,1,'R');
 
     $pdf->SetFont('Arial',null,10);
     $pdf->SetXY(16,145);

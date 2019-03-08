@@ -40,7 +40,7 @@ class TrataDados {
 	 **/
 	public static function converteMoeda( $valor ){
 		$result = null;
-		if ( !empty($valor) && floatval($valor) > 0 ){
+		if ( !empty($valor) ){
 			$result = str_replace( array(".", ","), array(",", "."), $valor );
 		}
 		return $result;
