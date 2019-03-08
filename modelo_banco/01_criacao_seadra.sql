@@ -323,20 +323,20 @@ SELECT `cli`.`idCliente` AS `idCliente`
        ,`cli`.`dsSigla` AS `dsSigla`
        ,`ped`.`idPedido` AS `idPedido` 
        ,`ped`.`dtPedido` AS `dtPedido`
-       ,DATE_FORMAT(`dtPedido`,\'%d/%m/%Y\') AS `dtPedidoFormatada`
+       ,DATE_FORMAT(`dtPedido`,'%d/%m/%Y') AS `dtPedidoFormatada`
        ,`ite`.`idItemPedido` AS `idItemPedido`
 	     ,`ite`.`idProduto` AS `idProduto`
        ,LPAD(`ite`.`idProduto`,5,'0') AS `idProdutoFormatado`
 	     ,`pro`.`nmProduto` AS `nmProduto`
        ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
-       ,FORMAT(`pro`.`vlPrecoVenda`,2,\'de_DE\') AS `vlPrecoVenda`
+       ,FORMAT(`pro`.`vlPrecoVenda`,2,'de_DE') AS `vlPrecoVenda`
        ,`pro`.`stAtivo` AS `stProdutoAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
-       ,FORMAT(IFNULL(`ite`.`vlDesconto`, 0),2,\'de_DE\') AS `vlDesconto`
-       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) - IFNULL(`ite`.`vlDesconto`, 0),2,\'de_DE\') AS `vlTotalItem` 
-       ,FORMAT(`vlr`.`vlPedido`,2,\'de_DE\') AS `vlPedido`
-       ,FORMAT(`vlr`.`vlTotalDesconto`,2,\'de_DE\') AS `vlTotalDesconto`
-       ,FORMAT(`vlr`.`vlTotal`,2,\'de_DE\') AS `vlTotal` 
+       ,FORMAT(IFNULL(`ite`.`vlDesconto`, 0),2,'de_DE') AS `vlDesconto`
+       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) - IFNULL(`ite`.`vlDesconto`, 0),2,'de_DE') AS `vlTotalItem` 
+       ,FORMAT(`vlr`.`vlPedido`,2,'de_DE') AS `vlPedido`
+       ,FORMAT(`vlr`.`vlTotalDesconto`,2,'de_DE') AS `vlTotalDesconto`
+       ,FORMAT(`vlr`.`vlTotal`,2,'de_DE') AS `vlTotal` 
 FROM `seadra`.`pedido` `ped`
 	INNER JOIN `seadra`.`vw_cliente` `cli` ON `ped`.`idCliente` = `cli`.`idCliente` 
 	LEFT JOIN `seadra`.`itempedido` `ite` ON  `ite`.`idPedido` = `ped`.`idPedido`
