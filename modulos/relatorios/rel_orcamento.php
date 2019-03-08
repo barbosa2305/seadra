@@ -39,14 +39,14 @@ class RelOrcamento extends TPDF {
 
         $this->clearColumns();
         $this->setData( $dados );
-        $this->addColumn(utf8_decode('Item'),10,'C','NRITEM',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Código'),15,'C','IDPRODUTOFORMATADO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Descrição'),75,'L','NMPRODUTO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Unidade'),15,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Qtd'),15,'C','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Valor Unitário'),30,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Desconto'),20,'R','VLDESCONTO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Valor Total'),30,'R','VLTOTALITEM',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Item'),9,'C','NRITEM',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Código'),12,'C','IDPRODUTOFORMATADO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Descrição'),79,'L','NMPRODUTO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Unidade'),14,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Qtd'),12,'C','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Valor Unit.(R$)'),23,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Desc.(R$)'),18,'R','VLDESCONTO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Total item(R$)'),23,'R','VLTOTALITEM',null,null,$tamanho,$fontCor,$tipo);
         $this->printRows();
     }
 }
@@ -100,7 +100,7 @@ function cabecalho(TPDF $pdf)
     $pdf->linha(80,14,'Nr. documento: '.$idPedidoFormatado,1,0,'C');
     $pdf->SetXY(120,47);
     $pdf->SetFont('Arial', null, 10);
-    $pdf->linha(80,14,'Data: '.$dados['DTPEDIDO'][0],1,0,'C');
+    $pdf->linha(80,14,'Data: '.$dados['DTPEDIDOFORMATADA'][0],1,0,'C');
 
     $pdf->SetXY(10,61);
     $pdf->SetFont('Arial', null, 9);

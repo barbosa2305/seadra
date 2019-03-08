@@ -10,37 +10,40 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 
-$frm->setColumns('50,50,45,50,35');
+$frm->setColumns('50,45,58,80,87,83,56');
 $frm->addGroupField('gpPedido','Pedido');
-	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,5)->setEnabled( FALSE );
-	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,100,null,FALSE)->setEnabled( FALSE );
-	$frm->addTextField('DTPEDIDO','Data:',10,FALSE,13,null,FALSE)->setEnabled( FALSE );
-	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,TRUE)->setEnabled( FALSE );
-	$frm->addNumberField('VLTOTALDESCONTO', 'Descontos (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,10)->setEnabled( FALSE );
+	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,114,null,FALSE)->setEnabled( FALSE );
+    $frm->addTextField('DTPEDIDO','Data:',10,FALSE,10,null,TRUE)->setEnabled( FALSE );
+    $idPedido = $frm->get('IDPEDIDO');
+    if ( !empty($idPedido) ){
+        $where = array( 'IDPEDIDO'=>$idPedido );
+        $dadosPedido = Itempedido::selectAll( null,$where );
+        $vlPedido = $dadosPedido['VLPEDIDO'][0];
+        $vlTotalDesconto = $dadosPedido['VLTOTALDESCONTO'][0];
+        $vlTotal = $dadosPedido['VLTOTAL'][0];
+    } else {
+        $vlPedido = null;
+        $vlTotalDesconto = null;
+        $vlTotal = null;
+    }
+	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,FALSE,$vlPedido)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTALDESCONTO', 'Descontos (R$):',8,FALSE,2,FALSE,$vlTotalDesconto)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE,$vlTotal)->setEnabled( FALSE );
 $frm->closeGroup();
 	
-$frm->setColumns('50,50,80,50,70,60,85');
+$frm->setColumns('85,50,65,50,79');
 $frm->addGroupField('gpItens','Itens');
-	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,5,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
-    $frm->addTextField('NMPRODUTO',null,255,FALSE,70,null,FALSE); // campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,10,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
+    $frm->addTextField('NMPRODUTO',null,255,FALSE,115,null,FALSE); // campo obrigatorio para funcionar o autocomplete
+	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',8,FALSE,2,TRUE)->setEnabled( FALSE );
 	$frm->addNumberField('QTITEMPEDIDO','Quantidade:',10,TRUE,0,FALSE);
 	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
-	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',7,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->setAutoComplete('NMPRODUTO','vw_produto_ativo','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
 						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 $frm->closeGroup();
-/*
-$frm->setColumns('60,50');
-$frm->addGroupField('gpValores','Totais do pedido');
-	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
-	$frm->addButton('Salvar desconto','SalvarDesconto',null,null,null,FALSE,FALSE);
-	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-$frm->closeGroup();
-*/
 
-$frm->addHtmlField('html1', '<br>', null, null, null, null)->setCss('color', 'red');
+$frm->addHtmlField('html1', '<br>', null, null, null, null);
 $frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
 $frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);
 
@@ -55,7 +58,7 @@ $frm->addButton('Voltar para pedido','Voltar','btnVoltar',null,null,FALSE,FALSE)
 $frm->addButton('Ir para produto','Produto','btnProduto',null,null,FALSE,TRUE);
 
 function getCamposNaoLimpar() {
-    return array( 'IDPEDIDO','NMCLIENTE','DTPEDIDO' );
+    return array( 'IDPEDIDO','NMCLIENTE','DTPEDIDO','VLPEDIDO','VLTOTALDESCONTO','VLTOTAL' );
 }
 
 $acao = isset($acao) ? $acao : null;
@@ -74,6 +77,7 @@ switch( $acao ) {
 				$vo->setIdusuario( Acesso::getUserId() ); // IdUsuario que será gravado em Pedido
 				$resultado = Itempedido::save( $vo );
 				if ( $resultado == 1){
+                    getValoresPedido( $frm );
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 					$naoLimpar = getCamposNaoLimpar();
             		$frm->clearFields( null,$naoLimpar );
@@ -90,36 +94,13 @@ switch( $acao ) {
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
-	/*
 	//--------------------------------------------------------------------------------
-	case 'SalvarDesconto':
-		try{
-			$idPedido = $frm->get( 'IDPEDIDO' );
-			$vlDesconto = $frm->get( 'VLDESCONTO' );
-			$resultado = Itempedido::saveDesconto( $idPedido,$vlDesconto );
-			if ( $resultado == 1){
-				$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
-				$naoLimpar = getCamposNaoLimpar();
-				$frm->clearFields( null,$naoLimpar );
-			} else {
-				$frm->setMessage( Mensagem::OPERACAO_FALHOU );
-			}
-		}
-		catch ( DomainException $e ){
-			$frm->setMessage( $e->getMessage() );
-		}
-		catch ( Exception $e ){
-			MessageHelper::logRecord( $e );
-			$frm->setMessage( $e->getMessage() );
-		}
-	break;
-	//--------------------------------------------------------------------------------
-	*/
 	case 'gd_excluir':
 		try{
 			$id = $frm->get( $primaryKey ) ;
 			$resultado = Itempedido::delete( $id );
 			if ( $resultado == 1 ){
+                getValoresPedido( $frm );
 				$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 				$naoLimpar = getCamposNaoLimpar();
 				$frm->clearFields( null,$naoLimpar );
@@ -152,6 +133,24 @@ switch( $acao ) {
 		$frm->redirect( 'produto.php',null,TRUE );
 	break;
 	//--------------------------------------------------------------------------------
+}
+
+function getValoresPedido(&$frm){
+    $retorno = null;
+	$idPedido = $frm->get('IDPEDIDO');
+    if ( !empty($idPedido) ){
+        $where = array( 'IDPEDIDO'=>$idPedido );
+        $dadosPedido = Itempedido::selectAll( null,$where );
+        $retorno = array( 'VLPEDIDO'=>$dadosPedido['VLPEDIDO'][0],'VLTOTALDESCONTO'=>$dadosPedido['VLTOTALDESCONTO'][0],'VLTOTAL'=>$dadosPedido['VLTOTAL'][0] );
+        //$frm->setFieldValue( 'VLPEDIDO',$dadosPedido['VLPEDIDO'][0] );
+        //$frm->setFieldValue( 'VLTOTALDESCONTO',$dadosPedido['VLTOTALDESCONTO'][0] );
+        //$frm->setFieldValue( 'VLTOTAL',$dadosPedido['VLTOTAL'][0] );
+    } else {
+        //$frm->setFieldValue( 'VLPEDIDO',null );
+        //$frm->setFieldValue( 'VLTOTALDESCONTO',null );
+        //$frm->setFieldValue( 'VLTOTAL',null );
+    }
+    return $retorno;
 }
 
 function getWhereGridParameters(&$frm){
@@ -204,9 +203,6 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 	$gride->addColumn('VLPRECOVENDA','Valor unitário (R$)',null,'right');
 	$gride->addColumn('VLDESCONTO','Desconto (R$)',null,'right');
 	$gride->addColumn('VLTOTALITEM','Total item(R$)',null,'right');
-	//$gride->addColumn('VLPEDIDO','Total dos produtos(R$)',null,'right');
-	//$gride->addColumn('VLTOTALDESCONTO','Descontos(R$)',null,'right');
-	//$gride->addColumn('VLTOTAL','Total(R$)',null,'right');
 
 	$gride->show();
 	die();
