@@ -24,8 +24,9 @@ class ItempedidoDAO extends TPDOConnection {
 									 ,dsunidademedida
 									 ,vlprecovenda
 									 ,qtitempedido
-									 ,vldesconto
 									 ,vltotalitem
+									 ,vldesconto
+									 ,vltotalitemcomdesconto
 									 ,vlpedido
 									 ,vltotaldesconto
 									 ,vltotal 

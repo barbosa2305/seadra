@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDITEMPEDIDO';
-$frm = new TForm( 'Itens do pedido',580,910 );
+$frm = new TForm( 'Itens do pedido',580,1100 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -159,7 +159,8 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 		$whereGrid = getWhereGridParameters( $frm );
 		$whereGrid['IDPEDIDO'] = $frm->get('IDPEDIDO');
 		$page = PostHelper::get('page');
-		$dados = Itempedido::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
+		$orderBy = 'NMPRODUTO';
+		$dados = Itempedido::selectAllPagination( $orderBy,$whereGrid,$page,$maxRows );
 		$realTotalRowsSqlPaginator = Itempedido::selectCount( $whereGrid );
 		$mixUpdateFields = $primaryKey.'|'.$primaryKey
 						.',IDPEDIDO|IDPEDIDO'
@@ -183,12 +184,14 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 	}
 
 	$gride->addColumn('NRITEM','Item',null,'center');
-    $gride->addColumnCompact('NMPRODUTO','Produto',null,null,60);
-    $gride->addColumn('DSUNIDADEMEDIDA','Unidade',null,'center');
-	$gride->addColumn('QTITEMPEDIDO','Quantidade',null,'center');
-	$gride->addColumn('VLPRECOVENDA','Valor unitário (R$)',null,'right');
-	$gride->addColumn('VLDESCONTO','Desconto (R$)',null,'right');
-	$gride->addColumn('VLTOTALITEM','Total item(R$)',null,'right');
+	$gride->addColumn('IDPRODUTOFORMATADO','Código',null,'center');
+    $gride->addColumnCompact('NMPRODUTO','Produto',null,null,110);
+    $gride->addColumn('DSUNIDADEMEDIDA','Unid.',null,'center');
+	$gride->addColumn('VLPRECOVENDA','Valor unit. (R$)',null,'right');
+	$gride->addColumn('QTITEMPEDIDO','Qtd',null,'center');
+	$gride->addColumn('VLTOTALITEM','Total (R$)',null,'right');
+	$gride->addColumn('VLDESCONTO','Desc. (R$)',null,'right');
+	$gride->addColumn('VLTOTALITEMCOMDESCONTO','Total c/ desc. (R$)',null,'right');
 
 	$gride->show();
 	die();
@@ -219,7 +222,7 @@ function buscar() {
 }
 function exibir_pdf() {
     var jsonParams = {
-                        "modulo" : "relatorios/rel_orcamento.php"
+                        "modulo" : "relatorios/rel_pedido.php"
                         ,"titulo" : "Pedido Nr. " + jQuery("#IDPEDIDO").val() 
                         ,"IDPEDIDO" : jQuery("#IDPEDIDO").val()
                     };

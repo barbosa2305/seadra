@@ -1,6 +1,6 @@
 <?php
 
-class RelOrcamento extends TPDF {
+class RelPedido extends TPDF {
     private $dados;
     private $gridFontTipo = 'Arial';
     private $gridFontTamanho = 8;
@@ -41,12 +41,12 @@ class RelOrcamento extends TPDF {
         $this->setData( $dados );
         $this->addColumn(utf8_decode('Item'),9,'C','NRITEM',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Código'),12,'C','IDPRODUTOFORMATADO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Descrição'),79,'L','NMPRODUTO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Unidade'),14,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Descrição'),83,'L','NMPRODUTO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Unid.'),10,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Qtd'),12,'C','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Valor Unit.(R$)'),23,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Desc.(R$)'),18,'R','VLDESCONTO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Total item(R$)'),23,'R','VLTOTALITEM',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Valor Unit. (R$)'),23,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Desc. (R$)'),18,'R','VLDESCONTO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Total (R$)'),23,'R','VLTOTALITEMCOMDESCONTO',null,null,$tamanho,$fontCor,$tipo);
         $this->printRows();
     }
 }
@@ -63,7 +63,7 @@ if ( !ArrayHelper::validateUndefined($_REQUEST,'IDPEDIDO') ){
     if ( empty($dados) ){
         echo Mensagem::RELATORIO_DADOS_INEXISTENTES;
     } else {
-        $pdf = new RelOrcamento('P');
+        $pdf = new RelPedido('P');
         $pdf->setDados($dados);
         $pdf->AddPage();
         $pdf->Itens(); 
@@ -87,16 +87,18 @@ function cabecalho(TPDF $pdf)
     $pdf->linha(0, 6, 'Página: '.$pdf->PageNo().'/{nb}', 1, 1, 'C');
 
     $pdf->SetFont('Arial', null, 9);
-    $empresa = 'MARTINS TEXTIL LTDA';
+    $config = Configuracao::selectAll();
+    $empresa = trim($config['DSEMITENTE'][0]);
     $emitente = 'Emitente: '.$empresa;
     $pdf->linha(0, 6, $emitente, 1, 1);
 
-    $enderecoEmitente = "Rua dos Missionários, 643\nQd.31, Lt.22 - St. Rodoviário - Goiânia - GO\nTelefone: (62) 3271-1912\n ";
-    $textoLogotipo = "\n".$empresa."\n\n".$enderecoEmitente;
+    $enderecoEmitente = trim($config['DSENDERECOEMITENTE'][0]);
+    $telefoneEmitente = trim($config['DSTELEFONEEMITENTE'][0]);
+    $textoLogotipo = "\n".$empresa."\n\n".$enderecoEmitente."\nTelefone: ".$telefoneEmitente."\n\n";
     $pdf->MultiCell(110,4,utf8_decode($textoLogotipo), 1, 'C');
     $pdf->SetXY(120,33);
     $pdf->SetFont('Arial', null, 10);
-    $idPedidoFormatado = str_pad((int)$dados['IDPEDIDO'][0],10,"0",STR_PAD_LEFT);
+    $idPedidoFormatado = str_pad((int)$dados['IDPEDIDO'][0],7,"0",STR_PAD_LEFT);
     $pdf->linha(80,14,'Nr. documento: '.$idPedidoFormatado,1,0,'C');
     $pdf->SetXY(120,47);
     $pdf->SetFont('Arial', null, 10);
@@ -104,7 +106,7 @@ function cabecalho(TPDF $pdf)
 
     $pdf->SetXY(10,61);
     $pdf->SetFont('Arial', null, 9);
-    $pdf->linha(132,6,'Cliente: '.$dados['NMCLIENTE'][0],1,0);
+    $pdf->linha(132,6,'Cliente: '.ucwords(strtolower($dados['NMCLIENTE'][0])),1,0);
     $cpfCnpj = $dados['NRCPFCNPJ'][0];
     if (strlen($cpfCnpj) == 11) {
         $cpfCnpj = mask($cpfCnpj,'###.###.###-##');
@@ -127,12 +129,12 @@ function rodape(TPDF $pdf)
     $dados = $pdf->getDados();
 
     $pdf->SetFont('Arial', null, 9);
-    $pdf->linha(132,6,'Total dos produtos(R$): ',1,0,'R');
+    $pdf->linha(132,6,'Total dos produtos (R$): ',1,0,'R');
     $pdf->linha(0,6,$dados['VLPEDIDO'][0],1,1,'R');
-    $pdf->linha(132,6,'Descontos(R$): ',1,0,'R');
+    $pdf->linha(132,6,'Descontos (R$): ',1,0,'R');
     $pdf->linha(0,6,$dados['VLTOTALDESCONTO'][0],1,1,'R');
     $pdf->SetFont('Arial', 'B', 10);
-    $pdf->linha(132,6,'Total(R$): ',1,0,'R');
+    $pdf->linha(132,6,'Total (R$): ',1,0,'R');
     $pdf->linha(0,6,$dados['VLTOTAL'][0],1,1,'R');
 
     $pdf->SetFont('Arial',null,10);
