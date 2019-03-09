@@ -53,10 +53,10 @@ class Produto {
 	}
 	//--------------------------------------------------------------------------------
 	private static function validar( ProdutoVO $objVo ){
-		self::validarDescricao( $objVo );
+		self::validarProdutoCadastrado( $objVo );
 	}
 	//--------------------------------------------------------------------------------
-	private static function validarDescricao( ProdutoVO $objVo ){
+	private static function validarProdutoCadastrado( ProdutoVO $objVo ){
         $nmProduto = $objVo->getNmproduto();
 		$where['NMPRODUTO'] = $nmProduto;
         $dados = self::selectAll( null,$where );

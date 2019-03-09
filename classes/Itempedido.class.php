@@ -36,6 +36,7 @@ class Itempedido {
 		if( $objVo->getIditempedido() ) {
 			$result = ItempedidoDAO::update( $objVo );
 		} else {
+			self::validar( $objVo );
 			$result = ItempedidoDAO::insert( $objVo );
 		}
 		return $result;
@@ -44,6 +45,18 @@ class Itempedido {
 	public static function delete( $id ){
 		return ItempedidoDAO::delete( $id );
 	}
+	//--------------------------------------------------------------------------------
+    private static function validar( ItempedidoVO $objVo ){
+        self::validarItemCadastrado( $objVo );
+	}
+	//--------------------------------------------------------------------------------
+    private static function validarItemCadastrado( ItempedidoVO $objVo ){
+        $where = array( 'IDPEDIDO'=>$objVo->getIdpedido(),'IDPRODUTO'=>$objVo->getIdproduto() );
+        $dados = self::selectAll( null,$where );
+        if( !empty($dados) ){
+            throw new DomainException( Mensagem::PRODUTO_JA_CADASTRADO ); 
+        }
+    }
 	//--------------------------------------------------------------------------------
 }
 ?>

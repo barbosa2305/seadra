@@ -36,6 +36,7 @@ class Pedido {
 		if ( $objVo->getIdpedido() ) {
 			$result = PedidoDAO::update( $objVo );
 		} else {
+			self::validar( $objVo );
 			$result = PedidoDAO::insert( $objVo );
 		}
 		return $result;
@@ -44,6 +45,18 @@ class Pedido {
 	public static function delete( $id ){
 		return PedidoDAO::delete( $id );
 	}
+	//--------------------------------------------------------------------------------
+    private static function validar( PedidoVO $objVo ){
+        self::validarPedidoCadastrado( $objVo );
+	}
+	//--------------------------------------------------------------------------------
+    private static function validarPedidoCadastrado( PedidoVO $objVo ){
+        $where = array( 'IDCLIENTE'=>$objVo->getIdcliente(),'DTPEDIDO'=>$objVo->getDtpedido() );
+        $dados = self::selectAll( null,$where );
+        if( !empty($dados) ){
+            throw new DomainException( Mensagem::PEDIDO_JA_CADASTRADO ); 
+        }
+    }
 	//--------------------------------------------------------------------------------
 }
 ?>
