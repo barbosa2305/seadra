@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDITEMPEDIDO';
-$frm = new TForm( 'Itens do pedido',580,950 );
+$frm = new TForm( 'Itens do pedido',580,910 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -15,21 +15,10 @@ $frm->addGroupField('gpPedido','Pedido');
 	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,10)->setEnabled( FALSE );
 	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,114,null,FALSE)->setEnabled( FALSE );
     $frm->addTextField('DTPEDIDO','Data:',10,FALSE,10,null,TRUE)->setEnabled( FALSE );
-    $idPedido = $frm->get('IDPEDIDO');
-    if ( !empty($idPedido) ){
-        $where = array( 'IDPEDIDO'=>$idPedido );
-        $dadosPedido = Itempedido::selectAll( null,$where );
-        $vlPedido = $dadosPedido['VLPEDIDO'][0];
-        $vlTotalDesconto = $dadosPedido['VLTOTALDESCONTO'][0];
-        $vlTotal = $dadosPedido['VLTOTAL'][0];
-    } else {
-        $vlPedido = null;
-        $vlTotalDesconto = null;
-        $vlTotal = null;
-    }
-	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,FALSE,$vlPedido)->setEnabled( FALSE );
-	$frm->addNumberField('VLTOTALDESCONTO', 'Descontos (R$):',8,FALSE,2,FALSE,$vlTotalDesconto)->setEnabled( FALSE );
-	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE,$vlTotal)->setEnabled( FALSE );
+	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTALDESCONTO', 'Descontos (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	getValoresPedido( $frm );
 $frm->closeGroup();
 	
 $frm->setColumns('85,50,65,50,79');
@@ -77,7 +66,7 @@ switch( $acao ) {
 				$vo->setIdusuario( Acesso::getUserId() ); // IdUsuario que será gravado em Pedido
 				$resultado = Itempedido::save( $vo );
 				if ( $resultado == 1){
-                    getValoresPedido( $frm );
+					getValoresPedido( $frm );
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 					$naoLimpar = getCamposNaoLimpar();
             		$frm->clearFields( null,$naoLimpar );
@@ -100,7 +89,7 @@ switch( $acao ) {
 			$id = $frm->get( $primaryKey ) ;
 			$resultado = Itempedido::delete( $id );
 			if ( $resultado == 1 ){
-                getValoresPedido( $frm );
+				getValoresPedido( $frm );
 				$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 				$naoLimpar = getCamposNaoLimpar();
 				$frm->clearFields( null,$naoLimpar );
@@ -136,21 +125,18 @@ switch( $acao ) {
 }
 
 function getValoresPedido(&$frm){
-    $retorno = null;
 	$idPedido = $frm->get('IDPEDIDO');
     if ( !empty($idPedido) ){
         $where = array( 'IDPEDIDO'=>$idPedido );
-        $dadosPedido = Itempedido::selectAll( null,$where );
-        $retorno = array( 'VLPEDIDO'=>$dadosPedido['VLPEDIDO'][0],'VLTOTALDESCONTO'=>$dadosPedido['VLTOTALDESCONTO'][0],'VLTOTAL'=>$dadosPedido['VLTOTAL'][0] );
-        //$frm->setFieldValue( 'VLPEDIDO',$dadosPedido['VLPEDIDO'][0] );
-        //$frm->setFieldValue( 'VLTOTALDESCONTO',$dadosPedido['VLTOTALDESCONTO'][0] );
-        //$frm->setFieldValue( 'VLTOTAL',$dadosPedido['VLTOTAL'][0] );
+		$dadosPedido = Itempedido::selectAll( null,$where );
+		$frm->setFieldValue( 'VLPEDIDO',$dadosPedido['VLPEDIDO'][0] );
+		$frm->setFieldValue( 'VLTOTALDESCONTO',$dadosPedido['VLTOTALDESCONTO'][0] );
+		$frm->setFieldValue( 'VLTOTAL',$dadosPedido['VLTOTAL'][0] );
     } else {
-        //$frm->setFieldValue( 'VLPEDIDO',null );
-        //$frm->setFieldValue( 'VLTOTALDESCONTO',null );
-        //$frm->setFieldValue( 'VLTOTAL',null );
-    }
-    return $retorno;
+		$frm->setFieldValue( 'VLPEDIDO',null );
+		$frm->setFieldValue( 'VLTOTALDESCONTO',null );
+		$frm->setFieldValue( 'VLTOTAL',null );
+	}
 }
 
 function getWhereGridParameters(&$frm){
