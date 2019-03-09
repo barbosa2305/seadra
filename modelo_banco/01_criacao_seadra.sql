@@ -197,6 +197,8 @@ CREATE INDEX `fk_Pedido_UsuarioCriacao_idx` ON `seadra`.`Pedido` (`idUsuarioCria
 
 CREATE INDEX `fk_Pedido_UsuarioModificacao_idx` ON `seadra`.`Pedido` (`idUsuarioModificacao` ASC);
 
+CREATE UNIQUE INDEX `uk_idCliente_dtPedido` ON `seadra`.`Pedido` (`idCliente` ASC, `dtPedido` ASC);
+
 
 -- -----------------------------------------------------
 -- Table `seadra`.`ItemPedido`
@@ -225,6 +227,19 @@ CREATE INDEX `fk_ItemPedido_Produto_idx` ON `seadra`.`ItemPedido` (`idProduto` A
 CREATE INDEX `fk_ItemPedido_Pedido_idx` ON `seadra`.`ItemPedido` (`idPedido` ASC);
 
 CREATE UNIQUE INDEX `uk_idPedido_idProduto` ON `seadra`.`itempedido` (`idPedido` ASC, `idProduto` ASC);
+
+
+-- -----------------------------------------------------
+-- Table `seadra`.`Configuracao`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `seadra`.`Configuracao` (
+  `idConfiguracao` INT NOT NULL AUTO_INCREMENT,
+  `dsEmitente` VARCHAR(200) NULL,
+  `dsEnderecoEmitente` VARCHAR(400) NULL,
+  `dsTelefoneEmitente` VARCHAR(20) NULL,
+  PRIMARY KEY (`idConfiguracao`)
+)
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -332,8 +347,9 @@ SELECT `cli`.`idCliente` AS `idCliente`
        ,FORMAT(`pro`.`vlPrecoVenda`,2,'de_DE') AS `vlPrecoVenda`
        ,`pro`.`stAtivo` AS `stProdutoAtivo`
        ,`ite`.`qtItemPedido` AS `qtItemPedido`
+       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`),2,'de_DE') AS `vlTotalItem` 
        ,FORMAT(IFNULL(`ite`.`vlDesconto`, 0),2,'de_DE') AS `vlDesconto`
-       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) - IFNULL(`ite`.`vlDesconto`, 0),2,'de_DE') AS `vlTotalItem` 
+       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) - IFNULL(`ite`.`vlDesconto`, 0),2,'de_DE') AS `vlTotalItemComDesconto` 
        ,FORMAT(`vlr`.`vlPedido`,2,'de_DE') AS `vlPedido`
        ,FORMAT(`vlr`.`vlTotalDesconto`,2,'de_DE') AS `vlTotalDesconto`
        ,FORMAT(`vlr`.`vlTotal`,2,'de_DE') AS `vlTotal` 
@@ -348,8 +364,9 @@ FROM `seadra`.`pedido` `ped`
 				    FROM `seadra`.`itempedido` `it`
 					      INNER JOIN `seadra`.`pedido` `pe` ON `it`.`idPedido` = `pe`.`idPedido`
 					      INNER JOIN `seadra`.`produto` `pr` ON `it`.`idProduto` = `pr`.`idProduto`
+                WHERE `pr`.`stAtivo` = 'S'
 				    GROUP BY `pe`.`idPedido`) AS `vlr` ON `vlr`.`idPedido` = `ped`.`idPedido`
-WHERE `cli`.`stAtivo` = 'S' AND `pro`.`stAtivo` = 'S' ;
+WHERE `cli`.`stAtivo` = 'S' AND `pro`.`stAtivo` = 'S';
 
 
 

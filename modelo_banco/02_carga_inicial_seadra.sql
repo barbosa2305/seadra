@@ -3,6 +3,10 @@
 -- -----------------------------------------------------
 INSERT INTO `seadra`.`Usuario` (`nmUsuario`, `dsLogin`, `dsSenha`, `tpGrupo`) VALUES ('Administrador', 'admin', '$2y$10$Pu7jakvAdT69OLkrI2S10.2t2WXOUGNJ7HHjgyFJ6R99b6l44Jipm','A');
 
+-- -----------------------------------------------------
+-- Table `seadra`.`Configuracao`
+-- -----------------------------------------------------
+INSERT INTO `seadra`.`Configuracao` (`dsEmitente`, `dsEnderecoEmitente`, `dsTelefoneEmitente`) VALUES ('EMPRESA TESTE LTDA', 'Rua exemplo, 000\nQd.00, Lt.00 - Centro - São Paulo - SP\n','(00) 0000-0000');
 
 -- -----------------------------------------------------
 -- Table `seadra`.`UnidadeFederativa`
