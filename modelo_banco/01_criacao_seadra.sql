@@ -370,11 +370,6 @@ WHERE `cli`.`stAtivo` = 'S' AND `pro`.`stAtivo` = 'S';
 
 
 
-DROP USER IF EXISTS 'seadra_bd'@'localhost';
-CREATE USER 'seadra_bd'@'localhost' IDENTIFIED BY '!s3@dr@19';
-GRANT DELETE,EXECUTE,INSERT,SELECT,UPDATE ON seadra.* TO 'seadra_bd'@'localhost';
-
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
