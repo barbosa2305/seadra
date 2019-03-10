@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPRODUTO';
-$frm = new TForm( 'Produto',580,950 );
+$frm = new TForm( 'Produto',580,750 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -10,12 +10,12 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 
-$frm->setColumns('90,50,95,80,43');
+$frm->setColumns('56,50,90,80,95,50,40');
 $frm->addGroupField('gpx1');	
-    $frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,100);
+    $frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,114);
     $unidadeMedida = array('MT'=>'Metro','M2'=>'Metro quadrado','M3'=>'Metro cubico','UN'=>'Unidade');
-    $frm->addSelectField('DSUNIDADEMEDIDA', 'Unidade medida:',TRUE,$unidadeMedida,FALSE,null,null,null,null,null,null,null);
-	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo (R$):',10,TRUE,2,TRUE);
+    $frm->addSelectField('DSUNIDADEMEDIDA', 'Unidade:',TRUE,$unidadeMedida,TRUE,null,null,null,null,null,null,null);
+	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo (R$):',10,TRUE,2,FALSE);
 	$frm->addNumberField('VLPRECOVENDA', 'Preço venda (R$):',10,TRUE,2,FALSE);
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
 	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,FALSE,null,null,null,null,null,null,null);
@@ -126,11 +126,11 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->setUrl( 'produto.php' );
     $gride->setZebrarColors( '#ffffff','#ffffff' );
 
-	$gride->addColumn($primaryKey,'Código');
-    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,80);
-    $gride->addColumn('DSUNIDADEMEDIDA','Unidade');
-	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)');
-	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)');
+	$gride->addColumn($primaryKey,'Código',null,'center');
+    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,56);
+    $gride->addColumn('DSUNIDADEMEDIDA','Unidade',null,'center');
+	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)',null,'right');
+	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)',null,'right');
 	$gride->addColumn('DSATIVO','Ativo ?');
 
 	$gride->show();

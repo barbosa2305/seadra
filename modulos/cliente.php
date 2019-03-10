@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
-$frm = new TForm('Cliente',580,1060);
+$frm = new TForm('Cliente',580,835);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -10,17 +10,19 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' ); //Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 
-$frm->setColumns('64,50,40,40,50,40,45');
-$frm->addGroupField('gpDadosBasicos','Dados básicos');
+$frm->setColumns('64');
+$frm->addGroupField('gpDadosBasicos','Dados básicos',null,400);
 	$frm->addCpfCnpjField('NRCPFCNPJ', 'CPF/CNPJ:',TRUE,null,TRUE,null,null,'CPF/CNPJ inválido.',TRUE);
-	$frm->addTextField('NMCLIENTE', 'Nome:',255,TRUE,50,null,TRUE);
-	$frm->addEmailField('DSEMAIL', 'E-mail:',null,FALSE,35,FALSE);
-	$frm->addFoneField('NRTELEFONE', 'Telefone:',null,FALSE);
-	$frm->addFoneField('NRCELULAR', 'Celular:',null,FALSE);
+	$frm->addTextField('NMCLIENTE', 'Nome:',255,TRUE,52,null,TRUE);
+	$frm->addEmailField('DSEMAIL', 'E-mail:',null,FALSE,52,TRUE);
+	$frm->addFoneField('NRTELEFONE', 'Telefone:',null,TRUE);
+	$frm->addFoneField('NRCELULAR', 'Celular:',null,TRUE);
+	$ativo = array( 'S'=>'Sim','N'=>'Não' );
+	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
 $frm->closeGroup();
 	
-$frm->setColumns('30,150,50,50,60');
-$frm->addGroupField('gpEndereco','Endereço');	
+$frm->setColumns('78');
+$frm->addGroupField('gpEndereco','Endereço',null,400,FALSE);	
 	$frm->addHiddenField('IDENDERECO');
 	// Endereço
 	$frm->addCepField('DSCEP'  // id do campo
@@ -44,21 +46,14 @@ $frm->addGroupField('gpEndereco','Endereço');
 					, 'O CEP está incompleto.'
 					)->addEvent('onchange','select_change(this)');
 	$frm->addHiddenField('DSLOCALIDADE');
-	$frm->addTextField('DSLOGRADOURO', 'Endereço:', 255,null,30,null,FALSE);
-	$frm->addTextField('DSCOMPLEMENTO', 'Complemento:',255,null,40,null,FALSE);
-	$frm->addTextField('DSBAIRRO', 'Bairro:', 255,null,31,null,FALSE);
+	$frm->addTextField('DSLOGRADOURO', 'Endereço:', 255,null,50,null,TRUE);
+	$frm->addTextField('DSCOMPLEMENTO', 'Complemento:',255,null,50,null,TRUE);
+	$frm->addTextField('DSBAIRRO', 'Bairro:', 255,null,50,null,TRUE);
 	$listUF = Unidadefederativa::selectComboSiglaUf();
 	$frm->addSelectField('DSSIGLA', 'UF:',FALSE, $listUF,TRUE);
-	$frm->addSelectField('CDMUNICIPIO', 'Município:', null, null, FALSE);
+	$frm->addSelectField('CDMUNICIPIO', 'Município:', null, null, TRUE);
 	$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipio', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- selecione --', '0', 'Nenhum município encontrado.');
 $frm->closeGroup();
-
-$frm->setColumns('40');
-$frm->addGroupField('gpAtivo');	
-	$ativo = array( 'S'=>'Sim','N'=>'Não' );
-	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
-$frm->closeGroup();
-
 $frm->addHtmlField('html1', '* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
@@ -193,9 +188,6 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->addColumn('DSEMAIL','E-mail');
 	$gride->addColumn('NRTELEFONE','Telefone');
 	$gride->addColumn('NRCELULAR','Celular');
-	$gride->addColumn('DSBAIRRO','Bairro');
-	$gride->addColumn('NMMUNICIPIO','Município');
-	$gride->addColumn('DSSIGLA','UF');
 	$gride->addColumn('DSATIVO','Ativo ?',null,'center');
 
 	$gride->show();
