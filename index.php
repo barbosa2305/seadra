@@ -10,6 +10,9 @@
  * System seadra created in: 2018-12-03 21:17:31
  */
 
+// Configurações
+require_once('classes/ServidorConfig.class.php');
+
 require_once('includes/constantes.php');
 require_once('includes/config_conexao.php');
 

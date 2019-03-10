@@ -1,0 +1,14 @@
+﻿; Este arquivo deve ser copiado e estar atualizado no seguinte caminho: <WWW SERVIDOR WEB>\config
+; Deverá ser criada a pasta "config" caso não exista.
+
+; Arquivo de configuração
+[config]
+ambiente = "desenvolvimento"
+
+[ds-adm]
+dbms = "MYSQL"
+hostname = "localhost"
+port = "3306"
+dbname = "seadra"
+username = "seadra_bd"
+password = "seadra_bd"
