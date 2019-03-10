@@ -158,7 +158,7 @@ function getWhereGridParameters(&$frm){
 						,'IDPEDIDO'=>$frm->get('IDPEDIDO')
 						,'IDPRODUTO'=>$frm->get('IDPRODUTO') 
 						,'QTITEMPEDIDO'=>$frm->get('QTITEMPEDIDO')
-						,'VLDESCONTO'=>$frm->get('VLDESCONTO')
+						//,'VLDESCONTO'=>$frm->get('VLDESCONTO')
 						);
 	}
 	return $retorno;
@@ -181,8 +181,9 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 						.',QTITEMPEDIDO|QTITEMPEDIDO' 
 						.',VLDESCONTO|VLDESCONTO'
 						;
+		$tituloGride = 'Lista de itens do pedido -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 		$gride = new TGrid( 'gd'                        // id do gride
-						,'Lista de itens do pedido -'.' Quantidade: '.$realTotalRowsSqlPaginator // titulo do gride
+						,$tituloGride // titulo do gride
 						);
 		$gride->addKeyField( $primaryKey ); // chave primaria
 		$gride->setData( $dados ); // array de dados
@@ -191,7 +192,8 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 		$gride->setUpdateFields( $mixUpdateFields );
 		$gride->setUrl( 'itempedido.php' );
 	} else {
-		$gride = new TGrid( 'gd','Lista de itens do pedido');
+		$tituloGride = 'Lista de itens do pedido - Quantidade: 0';
+		$gride = new TGrid( 'gd',$tituloGride);
 	}
 
 	$gride->addColumn('NRITEM','Item',null,'center');

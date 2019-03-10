@@ -115,8 +115,9 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
                     .',VLPRECOVENDA|VLPRECOVENDA'
 					.',STATIVO|STATIVO'
 					;
+	$tituloGride = 'Lista de produtos -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Lista de produtos' // titulo do gride
+					   ,$tituloGride // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados
@@ -131,7 +132,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->addColumn('DSUNIDADEMEDIDA','Unidade',null,'center');
 	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)',null,'right');
 	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)',null,'right');
-	$gride->addColumn('DSATIVO','Ativo ?');
+	$gride->addColumn('DSATIVO','Ativo ?',null,'center');
 
 	$gride->show();
 	die();

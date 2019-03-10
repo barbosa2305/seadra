@@ -3,7 +3,7 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
 
-$frm = new TForm('Usuário',500,840);
+$frm = new TForm('Usuário',580,840);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -130,8 +130,9 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 					.',TPGRUPO|TPGRUPO'
 					.',STATIVO|STATIVO'
 					;
+	$tituloGride = 'Lista de usuários -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Lista de usuários' // titulo do gride
+					   ,$tituloGride // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados

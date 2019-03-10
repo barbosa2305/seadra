@@ -125,8 +125,9 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 					.',NMCLIENTE|NMCLIENTE'
 					.',DTPEDIDO|DTPEDIDO'
 					;
+	$tituloGride = 'Lista de pedidos -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 	$gride = new TGrid( 'gd'                // id do gride
-					   ,'Lista de pedidos' // titulo do gride
+					   ,$tituloGride // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados

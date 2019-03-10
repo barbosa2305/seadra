@@ -78,8 +78,9 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 					.',DSENDERECOEMITENTE|DSENDERECOEMITENTE'
 					.',DSTELEFONEEMITENTE|DSTELEFONEEMITENTE'
 					;
+	$tituloGride = 'Configurações -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Configurações' // titulo do gride
+					   ,$tituloGride // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados

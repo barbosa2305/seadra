@@ -172,8 +172,9 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 					.',DSSIGLA|DSSIGLA'
 					.',STATIVO|STATIVO'
 					;
+	$tituloGride = 'Lista de clientes -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 	$gride = new TGrid( 'gd'                        // id do gride
-					   ,'Lista de clientes' // titulo do gride
+					   ,$tituloGride // titulo do gride
 					   );
 	$gride->addKeyField( $primaryKey ); // chave primaria
 	$gride->setData( $dados ); // array de dados
