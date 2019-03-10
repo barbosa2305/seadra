@@ -16,7 +16,7 @@ $frm->addGroupField('gpEmitente','Emitente');
 	$frm->addMemoField('DSENDERECOEMITENTE', 'Endereço:',400,FALSE,115,3);
 	$frm->addTextField('DSTELEFONEEMITENTE', 'Telefone:',20,FALSE,15);
 $frm->closeGroup();
-$frm->addHtmlField('html1', '<br>* Essas configurações serão utilizadas no relatório: Pedido de Venda.', null, null, null, null)->setCss('color', 'red');
+$frm->addHtmlField('html1', '* Essas configurações serão utilizadas no relatório: Pedido de Venda.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
 $frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);

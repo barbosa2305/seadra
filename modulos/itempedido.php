@@ -10,38 +10,49 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 
+/*
 $frm->setColumns('50,45,58,80,87,83,56');
 $frm->addGroupField('gpPedido','Pedido');
 	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,10)->setEnabled( FALSE );
-	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,114,null,FALSE)->setEnabled( FALSE );
+	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,149,null,FALSE)->setEnabled( FALSE );
     $frm->addTextField('DTPEDIDO','Data:',10,FALSE,10,null,TRUE)->setEnabled( FALSE );
 	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->addNumberField('VLTOTALDESCONTO', 'Descontos (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	getValoresPedido( $frm );
 $frm->closeGroup();
-	
-$frm->setColumns('85,50,65,50,79');
+*/
+
+$frm->setColumns('47,45,42,40,30,45,55,50,59,40,97');
+$frm->addGroupField('gpPedido','Pedido');
+	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,6)->setEnabled( FALSE );
+	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,49,null,FALSE)->setEnabled( FALSE );
+    $frm->addTextField('DTPEDIDO','Data:',10,FALSE,8,null,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLPEDIDO', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTALDESCONTO', 'Desc. (R$):',6,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('VLTOTAL', 'Total c/ desc. (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	getValoresPedido( $frm );
+$frm->closeGroup();
+
+$frm->setColumns('47,50,65,50,80,50,26,50,78');
 $frm->addGroupField('gpItens','Itens');
-	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,10,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
-    $frm->addTextField('NMPRODUTO',null,255,FALSE,115,null,FALSE); // campo obrigatorio para funcionar o autocomplete
-	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',8,FALSE,2,TRUE)->setEnabled( FALSE );
-	$frm->addNumberField('QTITEMPEDIDO','Quantidade:',10,TRUE,0,FALSE);
+	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,6,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
+    $frm->addTextField('NMPRODUTO',null,255,FALSE,80,null,FALSE); // campo obrigatorio para funcionar o autocomplete
+	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
+	$frm->addNumberField('QTITEMPEDIDO','Qtd:',6,TRUE,0,FALSE);
 	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
 	$frm->setAutoComplete('NMPRODUTO','vw_produto_ativo','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
 						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 $frm->closeGroup();
+$frm->addHtmlField('html1', '* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 
-$frm->addHtmlField('html1', '<br>', null, null, null, null);
 $frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
 $frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);
-
 if ( !empty($frm->get('IDPEDIDO')) ) {
     $frm->addButton('Imprimir',null,'btnImprimir','exibir_pdf()',null,FALSE,FALSE)->setEnabled( TRUE );
 } else {
     $frm->addButton('Imprimir',null,'btnImprimir','exibir_pdf()',null,FALSE,FALSE)->setEnabled( FALSE );
 }
-
 $frm->addButton('Limpar',null,'Limpar',null,null,FALSE,FALSE);
 $frm->addButton('Voltar para pedido','Voltar','btnVoltar',null,null,FALSE,FALSE);
 $frm->addButton('Ir para produto','Produto','btnProduto',null,null,FALSE,TRUE);

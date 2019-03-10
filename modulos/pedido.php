@@ -10,17 +10,17 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );  // coluna chave da tabela
 
-$g = $frm->addGroupField('gpx1');
-	$g->setColumns('45,35,50');
+$frm->setColumns('43,35,50,40,32');
+$frm->addGroupField('gpx1');
 	// Inicio campo AutoComplete
 	$frm->addTextField('IDCLIENTE','Cliente:',6,TRUE,6,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-	$frm->addTextField('NMCLIENTE',null,255,FALSE,75,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('NMCLIENTE',null,255,FALSE,82,null,FALSE); //campo obrigatorio para funcionar o autocomplete
 	$frm->setAutoComplete('NMCLIENTE','vw_cliente_ativo','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
 						  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 	// Fim campo AutoComplete
 	$frm->addDateField('DTPEDIDO','Data:',TRUE,FALSE);
-	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
-$g->closeGroup();
+$frm->closeGroup();
+$frm->addHtmlField('html1', '* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
 $frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);

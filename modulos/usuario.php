@@ -3,7 +3,7 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
 
-$frm = new TForm('Usuário',500,700);
+$frm = new TForm('Usuário',500,840);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -11,16 +11,16 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' ); // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // Coluna chave da tabela
 
-$g = $frm->addGroupField('gpx1');
-	$g->setColumns('60,80');
-	$frm->addTextField('NMUSUARIO','Nome:',255,TRUE,80);
-	$frm->addTextField('DSLOGIN','Usuário:',20,TRUE,20);
+$frm->setColumns('38,40,44,40,39,40,38');
+$frm->addGroupField('gpx1');
+	$frm->addTextField('NMUSUARIO','Nome:',255,TRUE,55);
+	$frm->addTextField('DSLOGIN','Usuário:',20,TRUE,16,null,FALSE);
 	$grupo = array('U' => 'Usuários', 'A' => 'Administradores');
-	$frm->addSelectField('TPGRUPO', 'Grupo:',TRUE,$grupo,null,null,null,null,null,null,null,'U');
+	$frm->addSelectField('TPGRUPO', 'Grupo:',TRUE,$grupo,FALSE,null,null,null,null,null,null,'U');
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
-	$frm->addSelectField('STATIVO', 'Ativo ?',TRUE,$ativo,null,null,null,null,null,null,null,'S');
-	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
-$g->closeGroup();
+	$frm->addSelectField('STATIVO', 'Ativo ?',TRUE,$ativo,FALSE,null,null,null,null,null,null,'S');
+$frm->closeGroup();
+$frm->addHtmlField('html1', '* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
 $frm->addButton('Salvar', null, 'Salvar', null, null, FALSE, FALSE);

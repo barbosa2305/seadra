@@ -3,7 +3,7 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
 
-$frm = new TForm('Alterar minha senha',200,400);
+$frm = new TForm('Alterar minha senha',240,400);
 $frm->setFlat(true);
 $frm->setMaximize(true);
 $frm->setShowCloseButton( FALSE );
@@ -12,13 +12,16 @@ $frm->setColumns('110');
 $frm->addHiddenField( 'BUSCAR' ); // campo oculto para buscas
 $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 
-$userLogin = Acesso::getUserLogin();
-$frm->addTextField('login','Usuário',255,true,35,$userLogin)->setEnabled(false)->setAttribute('align','center');
-$frm->addPasswordField('senha','Senha atual',true,null,20,null,null,null,35)->setAttribute('align','center');
-$frm->addHtmlField('espaço1','');
-$frm->addPasswordField('novaSenha','Nova senha',true,null,20,null,null,null,35)->setAttribute('align','center');
-$frm->addPasswordField('novaSenhaRepita','Repita a nova senha',true,null,20,null,null,null,35)->setAttribute('align','center');
-$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
+$frm->setColumns('113');
+$frm->addGroupField('gpAlteraSenha');
+	$userLogin = Acesso::getUserLogin();
+	$frm->addTextField('login','Usuário:',255,true,35,$userLogin)->setEnabled(false)->setAttribute('align','center');
+	$frm->addPasswordField('senha','Senha atual:',true,null,20,null,null,null,35)->setAttribute('align','center');
+	$frm->addHtmlField('espaço1','');
+	$frm->addPasswordField('novaSenha','Nova senha:',true,null,20,null,null,null,35)->setAttribute('align','center');
+	$frm->addPasswordField('novaSenhaRepita','Repita a nova senha:',true,null,20,null,null,null,35)->setAttribute('align','center');
+$frm->closeGroup();
+$frm->addHtmlField('html1', '* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Salvar', null, 'Salvar', null, null, true, false);
 $frm->addButton('Limpar', null, 'Limpar', null, null, false, false);

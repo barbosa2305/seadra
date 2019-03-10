@@ -10,17 +10,17 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 
-$g = $frm->addGroupField('gpx1');
-	$g->setColumns('100,160');
-    $frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,120);
+$frm->setColumns('90,50,95,80,43');
+$frm->addGroupField('gpx1');	
+    $frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,100);
     $unidadeMedida = array('MT'=>'Metro','M2'=>'Metro quadrado','M3'=>'Metro cubico','UN'=>'Unidade');
-    $frm->addSelectField('DSUNIDADEMEDIDA', 'Unidade medida:',TRUE,$unidadeMedida,null,null,null,null,null,null,null,null);
-	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo (R$):',10,TRUE,2);
-	$frm->addNumberField('VLPRECOVENDA', 'Preço venda (R$):',10,TRUE,2);
+    $frm->addSelectField('DSUNIDADEMEDIDA', 'Unidade medida:',TRUE,$unidadeMedida,FALSE,null,null,null,null,null,null,null);
+	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo (R$):',10,TRUE,2,TRUE);
+	$frm->addNumberField('VLPRECOVENDA', 'Preço venda (R$):',10,TRUE,2,FALSE);
 	$ativo = array('S' => 'Sim', 'N' => 'Não');
-	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
-	$frm->addHtmlField('html1', '<br>* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
-$g->closeGroup();
+	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,FALSE,null,null,null,null,null,null,null);
+$frm->closeGroup();
+$frm->addHtmlField('html1', '* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Buscar',null,'btnBuscar','buscar()',null,TRUE,FALSE);
 $frm->addButton('Salvar',null,'Salvar',null,null,FALSE,FALSE);
