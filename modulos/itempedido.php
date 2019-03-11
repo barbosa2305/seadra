@@ -2,26 +2,13 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDITEMPEDIDO';
-$frm = new TForm( 'Itens do pedido',580,1100 );
+$frm = new TForm( 'Itens do pedido',605,1100 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
 
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
-
-/*
-$frm->setColumns('50,45,58,80,87,83,56');
-$frm->addGroupField('gpPedido','Pedido');
-	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,10)->setEnabled( FALSE );
-	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,149,null,FALSE)->setEnabled( FALSE );
-    $frm->addTextField('DTPEDIDO','Data:',10,FALSE,10,null,TRUE)->setEnabled( FALSE );
-	$frm->addNumberField('VLPEDIDO', 'Valor (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	$frm->addNumberField('VLTOTALDESCONTO', 'Descontos (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	$frm->addNumberField('VLTOTAL', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	getValoresPedido( $frm );
-$frm->closeGroup();
-*/
 
 $frm->setColumns('47,45,42,40,30,45,55,50,59,40,97');
 $frm->addGroupField('gpPedido','Pedido');
@@ -191,6 +178,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 		$gride->setMaxRows( $maxRows );
 		$gride->setUpdateFields( $mixUpdateFields );
 		$gride->setUrl( 'itempedido.php' );
+		$gride->setZebrarColors( '#ffffff','#ffffff' );
 	} else {
 		$tituloGride = 'Lista de itens do pedido - Quantidade: 0';
 		$gride = new TGrid( 'gd',$tituloGride);

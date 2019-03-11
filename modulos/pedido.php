@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPEDIDO';
-$frm = new TForm( 'Pedido',580,800 );
+$frm = new TForm( 'Pedido',575,800 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -135,6 +135,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$gride->setMaxRows( $maxRows );
 	$gride->setUpdateFields( $mixUpdateFields );
 	$gride->setUrl( 'pedido.php' );
+	$gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Pedido',null,'center');
 	$gride->addColumnCompact('NMCLIENTE','Cliente',null,null,80);

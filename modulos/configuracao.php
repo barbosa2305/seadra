@@ -90,6 +90,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$gride->setUrl( 'configuracao.php' );
 	$gride->setCreateDefaultDeleteButton( FALSE );
 	$gride->setExportExcel( FALSE );
+	$gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código',null,'center');
 	$gride->addColumn('DSEMITENTE','Emitente');

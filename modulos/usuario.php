@@ -3,7 +3,7 @@ defined('APLICATIVO') or die();
 
 $primaryKey = 'IDUSUARIO';
 
-$frm = new TForm('Usuário',580,840);
+$frm = new TForm('Usuário',560,840);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -142,6 +142,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$gride->setUrl( 'usuario.php' );
 	$gride->setExportExcel( FALSE );
 	$gride->setOnDrawActionButton( 'gdConfigButtons' );
+	$gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código');
 	$gride->addColumn('NMUSUARIO','Nome');

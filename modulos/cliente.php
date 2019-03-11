@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
-$frm = new TForm('Cliente',580,835);
+$frm = new TForm('Cliente',590,835);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -149,7 +149,7 @@ function getWhereGridParameters(&$frm){
 }
 
 if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
-	$maxRows = ROWS_PER_PAGE;
+	$maxRows = 12; // ROWS_PER_PAGE;
 	$whereGrid = getWhereGridParameters($frm);
 	$page = PostHelper::get('page');
 	$dados = Cliente::selectAllPagination( $primaryKey, $whereGrid, $page,  $maxRows);
@@ -182,6 +182,7 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 	$gride->setMaxRows( $maxRows );
 	$gride->setUpdateFields($mixUpdateFields);
 	$gride->setUrl( 'cliente.php' );
+	$gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código',null,'center');
 	$gride->addColumn('NRCPFCNPJ','CPF/CNPJ',null,'center');

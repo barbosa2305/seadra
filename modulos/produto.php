@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPRODUTO';
-$frm = new TForm( 'Produto',580,750 );
+$frm = new TForm( 'Produto',570,750 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -128,7 +128,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código',null,'center');
-    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,56);
+    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,60);
     $gride->addColumn('DSUNIDADEMEDIDA','Unidade',null,'center');
 	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)',null,'right');
 	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)',null,'right');
