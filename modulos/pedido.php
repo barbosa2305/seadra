@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPEDIDO';
-$frm = new TForm( 'Pedido',575,800 );
+$frm = new TForm( 'Pedido',610,850 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -10,11 +10,12 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );  // coluna chave da tabela
 
-$frm->setColumns('43,35,50,40,32');
+$frm->setColumns('40,35,40,30,32');
 $frm->addGroupField('gpx1');
+    $frm->addNumberField('IDPEDIDOBUSCA','Pedido:',6,FALSE,0,TRUE);
 	// Inicio campo AutoComplete
-	$frm->addTextField('IDCLIENTE','Cliente:',6,TRUE,6,null,TRUE);  //campo obrigatorio para funcionar o autocomplete
-	$frm->addTextField('NMCLIENTE',null,255,FALSE,82,null,FALSE); //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('IDCLIENTE','Cliente:',6,TRUE,6,null,FALSE);  //campo obrigatorio para funcionar o autocomplete
+	$frm->addTextField('NMCLIENTE',null,255,FALSE,68,null,FALSE); //campo obrigatorio para funcionar o autocomplete
 	$frm->setAutoComplete('NMCLIENTE','vw_cliente_ativo','NMCLIENTE','IDCLIENTE|IDCLIENTE,NMCLIENTE|NMCLIENTE'
 						  ,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
 	// Fim campo AutoComplete
@@ -31,7 +32,8 @@ $acao = isset($acao) ? $acao : null;
 switch( $acao ) {
 	//--------------------------------------------------------------------------------
 	case 'Limpar':
-		$frm->clearFields();
+        $frm->clearFields();
+        $frm->setFocusField('NMCLIENTE');
 	break;
 	//--------------------------------------------------------------------------------
 	case 'Salvar':
@@ -43,7 +45,8 @@ switch( $acao ) {
 				$resultado = Pedido::save( $vo );
 				if ( $resultado == 1 ){
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
-					$frm->clearFields();
+                    $frm->clearFields();
+                    $frm->setFocusField('NMCLIENTE');
 				} else {
 					$frm->setMessage( $resultado );
 				}
@@ -68,7 +71,7 @@ switch( $acao ) {
 			} else {
 				$frm->clearFields();
 				$frm->setMessage( $resultado );
-			}
+            }
 		}
 		catch ( DomainException $e ){
 			$frm->setMessage( $e->getMessage() );
@@ -107,7 +110,8 @@ function getWhereGridParametersPedido( &$frm ){
 		$retorno = array(
 				'IDPEDIDO'=>$frm->get('IDPEDIDO')
 				,'IDCLIENTE'=>$frm->get('IDCLIENTE')
-				,'DTPEDIDO'=>$frm->get('DTPEDIDO')
+                ,'DTPEDIDO'=>$frm->get('DTPEDIDO') 
+                ,'IDPEDIDO'=>$frm->get('IDPEDIDOBUSCA')
 		);
 	}
 	return $retorno;
@@ -123,7 +127,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 	$mixUpdateFields = $primaryKey.'|'.$primaryKey
 					.',IDCLIENTE|IDCLIENTE'
 					.',NMCLIENTE|NMCLIENTE'
-					.',DTPEDIDO|DTPEDIDO'
+                    .',DTPEDIDO|DTPEDIDO' 
 					;
 	$tituloGride = 'Lista de pedidos -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 	$gride = new TGrid( 'gd'                // id do gride
@@ -152,6 +156,7 @@ if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
 
 $frm->addHtmlField('gride');
 $frm->addJavascript('init()');
+$frm->setFocusField('NMCLIENTE');
 $frm->show();
 
 ?>
@@ -161,7 +166,9 @@ function init() {
 					,"IDPEDIDO":""
 					,"IDCLIENTE":""
 					,"NMCLIENTE":""
-					,"DTPEDIDO":""
+					,"DTPEDIDO":"" 
+                    ,"IDPEDIDOBUSCA":""
+
 					};
 	fwGetGrid('pedido.php','gride',Parameters,true);
 }

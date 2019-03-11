@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPRODUTO';
-$frm = new TForm( 'Produto',570,750 );
+$frm = new TForm( 'Produto',640,830 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -10,9 +10,14 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 
-$frm->setColumns('56,50,90,80,95,50,40');
-$frm->addGroupField('gpx1');	
-    $frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,114);
+$frm->setColumns('42');
+$frm->addGroupField('gpx1','Busca por');
+    $frm->addNumberField('IDPRODUTOBUSCA','Código:',6,FALSE,0,TRUE)->setExampleText('Utilizar este campo apenas para busca.');
+$frm->closeGroup();
+
+$frm->setColumns('58,50,90,80,95,50,40');
+$frm->addGroupField('gpx2','Dados do produto');
+    $frm->addTextField('NMPRODUTO', 'Descrição:',255,TRUE,119,null,TRUE);
     $unidadeMedida = array('MT'=>'Metro','M2'=>'Metro quadrado','M3'=>'Metro cubico','UN'=>'Unidade');
     $frm->addSelectField('DSUNIDADEMEDIDA', 'Unidade:',TRUE,$unidadeMedida,TRUE,null,null,null,null,null,null,null);
 	$frm->addNumberField('VLPRECOCUSTO', 'Preço custo (R$):',10,TRUE,2,FALSE);
@@ -43,7 +48,8 @@ switch( $acao ){
 				$resultado = Produto::save( $vo );
 				if ( $resultado == 1 ) {
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
-					$frm->clearFields();
+                    $frm->clearFields();
+                    $frm->setFocusField('NMPRODUTO');
 				} else {
 					$frm->setMessage( Mensagem::OPERACAO_FALHOU );
 				}
@@ -92,11 +98,11 @@ function getWhereGridParameters(&$frm){
 	$retorno = null;
 	if ( $frm->get('BUSCAR') == 1 ){
 		$retorno = array(
-				'IDPRODUTO'=>$frm->get('IDPRODUTO')
-				,'NMPRODUTO'=>$frm->get('NMPRODUTO')
+				'NMPRODUTO'=>$frm->get('NMPRODUTO')
 				,'VLPRECOCUSTO'=>TrataDados::converteMoeda( $frm->get('VLPRECOCUSTO') )
 				,'VLPRECOVENDA'=>TrataDados::converteMoeda( $frm->get('VLPRECOVENDA') )
-				,'STATIVO'=>$frm->get('STATIVO')
+                ,'STATIVO'=>$frm->get('STATIVO')
+                ,'IDPRODUTO'=>$frm->get('IDPRODUTOBUSCA')
 		);
 	}
 	return $retorno;
@@ -128,7 +134,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código',null,'center');
-    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,60);
+    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,84);
     $gride->addColumn('DSUNIDADEMEDIDA','Unidade',null,'center');
 	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)',null,'right');
 	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)',null,'right');
@@ -140,6 +146,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 
 $frm->addHtmlField('gride');
 $frm->addJavascript('init()');
+$frm->setFocusField('NMPRODUTO');
 $frm->show();
 
 ?>
@@ -151,6 +158,7 @@ function init() {
 					,"VLPRECOCUSTO":""
 					,"VLPRECOVENDA":""
 					,"STATIVO":""
+                    ,"IDPRODUTOBUSCA":""
 					};
 	fwGetGrid('produto.php','gride',Parameters,true);
 }
