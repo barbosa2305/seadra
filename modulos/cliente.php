@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
-$frm = new TForm('Cliente',590,835);
+$frm = new TForm('Cliente',610,840);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -13,8 +13,8 @@ $frm->addHiddenField( $primaryKey );   // coluna chave da tabela
 $frm->setColumns('64');
 $frm->addGroupField('gpDadosBasicos','Dados básicos',null,400);
 	$frm->addCpfCnpjField('NRCPFCNPJ', 'CPF/CNPJ:',TRUE,null,TRUE,null,null,'CPF/CNPJ inválido.',TRUE);
-	$frm->addTextField('NMCLIENTE', 'Nome:',255,TRUE,52,null,TRUE);
-	$frm->addEmailField('DSEMAIL', 'E-mail:',null,FALSE,52,TRUE);
+	$frm->addTextField('NMCLIENTE', 'Nome:',255,TRUE,49,null,TRUE);
+	$frm->addEmailField('DSEMAIL', 'E-mail:',null,FALSE,49,TRUE);
 	$frm->addFoneField('NRTELEFONE', 'Telefone:',null,TRUE);
 	$frm->addFoneField('NRCELULAR', 'Celular:',null,TRUE);
 	$ativo = array( 'S'=>'Sim','N'=>'Não' );
@@ -46,9 +46,9 @@ $frm->addGroupField('gpEndereco','Endereço',null,400,FALSE);
 					, 'O CEP está incompleto.'
 					)->addEvent('onchange','select_change(this)');
 	$frm->addHiddenField('DSLOCALIDADE');
-	$frm->addTextField('DSLOGRADOURO', 'Endereço:', 255,null,50,null,TRUE);
-	$frm->addTextField('DSCOMPLEMENTO', 'Complemento:',255,null,50,null,TRUE);
-	$frm->addTextField('DSBAIRRO', 'Bairro:', 255,null,50,null,TRUE);
+	$frm->addTextField('DSLOGRADOURO', 'Endereço:', 255,null,47,null,TRUE);
+	$frm->addTextField('DSCOMPLEMENTO', 'Complemento:',255,null,47,null,TRUE);
+	$frm->addTextField('DSBAIRRO', 'Bairro:', 255,null,47,null,TRUE);
 	$listUF = Unidadefederativa::selectComboSiglaUf();
 	$frm->addSelectField('DSSIGLA', 'UF:',FALSE, $listUF,TRUE);
 	$frm->addSelectField('CDMUNICIPIO', 'Município:', null, null, TRUE);

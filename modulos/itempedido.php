@@ -13,7 +13,7 @@ $frm->addHiddenField( $primaryKey ); // coluna chave da tabela
 $frm->setColumns('47,45,42,40,30,45,55,50,59,40,97');
 $frm->addGroupField('gpPedido','Pedido');
 	$frm->addTextField('IDPEDIDO','Número:',10,TRUE,6)->setEnabled( FALSE );
-	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,49,null,FALSE)->setEnabled( FALSE );
+	$frm->addTextField('NMCLIENTE','Cliente:',255,FALSE,47,null,FALSE)->setEnabled( FALSE );
     $frm->addTextField('DTPEDIDO','Data:',10,FALSE,8,null,FALSE)->setEnabled( FALSE );
 	$frm->addNumberField('VLPEDIDO', 'Total (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->addNumberField('VLTOTALDESCONTO', 'Desc. (R$):',6,FALSE,2,FALSE)->setEnabled( FALSE );
@@ -24,7 +24,7 @@ $frm->closeGroup();
 $frm->setColumns('47,50,65,50,80,50,26,50,78');
 $frm->addGroupField('gpItens','Itens');
 	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,6,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
-    $frm->addTextField('NMPRODUTO',null,255,FALSE,80,null,FALSE); // campo obrigatorio para funcionar o autocomplete
+    $frm->addTextField('NMPRODUTO',null,255,FALSE,75,null,FALSE); // campo obrigatorio para funcionar o autocomplete
 	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
 	$frm->addNumberField('QTITEMPEDIDO','Qtd:',6,TRUE,0,FALSE);
 	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
@@ -184,7 +184,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 		$gride = new TGrid( 'gd',$tituloGride);
 	}
 
-	$gride->addColumn('NRITEM','Item',null,'center');
+	//$gride->addColumn('NRITEM','Item',null,'center');
 	$gride->addColumn('IDPRODUTOFORMATADO','Código',null,'center');
     $gride->addColumnCompact('NMPRODUTO','Produto',null,null,110);
     $gride->addColumn('DSUNIDADEMEDIDA','Unid.',null,'center');
