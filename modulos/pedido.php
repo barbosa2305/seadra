@@ -114,7 +114,7 @@ function getWhereGridParametersPedido( &$frm ){
 }
 
 if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
-	$maxRows = ROWS_PER_PAGE;
+	$maxRows = LINHAS_POR_PAGINA;
 	$whereGrid = getWhereGridParametersPedido( $frm );
 	$whereGrid['STATIVO'] = STATUS_ATIVO;
 	$page = PostHelper::get('page');

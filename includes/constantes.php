@@ -15,12 +15,14 @@ if ( $ambiente == 'produção' || $ambiente == 'producao' ){
     $ambiente = null;
 }
 
-define('SYSTEM_NAME'    , 'Seadra');
-define('SYSTEM_NAME_SUB', $ambiente);
-define('SYSTEM_ACRONYM' , 'seadra');
-define('SYSTEM_VERSION' , '0.1.0');
-define('APLICATIVO'     , SYSTEM_ACRONYM);
-define('STATUS_ATIVO'   , 'S');
-define('STATUS_INATIVO' , 'N');
+define('SYSTEM_NAME'       , 'Seadra');
+define('SYSTEM_NAME_SUB'   , $ambiente);
+define('SYSTEM_ACRONYM'    , 'seadra');
+define('SYSTEM_VERSION'    , '0.1.0');
+define('APLICATIVO'        , SYSTEM_ACRONYM);
+define('STATUS_ATIVO'      , 'S');
+define('STATUS_INATIVO'    , 'N');
+define('LINHAS_POR_PAGINA' , 15);
+
 if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 ?>

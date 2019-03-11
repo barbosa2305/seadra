@@ -153,7 +153,7 @@ function getWhereGridParameters(&$frm){
 
 if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
 	if ( !empty($frm->get('IDPEDIDO')) ) {
-		$maxRows = ROWS_PER_PAGE;
+		$maxRows = LINHAS_POR_PAGINA;
 		$whereGrid = getWhereGridParameters( $frm );
 		$whereGrid['IDPEDIDO'] = $frm->get('IDPEDIDO');
 		$page = PostHelper::get('page');

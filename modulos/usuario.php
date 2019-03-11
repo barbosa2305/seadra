@@ -119,7 +119,7 @@ function getWhereGridParameters(&$frm){
 }
 
 if ( isset( $_REQUEST['ajax'] ) && $_REQUEST['ajax'] ){
-	$maxRows = ROWS_PER_PAGE;
+	$maxRows = LINHAS_POR_PAGINA;
 	$whereGrid = getWhereGridParameters( $frm );
 	$page = PostHelper::get('page');
 	$dados = Usuario::selectAllPagination( $primaryKey,$whereGrid,$page,$maxRows );
