@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDPEDIDO';
-$frm = new TForm( 'Pedido',610,850 );
+$frm = new TForm( 'Pedido',630,850 );
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -10,9 +10,13 @@ $frm->setShowCloseButton( FALSE );
 $frm->addHiddenField( 'BUSCAR' );  // Campo oculto para buscas
 $frm->addHiddenField( $primaryKey );  // coluna chave da tabela
 
-$frm->setColumns('40,35,40,30,32');
-$frm->addGroupField('gpx1');
-    $frm->addNumberField('IDPEDIDOBUSCA','Pedido:',6,FALSE,0,TRUE);
+$frm->setColumns('42');
+$frm->addGroupField('gpx1','Busca por');
+	$frm->addNumberField('IDPEDIDOBUSCA','Pedido:',6,FALSE,0,TRUE)->setExampleText('Utilizar este campo apenas para busca.');
+$frm->closeGroup();
+
+$frm->setColumns('42,35,40,30,32');
+$frm->addGroupField('gpx2','Dados do pedido');
 	// Inicio campo AutoComplete
 	$frm->addTextField('IDCLIENTE','Cliente:',6,TRUE,6,null,FALSE);  //campo obrigatorio para funcionar o autocomplete
 	$frm->addTextField('NMCLIENTE',null,255,FALSE,68,null,FALSE); //campo obrigatorio para funcionar o autocomplete
