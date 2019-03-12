@@ -28,6 +28,7 @@ $app->setTitle(SYSTEM_NAME);
 $app->setSubtitle(SYSTEM_NAME_SUB);
 $app->setSigla('');
 $app->setVersionSystem(SYSTEM_VERSION);
+$app->addCssFile('css/app.css');
 
 //Parametros para login
 $app->setLoginFile('includes/tela_login.php');
