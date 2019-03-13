@@ -33,6 +33,8 @@ $app->addCssFile('css/app.css');
 //Parametros para login
 $app->setLoginFile('includes/tela_login.php');
 $app->setLoginInfo(Acesso::getUserName());
+$app->setMenuTheme("modern_blue");
+$app->setBackgroundImage('../css/imagens/app/bg_listrado.jpg');
 
 $app->setMainMenuFile('includes/menu.php');
 $app->setDefaultModule('pedido.php');
