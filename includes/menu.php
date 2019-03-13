@@ -29,8 +29,9 @@ $menu->add('9', null, 'Sobre', 'modulos/sys_about.php', null, 'information16.gif
 if (Acesso::isUserLoggedAdm()) {
     $menu->add('10',null,'Adm',null,null,'settings-gear-tool-03.png'); 
     $menu->add('10.1','10','Configuração','modulos/configuracao.php');
-    $menu->add('10.2','10','Ambiente Resumido','modulos/sys_environment_summary.php');
-    $menu->add('10.3','10','PHPInfo','modulos/sys_environment.php');
+    $menu->add('10.2','10','Importar dados','modulos/importadados.php');
+    $menu->add('10.3','10','Ambiente Resumido','modulos/sys_environment_summary.php');
+    $menu->add('10.4','10','PHPInfo','modulos/sys_environment.php');
 }
 
 $menu->getXml();
