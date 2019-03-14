@@ -37,10 +37,10 @@ switch ($acao) {
                 $resultado = ImportaDados::importa( $tipo,$postArquivo );
 				if ( $resultado ){
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
-					$frm->clearFields();
 				} else {
-					$frm->setMessage( $resultado );
+					$frm->setMessage( Mensagem::OPERACAO_FALHOU );
                 }
+                $frm->clearFields();
 			}
 		}
 		catch (DomainException $e) {

@@ -84,10 +84,10 @@ class ClienteDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function insert( ClienteVO $objVo ){
 		$values = array(  trim($objVo->getNmcliente())
-						, $objVo->getNrcpfcnpj() 
-						, trim($objVo->getDsemail())
-						, $objVo->getNrtelefone() 
-						, $objVo->getNrcelular() 
+						, preg_replace('/[^0-9]/','',$objVo->getNrcpfcnpj()) 
+						, trim(strtolower($objVo->getDsemail()))
+						, preg_replace('/[^0-9]/','',$objVo->getNrtelefone())
+						, preg_replace('/[^0-9]/','',$objVo->getNrcelular()) 
 						, $objVo->getIdusuario()
 						);				
 		self::executeSql('insert into seadra.cliente(
@@ -102,14 +102,15 @@ class ClienteDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( ClienteVO $objVo ){
-		$values = array( trim($objVo->getNmcliente())
-						,$objVo->getNrcpfcnpj()
-						,trim($objVo->getDsemail())
-						,$objVo->getNrtelefone()
-						,$objVo->getNrcelular()
-						,$objVo->getStativo()
-						,$objVo->getIdusuario()
-						,$objVo->getIdCliente() );
+		$values = array(  trim($objVo->getNmcliente())
+						, preg_replace('/[^0-9]/','',$objVo->getNrcpfcnpj())
+						, trim(strtolower($objVo->getDsemail()))
+						, preg_replace('/[^0-9]/','',$objVo->getNrtelefone())
+						, preg_replace('/[^0-9]/','',$objVo->getNrcelular()) 
+						, $objVo->getStativo()
+						, $objVo->getIdusuario()
+						, $objVo->getIdCliente()
+					   );
 		return self::executeSql('update seadra.cliente set 
 								 nmcliente = ?
 								,nrcpfcnpj = ?

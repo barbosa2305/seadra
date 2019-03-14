@@ -63,7 +63,7 @@ class Cliente {
 		$vo = new EnderecoVO();
 		$vo->setIdendereco( $objVo->getIdendereco() );
 		$vo->setIdcliente( $objVo->getIdcliente() );
-		$vo->setDscep( preg_replace('/[^0-9]/','',$objVo->getDscep()) );
+		$vo->setDscep( $objVo->getDscep() );
 		$vo->setDslogradouro( trim($objVo->getDslogradouro()) );
 		$vo->setDscomplemento( trim($objVo->getDscomplemento()) );
 		$vo->setDsbairro( trim($objVo->getDsbairro()) );

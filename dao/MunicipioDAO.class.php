@@ -61,6 +61,21 @@ class MunicipioDAO extends TPDOConnection {
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
+	public static function selectByMunicipioSigla( $nmMunicipio,$dsSigla ) {
+		$values = array( $nmMunicipio,$dsSigla );
+		$sql = 'select
+					idunidadefederativa
+					,dssigla
+					,dsunidadefederativa
+					,idmunicipio
+					,cdmunicipio
+					,nmmunicipio
+				from seadra.vw_municipio 
+				where nmmunicipio = ? 
+				and dssigla = ? ';
+		return self::executeSql( $sql,$values );
+	}
+	//--------------------------------------------------------------------------------
 	public static function insert( MunicipioVO $objVo ) {
 		$values = array(  $objVo->getCdmunicipio() 
 						, $objVo->getNmmunicipio() 

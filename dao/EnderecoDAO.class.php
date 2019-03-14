@@ -69,7 +69,7 @@ class EnderecoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function insert( EnderecoVO $objVo ) {
 		$values = array(  $objVo->getIdcliente() 
-						, $objVo->getDscep() 
+						, preg_replace('/[^0-9]/','',$objVo->getDscep()) 
 						, $objVo->getDslogradouro() 
 						, $objVo->getDscomplemento() 
 						, $objVo->getDsbairro() 
@@ -88,14 +88,15 @@ class EnderecoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( EnderecoVO $objVo ) {
-		$values = array( $objVo->getIdcliente()
-						,$objVo->getDscep()
-						,$objVo->getDslogradouro()
-						,$objVo->getDscomplemento()
-						,$objVo->getDsbairro()
-						,$objVo->getDslocalidade()
-						,$objVo->getIdmunicipio()
-						,$objVo->getIdEndereco() );
+		$values = array(  $objVo->getIdcliente()
+						, preg_replace('/[^0-9]/','',$objVo->getDscep())
+						, $objVo->getDslogradouro()
+						, $objVo->getDscomplemento()
+						, $objVo->getDsbairro()
+						, $objVo->getDslocalidade()
+						, $objVo->getIdmunicipio()
+						, $objVo->getIdEndereco() 
+					   );
 		return self::executeSql('update seadra.endereco set 
 								 idcliente = ?
 								,dscep = ?

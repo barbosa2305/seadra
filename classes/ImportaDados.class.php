@@ -20,37 +20,135 @@ class ImportaDados {
 		$result = null;
         $arquivo = $infoArquivo['arquivo_temp_name'];
         if ( $tipo == self::TIPO_ARQUIVO_CLIENTE ) {
-            self::importaCliente( $arquivo );
+            $result = self::importaCliente( $arquivo );
         } elseif ( $tipo == self::TIPO_ARQUIVO_PRODUTO ) {
-            self::importaProduto( $arquivo );
+            $result = self::importaProduto( $arquivo );
         }
         self::apagaArquivo( $arquivo );
 		return $result;
     }  
     //--------------------------------------------------------------------------------
 	private static function importaCliente( $arquivo ){
-		$result = null;
-		if ( ($objeto = fopen($arquivo,'r')) !== FALSE ) {
+        $result = TRUE;
+		if ( ($objeto = fopen($arquivo,'r')) !== FALSE ){
             $linha = 1;
-            while( ($dados = fgetcsv($objeto,1000,';')) !== FALSE ) {
-                /*
+            while( ($dados = fgetcsv($objeto,1000,';')) !== FALSE ){ 
+                $voCliente = new ClienteVO();
                 $num = count($dados);
-                echo "<p> $num campos na linha $linha: <br /></p>\n";
-                */
-                $linha++;
-                /*
-                for ($c=0; $c < $num; $c++) {
-                    echo utf8_encode($dados[$c]) . "<br />\n";
-                }
-                */
+                for ($c=0; $c < $num; $c++){                   
+                    $valor = utf8_encode(trim($dados[$c]));
+                    $campo = strtolower(strstr($valor, ':', TRUE));
 
-                //$nome = utf8_encode($linha[0]);
+                    switch( $campo ){
+                        case 'nome':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $voCliente->setNmcliente( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                            }
+                        break;
+                        case 'cpf':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $nrCpfCnpj = preg_replace('/[^0-9]/','',trim($dados[$c+1]));
+                                $voCliente->setNrcpfcnpj( utf8_encode($nrCpfCnpj) );
+                                $c++;
+                            }
+                        break;
+                        case 'cnpj':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $nrCpfCnpj = preg_replace('/[^0-9]/','',trim($dados[$c+1]));
+                                $voCliente->setNrcpfcnpj( utf8_encode($nrCpfCnpj) );
+                                $c++;
+                            }
+                        break;
+                        case 'e-mail':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $voCliente->setDsemail( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                            }
+                        break;
+                        case 'celular':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $nrCelular = preg_replace('/[^0-9]/','',trim($dados[$c+1]));
+                                $nrCelular = preg_replace('/^0+/','', $nrCelular);
+                                $voCliente->setNrcelular( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                            }
+                        break;
+                        case 'telefone':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $nrTelefone = preg_replace('/[^0-9]/','',trim($dados[$c+1]));
+                                $nrTelefone = preg_replace('/^0+/','', $nrTelefone);
+                                $voCliente->setNrtelefone( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                            }
+                        break;
+                        case 'endereço':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $voCliente->setDslogradouro( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                                $c++;
+                                $valor = utf8_encode(trim($dados[$c]));
+                                $campo = strtolower(strstr($valor, ':', TRUE));
+                                if ($campo === 'nº'){
+                                    if (!strstr(trim($dados[$c+1]), ':')){
+                                        $logradouro = utf8_encode(trim($voCliente->getDslogradouro().', '.$dados[$c+1]));
+                                        $voCliente->setDslogradouro( $logradouro );
+                                        $c++;
+                                    }
+                                }
+                            }
+                        break;
+                        case 'município': 
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $nmMunicipio = utf8_encode(trim($dados[$c+1]));
+                                $c++;
+                                $c++;
+                                $valor = utf8_encode(trim($dados[$c]));
+                                $campo = strtolower(strstr($valor, ':', TRUE));
+                                if ($campo === 'uf'){
+                                    if (!strstr(trim($dados[$c+1]), ':')){
+                                        $dsSigla = utf8_encode(trim($dados[$c+1]));
+                                        $dadosMunicipio = MunicipioDAO::selectByMunicipioSigla( $nmMunicipio,$dsSigla );
+                                        $idMunicipio =  $dadosMunicipio['IDMUNICIPIO'][0];
+                                        $voCliente->setIdmunicipio( $idMunicipio );
+                                        $voCliente->setDslocalidade( $nmMunicipio );
+                                        $c++;
+                                    }
+                                }
+                            }
+                        break;
+                        case 'bairro':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $voCliente->setDsbairro( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                            }
+                        break;
+                        case 'complemento':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $voCliente->setDscomplemento( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                            }
+                        break;
+                        case 'cep':
+                            if (!strstr(trim($dados[$c+1]), ':')){
+                                $voCliente->setDscep( utf8_encode(trim($dados[$c+1])) );
+                                $c++;
+                            }
+                        break;
+                    }
+                }
+                try {
+                    $voCliente->setIdusuario( Acesso::getUserId() );
+                    Cliente::save( $voCliente );
+                } catch ( Exception $e ) {
+                    MessageHelper::logRecord( $e );
+                    $result = FALSE;
+                }     
+                $linha++;
             }
             fclose($objeto);
         }  
-
-		$result = TRUE;
-		return $result;
+        return $result;
     }  
     //--------------------------------------------------------------------------------
 	private static function importaProduto( $arquivo ){
