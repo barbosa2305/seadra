@@ -134,7 +134,7 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->setZebrarColors( '#ffffff','#ffffff' );
 
 	$gride->addColumn($primaryKey,'Código',null,'center');
-    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,84);
+    $gride->addColumnCompact('NMPRODUTO','Descrição',null,null,65);
     $gride->addColumn('DSUNIDADEMEDIDA','Unidade',null,'center');
 	$gride->addColumn('VLPRECOCUSTO','Preço custo (R$)',null,'right');
 	$gride->addColumn('VLPRECOVENDA','Preço venda (R$)',null,'right');

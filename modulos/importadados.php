@@ -38,7 +38,7 @@ switch ($acao) {
 				if ( $resultado ){
 					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 				} else {
-					$frm->setMessage( Mensagem::OPERACAO_FALHOU );
+					$frm->setMessage( 'Operação realizada com sucesso, porém com algumas falhas. Verificar o log do sistema.' );
                 }
                 $frm->clearFields();
 			}

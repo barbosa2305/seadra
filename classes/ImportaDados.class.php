@@ -7,15 +7,7 @@ class ImportaDados {
 
 	public function __construct(){
 	}
-	//--------------------------------------------------------------------------------
-	public static function converteMoeda( $valor ){
-		$result = null;
-		if ( !empty($valor) ){
-			$result = str_replace( array(".", ","), array(",", "."), $valor );
-		}
-		return $result;
-	}
-  //--------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------
 	public static function importa( $tipo,$infoArquivo ){
 		$result = null;
         $arquivo = $infoArquivo['arquivo_temp_name'];
@@ -152,11 +144,40 @@ class ImportaDados {
     }  
     //--------------------------------------------------------------------------------
 	private static function importaProduto( $arquivo ){
-		$result = null;
-    
-
 		$result = TRUE;
-		return $result;
+		if ( ($objeto = fopen($arquivo,'r')) !== FALSE ){
+            $linha = 1;
+            while( ($dados = fgetcsv($objeto,1000,';')) !== FALSE ){ 
+                $voProduto = new ProdutoVO();
+                $num = count($dados);
+                for ($c=0; $c < $num; $c++){
+                    switch( $c ){
+                        case 0:
+                            $voProduto->setNmproduto( utf8_encode(trim($dados[$c])) );
+                        break;
+                        case 1:
+                            $voProduto->setDsunidademedida( utf8_encode(strtoupper(trim($dados[$c]))) );
+                        break;
+                        case 5:
+                            $voProduto->setVlprecocusto( utf8_encode(trim($dados[$c])) );
+                        break;
+                        case 7:
+                            $voProduto->setVlprecovenda( utf8_encode(trim($dados[$c])) );
+                        break;
+                    }
+                }
+                try {
+                    $voProduto->setIdusuario( Acesso::getUserId() );
+                    Produto::save( $voProduto );
+                } catch ( Exception $e ) {
+                    MessageHelper::logRecord( $e );
+                    $result = FALSE;
+                }     
+                $linha++;
+            }
+            fclose($objeto);
+        }  
+        return $result;
     } 
     //--------------------------------------------------------------------------------
 	private static function apagaArquivo( $arquivo ){

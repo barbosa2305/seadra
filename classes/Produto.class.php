@@ -61,7 +61,7 @@ class Produto {
 		$where['NMPRODUTO'] = $nmProduto;
         $dados = self::selectAll( null,$where );
         if( !empty($dados) ){
-            throw new DomainException( Mensagem::PRODUTO_JA_CADASTRADO ); 
+            throw new DomainException( Mensagem::PRODUTO_JA_CADASTRADO.' Descricao: '.$nmProduto ); 
         }
         $where = null;
 	}
