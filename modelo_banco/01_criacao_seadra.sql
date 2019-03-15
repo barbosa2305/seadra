@@ -1,375 +1,366 @@
--- MySQL Workbench Forward Engineering
-
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-
 -- -----------------------------------------------------
 -- Schema seadra
 -- -----------------------------------------------------	
-DROP SCHEMA IF EXISTS `seadra` ;
-CREATE SCHEMA IF NOT EXISTS `seadra` DEFAULT CHARACTER SET utf8 ; 
-USE `seadra` ;
+-- DROP SCHEMA IF EXISTS `seadra` ;
+-- CREATE SCHEMA IF NOT EXISTS `seadra` DEFAULT CHARACTER SET utf8 ; 
+
+USE `seadra`;
 
 -- -----------------------------------------------------
--- Table `seadra`.`Usuario`
+-- Table `usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`Usuario` (
-  `idUsuario` INT NOT NULL AUTO_INCREMENT,
-  `nmUsuario` VARCHAR(255) NOT NULL,
-  `dsLogin` VARCHAR(20) NOT NULL,
-  `dsSenha` VARCHAR(255) NULL,
-  `tpGrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT 'U=Usuarios, A=Administradores',
-  `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
-  `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
-  `dtModificacao` DATETIME NULL ON UPDATE NOW(),
-  PRIMARY KEY (`idUsuario`))
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `idusuario` INT NOT NULL AUTO_INCREMENT,
+  `nmusuario` VARCHAR(255) NOT NULL,
+  `dslogin` VARCHAR(20) NOT NULL,
+  `dssenha` VARCHAR(255) NULL,
+  `tpgrupo` CHAR(1) NOT NULL DEFAULT 'U' COMMENT 'U=usuarios, A=Administradores',
+  `stativo` CHAR(1) NOT NULL DEFAULT 'S',
+  `dtcriacao` DATETIME NOT NULL DEFAULT NOW(),
+  `dtmodificacao` DATETIME NULL ON UPDATE NOW(),
+  PRIMARY KEY (`idusuario`))
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `uk_dsLogin` ON `seadra`.`usuario` (`dsLogin` ASC);
+CREATE UNIQUE INDEX `uk_dslogin` ON `usuario` (`dslogin` ASC);
 
 
 -- -----------------------------------------------------
--- Table `seadra`.`UnidadeFederativa`
+-- Table `unidadefederativa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`UnidadeFederativa` (
-  `idUnidadeFederativa` INT NOT NULL,
-  `dsSigla` CHAR(2) NOT NULL,
-  `dsNome` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`idUnidadeFederativa`))
+CREATE TABLE IF NOT EXISTS `unidadefederativa` (
+  `idunidadefederativa` INT NOT NULL,
+  `dssigla` CHAR(2) NOT NULL,
+  `dsnome` VARCHAR(30) NOT NULL,
+  PRIMARY KEY (`idunidadefederativa`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `form_exemplo`.`municipio`
+-- Table `municipio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`Municipio` (
-  `idMunicipio` INT NOT NULL AUTO_INCREMENT,
-  `cdMunicipio` INT NULL,
-  `nmMunicipio` VARCHAR(200) NOT NULL,
-  `idUnidadeFederativa` INT NOT NULL,
-  `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
-  PRIMARY KEY (`idMunicipio`),
-  INDEX `fk_municipio_uf_idx` (`idUnidadeFederativa` ASC),
+CREATE TABLE IF NOT EXISTS `municipio` (
+  `idmunicipio` INT NOT NULL AUTO_INCREMENT,
+  `cdmunicipio` INT NULL,
+  `nmmunicipio` VARCHAR(200) NOT NULL,
+  `idunidadefederativa` INT NOT NULL,
+  `stativo` CHAR(1) NOT NULL DEFAULT 'S',
+  PRIMARY KEY (`idmunicipio`),
+  INDEX `fk_municipio_uf_idx` (`idunidadefederativa` ASC),
   CONSTRAINT `fk_municipio_uf`
-    FOREIGN KEY (`idUnidadeFederativa`)
-    REFERENCES `seadra`.`UnidadeFederativa` (`idUnidadeFederativa`)
+    FOREIGN KEY (`idunidadefederativa`)
+    REFERENCES `unidadefederativa` (`idunidadefederativa`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `seadra`.`Endereco`
+-- Table `cliente`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`Endereco` (
-  `idEndereco` INT NOT NULL AUTO_INCREMENT,
-  `idCliente` INT NOT NULL,
-  `dsCep` VARCHAR(8) NULL,
-  `dsLogradouro` VARCHAR(255) NULL,
-  `dsComplemento` VARCHAR(255) NULL NULL,
-  `dsBairro` VARCHAR(100) NULL,
-  `dsLocalidade` VARCHAR(100) NULL,
-  `idMunicipio` INT NULL,
-  PRIMARY KEY (`idEndereco`),
-  CONSTRAINT `fk_Endereco_Municipio`
-    FOREIGN KEY (`idMunicipio`)
-    REFERENCES `seadra`.`municipio` (`idMunicipio`)
+CREATE TABLE IF NOT EXISTS `cliente` (
+  `idcliente` INT NOT NULL AUTO_INCREMENT,
+  `nmcliente` VARCHAR(255) NOT NULL,
+  `nrcpfcnpj` VARCHAR(30) NOT NULL,
+  `dsemail` VARCHAR(100) NULL,
+  `nrtelefone` VARCHAR(20) NULL,
+  `nrcelular` VARCHAR(20) NULL,
+  `dsobservacao` VARCHAR(2000) NULL,
+  `stativo` CHAR(1) NOT NULL DEFAULT 'S',
+  `idusuariocriacao` INT NOT NULL,
+  `dtcriacao` DATETIME NOT NULL DEFAULT NOW(),
+  `idusuariomodificacao` INT NULL,
+  `dtmodificacao` DATETIME NULL ON UPDATE NOW(),
+  PRIMARY KEY (`idcliente`),
+  CONSTRAINT `fk_cliente_usuariocriacao`
+    FOREIGN KEY (`idusuariocriacao`)
+    REFERENCES `usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Endereco_Cliente`
-    FOREIGN KEY (`idCliente`)
-    REFERENCES `seadra`.`cliente` (`idCliente`)
+  CONSTRAINT `fk_cliente_usuariomodificacao`
+    FOREIGN KEY (`idusuariomodificacao`)
+    REFERENCES `usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Endereco_Municipio_idx` ON `seadra`.`endereco` (`idMunicipio` ASC);
+CREATE INDEX `fk_cliente_usuariocriacao_idx` ON `cliente` (`idusuariocriacao` ASC);
 
-CREATE INDEX `fk_Endereco_Cliente_idx` ON `seadra`.`endereco` (`idCliente` ASC);
+CREATE INDEX `fk_cliente_usuariomodificacao_idx` ON `cliente` (`idusuariomodificacao` ASC);
 
-CREATE UNIQUE INDEX `uk_idCliente_dsCep` ON `seadra`.`endereco` (`idCliente` ASC, `dsCep` ASC);
+CREATE UNIQUE INDEX `uk_nrcpfcnpj` ON `cliente` (`nrcpfcnpj` ASC);
+
+CREATE UNIQUE INDEX `uk_dsemail` ON `cliente` (`dsemail` ASC);
 
 
 -- -----------------------------------------------------
--- Table `seadra`.`Cliente`
+-- Table `endereco`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`Cliente` (
-  `idCliente` INT NOT NULL AUTO_INCREMENT,
-  `nmCliente` VARCHAR(255) NOT NULL,
-  `nrCpfCnpj` VARCHAR(30) NOT NULL,
-  `dsEmail` VARCHAR(100) NULL,
-  `nrTelefone` VARCHAR(20) NULL,
-  `nrCelular` VARCHAR(20) NULL,
-  `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
-  `idUsuarioCriacao` INT NOT NULL,
-  `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
-  `idUsuarioModificacao` INT NULL,
-  `dtModificacao` DATETIME NULL ON UPDATE NOW(),
-  PRIMARY KEY (`idCliente`),
-  CONSTRAINT `fk_Cliente_UsuarioCriacao`
-    FOREIGN KEY (`idUsuarioCriacao`)
-    REFERENCES `seadra`.`Usuario` (`idUsuario`)
+CREATE TABLE IF NOT EXISTS `endereco` (
+  `idendereco` INT NOT NULL AUTO_INCREMENT,
+  `idcliente` INT NOT NULL,
+  `dscep` VARCHAR(8) NULL,
+  `dslogradouro` VARCHAR(255) NULL,
+  `dscomplemento` VARCHAR(255) NULL NULL,
+  `dsbairro` VARCHAR(100) NULL,
+  `dslocalidade` VARCHAR(100) NULL,
+  `idmunicipio` INT NULL,
+  PRIMARY KEY (`idendereco`),
+  CONSTRAINT `fk_endereco_municipio`
+    FOREIGN KEY (`idmunicipio`)
+    REFERENCES `municipio` (`idmunicipio`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Cliente_UsuarioModificacao`
-    FOREIGN KEY (`idUsuarioModificacao`)
-    REFERENCES `seadra`.`Usuario` (`idUsuario`)
+  CONSTRAINT `fk_endereco_cliente`
+    FOREIGN KEY (`idcliente`)
+    REFERENCES `cliente` (`idcliente`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Cliente_UsuarioCriacao_idx` ON `seadra`.`Cliente` (`idUsuarioCriacao` ASC);
+CREATE INDEX `fk_endereco_municipio_idx` ON `endereco` (`idmunicipio` ASC);
 
-CREATE INDEX `fk_Cliente_UsuarioModificacao_idx` ON `seadra`.`Cliente` (`idUsuarioModificacao` ASC);
+CREATE INDEX `fk_endereco_cliente_idx` ON `endereco` (`idcliente` ASC);
 
-CREATE UNIQUE INDEX `uk_nrCpfCnpj` ON `seadra`.`cliente` (`nrCpfCnpj` ASC);
-
-CREATE UNIQUE INDEX `uk_dsEmail` ON `seadra`.`cliente` (`dsEmail` ASC);
+CREATE UNIQUE INDEX `uk_idcliente_dscep` ON `endereco` (`idcliente` ASC, `dscep` ASC);
 
 
 -- -----------------------------------------------------
--- Table `seadra`.`Produto`
+-- Table `produto`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`Produto` (
-  `idProduto` INT NOT NULL AUTO_INCREMENT,
-  `nmProduto` VARCHAR(255) NOT NULL,
-  `dsUnidadeMedida` VARCHAR(4) NOT NULL COMMENT 'Unidade de medida do produto: UN=Unidade, MT=Metro, M2=Metro quadrado, M3=Metro cubico',
-  `vlPrecoCusto` DECIMAL(10,2) NOT NULL,
-  `vlPrecoVenda` DECIMAL(10,2) NOT NULL,
-  `stAtivo` CHAR(1) NOT NULL DEFAULT 'S',
-  `idUsuarioCriacao` INT NOT NULL,
-  `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
-  `idUsuarioModificacao` INT NULL,
-  `dtModificacao` DATETIME NULL ON UPDATE NOW(),
-  PRIMARY KEY (`idProduto`),
-  CONSTRAINT `fk_Produto_UsuarioCriacao`
-    FOREIGN KEY (`idUsuarioCriacao`)
-    REFERENCES `seadra`.`Usuario` (`idUsuario`)
+CREATE TABLE IF NOT EXISTS `produto` (
+  `idproduto` INT NOT NULL AUTO_INCREMENT,
+  `nmproduto` VARCHAR(255) NOT NULL,
+  `dsunidademedida` VARCHAR(4) NOT NULL COMMENT 'Unidade de medida do produto: UN=Unidade, MT=Metro, M2=Metro quadrado, M3=Metro cubico',
+  `vlprecocusto` DECIMAL(10,2) NOT NULL,
+  `vlprecovenda` DECIMAL(10,2) NOT NULL,
+  `stativo` CHAR(1) NOT NULL DEFAULT 'S',
+  `idusuariocriacao` INT NOT NULL,
+  `dtcriacao` DATETIME NOT NULL DEFAULT NOW(),
+  `idusuariomodificacao` INT NULL,
+  `dtmodificacao` DATETIME NULL ON UPDATE NOW(),
+  PRIMARY KEY (`idproduto`),
+  CONSTRAINT `fk_produto_usuariocriacao`
+    FOREIGN KEY (`idusuariocriacao`)
+    REFERENCES `usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Produto_UsuarioModificacao`
-    FOREIGN KEY (`idUsuarioModificacao`)
-    REFERENCES `seadra`.`Usuario` (`idUsuario`)
+  CONSTRAINT `fk_produto_usuariomodificacao`
+    FOREIGN KEY (`idusuariomodificacao`)
+    REFERENCES `usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Produto_UsuarioCriacao_idx` ON `seadra`.`Produto` (`idUsuarioCriacao` ASC);
+CREATE INDEX `fk_produto_usuariocriacao_idx` ON `produto` (`idusuariocriacao` ASC);
 
-CREATE INDEX `fk_Produto_UsuarioModificacao_idx` ON `seadra`.`Produto` (`idUsuarioModificacao` ASC);
+CREATE INDEX `fk_produto_usuariomodificacao_idx` ON `produto` (`idusuariomodificacao` ASC);
 
-CREATE UNIQUE INDEX `uk_nmProduto` ON `seadra`.`produto` (`nmProduto` ASC);
+CREATE UNIQUE INDEX `uk_nmproduto` ON `produto` (`nmproduto` ASC);
 
 
 -- -----------------------------------------------------
--- Table `seadra`.`Pedido`
+-- Table `pedido`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`Pedido` (
-  `idPedido` INT NOT NULL AUTO_INCREMENT,
-  `idCliente` INT NOT NULL,
-  `dtPedido` DATE NOT NULL,
-  `idUsuarioCriacao` INT NOT NULL,
-  `dtCriacao` DATETIME NOT NULL DEFAULT NOW(),
-  `idUsuarioModificacao` INT NULL,
-  `dtModificacao` DATETIME NULL ON UPDATE NOW(),
-  PRIMARY KEY (`idPedido`),
-  CONSTRAINT `fk_Pedido_Cliente`
-    FOREIGN KEY (`idCliente`)
-    REFERENCES `seadra`.`Cliente` (`idCliente`)
+CREATE TABLE IF NOT EXISTS `pedido` (
+  `idpedido` INT NOT NULL AUTO_INCREMENT,
+  `idcliente` INT NOT NULL,
+  `dtpedido` DATE NOT NULL,
+  `idusuariocriacao` INT NOT NULL,
+  `dtcriacao` DATETIME NOT NULL DEFAULT NOW(),
+  `idusuariomodificacao` INT NULL,
+  `dtmodificacao` DATETIME NULL ON UPDATE NOW(),
+  PRIMARY KEY (`idpedido`),
+  CONSTRAINT `fk_pedido_cliente`
+    FOREIGN KEY (`idcliente`)
+    REFERENCES `cliente` (`idcliente`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Pedido_UsuarioCriacao`
-    FOREIGN KEY (`idUsuarioCriacao`)
-    REFERENCES `seadra`.`Usuario` (`idUsuario`)
+  CONSTRAINT `fk_pedido_usuariocriacao`
+    FOREIGN KEY (`idusuariocriacao`)
+    REFERENCES `usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Pedido_UsuarioModificacao`
-    FOREIGN KEY (`idUsuarioModificacao`)
-    REFERENCES `seadra`.`Usuario` (`idUsuario`)
+  CONSTRAINT `fk_pedido_usuariomodificacao`
+    FOREIGN KEY (`idusuariomodificacao`)
+    REFERENCES `usuario` (`idusuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Pedido_Cliente_idx` ON `seadra`.`Pedido` (`idCliente` ASC);
+CREATE INDEX `fk_pedido_cliente_idx` ON `pedido` (`idcliente` ASC);
 
-CREATE INDEX `fk_Pedido_UsuarioCriacao_idx` ON `seadra`.`Pedido` (`idUsuarioCriacao` ASC);
+CREATE INDEX `fk_pedido_usuariocriacao_idx` ON `pedido` (`idusuariocriacao` ASC);
 
-CREATE INDEX `fk_Pedido_UsuarioModificacao_idx` ON `seadra`.`Pedido` (`idUsuarioModificacao` ASC);
+CREATE INDEX `fk_pedido_usuariomodificacao_idx` ON `pedido` (`idusuariomodificacao` ASC);
 
-CREATE UNIQUE INDEX `uk_idCliente_dtPedido` ON `seadra`.`Pedido` (`idCliente` ASC, `dtPedido` ASC);
+CREATE UNIQUE INDEX `uk_idcliente_dtpedido` ON `pedido` (`idcliente` ASC, `dtpedido` ASC);
 
 
 -- -----------------------------------------------------
--- Table `seadra`.`ItemPedido`
+-- Table `itempedido`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`ItemPedido` (
-  `idItemPedido` INT NOT NULL AUTO_INCREMENT,
-  `idPedido` INT NOT NULL,
-  `idProduto` INT NOT NULL,
-  `qtItemPedido` INT NOT NULL,
-  `vlDesconto` DECIMAL(10,2) NULL,
-  PRIMARY KEY (`idItemPedido`),
-  CONSTRAINT `fk_ItemPedido_Produto`
-    FOREIGN KEY (`idProduto`)
-    REFERENCES `seadra`.`Produto` (`idProduto`)
+CREATE TABLE IF NOT EXISTS `itempedido` (
+  `iditempedido` INT NOT NULL AUTO_INCREMENT,
+  `idpedido` INT NOT NULL,
+  `idproduto` INT NOT NULL,
+  `qtitempedido` INT NOT NULL,
+  `vldesconto` DECIMAL(10,2) NULL,
+  PRIMARY KEY (`iditempedido`),
+  CONSTRAINT `fk_itempedido_produto`
+    FOREIGN KEY (`idproduto`)
+    REFERENCES `produto` (`idproduto`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_ItemPedido_Pedido`
-    FOREIGN KEY (`idPedido`)
-    REFERENCES `seadra`.`Pedido` (`idPedido`)
+  CONSTRAINT `fk_itempedido_pedido`
+    FOREIGN KEY (`idpedido`)
+    REFERENCES `pedido` (`idpedido`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_ItemPedido_Produto_idx` ON `seadra`.`ItemPedido` (`idProduto` ASC);
+CREATE INDEX `fk_itempedido_produto_idx` ON `itempedido` (`idproduto` ASC);
 
-CREATE INDEX `fk_ItemPedido_Pedido_idx` ON `seadra`.`ItemPedido` (`idPedido` ASC);
+CREATE INDEX `fk_itempedido_pedido_idx` ON `itempedido` (`idpedido` ASC);
 
-CREATE UNIQUE INDEX `uk_idPedido_idProduto` ON `seadra`.`itempedido` (`idPedido` ASC, `idProduto` ASC);
+CREATE UNIQUE INDEX `uk_idpedido_idproduto` ON `itempedido` (`idpedido` ASC, `idproduto` ASC);
 
 
 -- -----------------------------------------------------
--- Table `seadra`.`Configuracao`
+-- Table `configuracao`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `seadra`.`Configuracao` (
-  `idConfiguracao` INT NOT NULL AUTO_INCREMENT,
-  `dsEmitente` VARCHAR(200) NULL,
-  `dsEnderecoEmitente` VARCHAR(400) NULL,
-  `dsTelefoneEmitente` VARCHAR(20) NULL,
-  PRIMARY KEY (`idConfiguracao`)
+CREATE TABLE IF NOT EXISTS `configuracao` (
+  `idconfiguracao` INT NOT NULL AUTO_INCREMENT,
+  `dsemitente` VARCHAR(200) NULL,
+  `dsenderecoemitente` VARCHAR(400) NULL,
+  `dstelefoneemitente` VARCHAR(20) NULL,
+  PRIMARY KEY (`idconfiguracao`)
 )
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- View `seadra`.`vw_municipio`
+-- View `vw_municipio`
 -- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_municipio` AS 
-SELECT `ufe`.`idUnidadeFederativa` AS `idUnidadeFederativa`
-       ,`ufe`.`dsSigla` AS `dsSigla`
-       ,`ufe`.`dsNome` AS `dsUnidadeFederativa`
-       ,`mun`.`idMunicipio` AS `idMunicipio`
-       ,`mun`.`cdMunicipio` AS `cdMunicipio`
-	     ,`mun`.`nmMunicipio` AS `nmMunicipio`
-FROM `seadra`.`municipio` `mun`
-	INNER JOIN `seadra`.`unidadefederativa` `ufe` ON `mun`.`idUnidadeFederativa` = `ufe`.`idUnidadeFederativa`;
-
-
--- -----------------------------------------------------
--- View `seadra`.`vw_cliente`
--- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_cliente` AS 
-SELECT `cli`.`idCliente` AS `idCliente`
-	     ,`cli`.`nmCliente` AS `nmCliente`
-       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
-       ,`cli`.`dsEmail` AS `dsEmail`
-       ,`cli`.`nrTelefone` AS `nrTelefone`
-       ,`cli`.`nrCelular` AS `nrCelular`
-	     ,`cli`.`stAtivo` AS `stAtivo`
-       ,`end`.`idEndereco` AS `idEndereco`
-       ,`end`.`dsCep` AS `dsCep`
-       ,`end`.`dsLogradouro` AS `dsLogradouro`
-       ,`end`.`dsComplemento` AS `dsComplemento`
-       ,`end`.`dsBairro` AS `dsBairro`
-       ,`end`.`dsLocalidade` AS `dsLocalidade`
-       ,`mun`.`idMunicipio` AS `idMunicipio`
-	     ,`mun`.`cdMunicipio` AS `cdMunicipio`
-       ,`mun`.`nmMunicipio` AS `nmMunicipio`
-       ,`mun`.`idUnidadeFederativa` AS `idUnidadeFederativa`
-       ,`mun`.`dsSigla` AS `dsSigla`
-       ,`mun`.`dsUnidadeFederativa` AS `dsUnidadeFederativa`
-FROM `seadra`.`cliente` `cli` 
-	LEFT JOIN `seadra`.`endereco` `end` ON `cli`.`idCliente` = `end`.`idCliente`
-    LEFT JOIN `seadra`.`vw_municipio` `mun` ON `mun`.`idMunicipio` = `end`.`idMunicipio`;
+CREATE OR REPLACE VIEW `vw_municipio` AS 
+SELECT `ufe`.`idunidadefederativa` AS `idunidadefederativa`
+       ,`ufe`.`dssigla` AS `dssigla`
+       ,`ufe`.`dsnome` AS `dsunidadefederativa`
+       ,`mun`.`idmunicipio` AS `idmunicipio`
+       ,`mun`.`cdmunicipio` AS `cdmunicipio`
+	     ,`mun`.`nmmunicipio` AS `nmmunicipio`
+FROM `municipio` `mun`
+	INNER JOIN `unidadefederativa` `ufe` ON `mun`.`idunidadefederativa` = `ufe`.`idunidadefederativa`;
 
 
 -- -----------------------------------------------------
--- View `seadra`.`vw_cliente_ativo`
+-- View `vw_cliente`
 -- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_cliente_ativo` AS 
-SELECT `cli`.`idCliente` AS `idCliente`
-	   ,`cli`.`nmCliente` AS `nmCliente`
-       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
-FROM `seadra`.`cliente` `cli` 
-WHERE `cli`.`stAtivo` = 'S';
-
-
--- -----------------------------------------------------
--- View `seadra`.`vw_produto_ativo`
--- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_produto_ativo` AS 
-SELECT `pro`.`idProduto` AS `idProduto`
-	   ,`pro`.`nmProduto` AS `nmProduto`
-     ,`pro`.`vlPrecoVenda` AS `vlPrecoVenda`
-FROM `seadra`.`produto` `pro` 
-WHERE `pro`.`stAtivo` = 'S';
-
-
--- -----------------------------------------------------
--- View `seadra`.`vw_pedido_cliente`
--- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_pedido_cliente` AS 
-SELECT `ped`.`idPedido` AS `idPedido`
-	     ,`cli`.`idCliente` AS `idCliente`
-	     ,`cli`.`nmCliente` AS `nmCliente`
-       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
-       ,`cli`.`stAtivo` AS `stAtivo`
-       ,`ped`.`dtPedido` AS `dtPedido`
-FROM `seadra`.`pedido` `ped`
-	INNER JOIN `seadra`.`cliente` `cli` ON `ped`.`idCliente` = `cli`.`idCliente`;		
+CREATE OR REPLACE VIEW `vw_cliente` AS 
+SELECT `cli`.`idcliente` AS `idcliente`
+	     ,`cli`.`nmcliente` AS `nmcliente`
+       ,`cli`.`nrcpfcnpj` AS `nrcpfcnpj`
+       ,`cli`.`dsemail` AS `dsemail`
+       ,`cli`.`nrtelefone` AS `nrtelefone`
+       ,`cli`.`nrcelular` AS `nrcelular`
+       ,`cli`.`dsobservacao` AS `dsobservacao`
+	     ,`cli`.`stativo` AS `stativo`
+       ,`end`.`idendereco` AS `idendereco`
+       ,`end`.`dscep` AS `dscep`
+       ,`end`.`dslogradouro` AS `dslogradouro`
+       ,`end`.`dscomplemento` AS `dscomplemento`
+       ,`end`.`dsbairro` AS `dsbairro`
+       ,`end`.`dslocalidade` AS `dslocalidade`
+       ,`mun`.`idmunicipio` AS `idmunicipio`
+	     ,`mun`.`cdmunicipio` AS `cdmunicipio`
+       ,`mun`.`nmmunicipio` AS `nmmunicipio`
+       ,`mun`.`idunidadefederativa` AS `idunidadefederativa`
+       ,`mun`.`dssigla` AS `dssigla`
+       ,`mun`.`dsunidadefederativa` AS `dsunidadefederativa`
+FROM `cliente` `cli` 
+	LEFT JOIN `endereco` `end` ON `cli`.`idcliente` = `end`.`idcliente`
+    LEFT JOIN `vw_municipio` `mun` ON `mun`.`idmunicipio` = `end`.`idmunicipio`;
 
 
 -- -----------------------------------------------------
--- View `seadra`.`vw_pedido_itens`
+-- View `vw_cliente_ativo`
 -- -----------------------------------------------------
-CREATE OR REPLACE VIEW `seadra`.`vw_pedido_itens` AS 
-SELECT `cli`.`idCliente` AS `idCliente`
-	     ,`cli`.`nmCliente` AS `nmCliente`
-       ,`cli`.`nrCpfCnpj` AS `nrCpfCnpj`
-       ,`cli`.`nrTelefone` AS `nrTelefone`
-       ,`cli`.`nrCelular` AS `nrCelular`
-	     ,`cli`.`stAtivo` AS `stClienteAtivo`
-       ,`cli`.`dsCep` AS `dsCep`
-       ,`cli`.`dsLogradouro` AS `dsLogradouro`
-       ,`cli`.`dsComplemento` AS `dsComplemento`
-       ,`cli`.`dsBairro` AS `dsBairro`
-       ,`cli`.`nmMunicipio` AS `nmMunicipio`
-       ,`cli`.`dsSigla` AS `dsSigla`
-       ,`ped`.`idPedido` AS `idPedido` 
-       ,`ped`.`dtPedido` AS `dtPedido`
-       ,DATE_FORMAT(`dtPedido`,'%d/%m/%Y') AS `dtPedidoFormatada`
-       ,`ite`.`idItemPedido` AS `idItemPedido`
-	     ,`ite`.`idProduto` AS `idProduto`
-       ,LPAD(`ite`.`idProduto`,5,'0') AS `idProdutoFormatado`
-	     ,`pro`.`nmProduto` AS `nmProduto`
-       ,`pro`.`dsUnidadeMedida` AS `dsUnidadeMedida`
-       ,FORMAT(`pro`.`vlPrecoVenda`,2,'de_DE') AS `vlPrecoVenda`
-       ,`pro`.`stAtivo` AS `stProdutoAtivo`
-       ,`ite`.`qtItemPedido` AS `qtItemPedido`
-       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`),2,'de_DE') AS `vlTotalItem` 
-       ,FORMAT(IFNULL(`ite`.`vlDesconto`, 0),2,'de_DE') AS `vlDesconto`
-       ,FORMAT((`pro`.`vlPrecoVenda` * `ite`.`qtItemPedido`) - IFNULL(`ite`.`vlDesconto`, 0),2,'de_DE') AS `vlTotalItemComDesconto` 
-       ,FORMAT(`vlr`.`vlPedido`,2,'de_DE') AS `vlPedido`
-       ,FORMAT(`vlr`.`vlTotalDesconto`,2,'de_DE') AS `vlTotalDesconto`
-       ,FORMAT(`vlr`.`vlTotal`,2,'de_DE') AS `vlTotal` 
-FROM `seadra`.`pedido` `ped`
-	INNER JOIN `seadra`.`vw_cliente` `cli` ON `ped`.`idCliente` = `cli`.`idCliente` 
-	LEFT JOIN `seadra`.`itempedido` `ite` ON  `ite`.`idPedido` = `ped`.`idPedido`
-	LEFT JOIN `seadra`.`produto` `pro` ON `ite`.`idProduto` = `pro`.`idProduto`
-  LEFT JOIN (SELECT `pe`.`idPedido`
-						        ,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) AS `vlPedido`
-                    ,SUM(`it`.`vlDesconto`) AS `vlTotalDesconto`
-						        ,SUM(`pr`.`vlPrecoVenda` * `it`.`qtItemPedido`) - IFNULL(SUM(`it`.`vlDesconto`), 0) AS `vlTotal`  
-				    FROM `seadra`.`itempedido` `it`
-					      INNER JOIN `seadra`.`pedido` `pe` ON `it`.`idPedido` = `pe`.`idPedido`
-					      INNER JOIN `seadra`.`produto` `pr` ON `it`.`idProduto` = `pr`.`idProduto`
-                WHERE `pr`.`stAtivo` = 'S'
-				    GROUP BY `pe`.`idPedido`) AS `vlr` ON `vlr`.`idPedido` = `ped`.`idPedido`
-WHERE `cli`.`stAtivo` = 'S' AND `pro`.`stAtivo` = 'S';
+CREATE OR REPLACE VIEW `vw_cliente_ativo` AS 
+SELECT `cli`.`idcliente` AS `idcliente`
+	   ,`cli`.`nmcliente` AS `nmcliente`
+       ,`cli`.`nrcpfcnpj` AS `nrcpfcnpj`
+FROM `cliente` `cli` 
+WHERE `cli`.`stativo` = 'S';
 
 
+-- -----------------------------------------------------
+-- View `vw_produto_ativo`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `vw_produto_ativo` AS 
+SELECT `pro`.`idproduto` AS `idproduto`
+	   ,`pro`.`nmproduto` AS `nmproduto`
+     ,`pro`.`vlprecovenda` AS `vlprecovenda`
+FROM `produto` `pro` 
+WHERE `pro`.`stativo` = 'S';
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- View `vw_pedido_cliente`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `vw_pedido_cliente` AS 
+SELECT `ped`.`idpedido` AS `idpedido`
+	     ,`cli`.`idcliente` AS `idcliente`
+	     ,`cli`.`nmcliente` AS `nmcliente`
+       ,`cli`.`nrcpfcnpj` AS `nrcpfcnpj`
+       ,`cli`.`stativo` AS `stativo`
+       ,`ped`.`dtpedido` AS `dtpedido`
+FROM `pedido` `ped`
+	INNER JOIN `cliente` `cli` ON `ped`.`idcliente` = `cli`.`idcliente`;		
+
+
+-- -----------------------------------------------------
+-- View `vw_pedido_itens`
+-- -----------------------------------------------------
+CREATE OR REPLACE VIEW `vw_pedido_itens` AS 
+SELECT `cli`.`idcliente` AS `idcliente`
+	     ,`cli`.`nmcliente` AS `nmcliente`
+       ,`cli`.`nrcpfcnpj` AS `nrcpfcnpj`
+       ,`cli`.`nrtelefone` AS `nrtelefone`
+       ,`cli`.`nrcelular` AS `nrcelular`
+	     ,`cli`.`stativo` AS `stclienteativo`
+       ,`cli`.`dscep` AS `dscep`
+       ,`cli`.`dslogradouro` AS `dslogradouro`
+       ,`cli`.`dscomplemento` AS `dscomplemento`
+       ,`cli`.`dsbairro` AS `dsbairro`
+       ,`cli`.`nmmunicipio` AS `nmmunicipio`
+       ,`cli`.`dssigla` AS `dssigla`
+       ,`ped`.`idpedido` AS `idpedido` 
+       ,`ped`.`dtpedido` AS `dtpedido`
+       ,DATE_FORMAT(`dtpedido`,'%d/%m/%Y') AS `dtpedidoformatada`
+       ,`ite`.`iditempedido` AS `iditempedido`
+	     ,`ite`.`idproduto` AS `idproduto`
+       ,LPAD(`ite`.`idproduto`,5,'0') AS `idprodutoformatado`
+	     ,`pro`.`nmproduto` AS `nmproduto`
+       ,`pro`.`dsunidademedida` AS `dsunidademedida`
+       ,FORMAT(`pro`.`vlprecovenda`,2,'de_DE') AS `vlprecovenda`
+       ,`pro`.`stativo` AS `stprodutoativo`
+       ,`ite`.`qtitempedido` AS `qtitempedido`
+       ,FORMAT((`pro`.`vlprecovenda` * `ite`.`qtitempedido`),2,'de_DE') AS `vltotalitem` 
+       ,FORMAT(IFNULL(`ite`.`vldesconto`, 0),2,'de_DE') AS `vldesconto`
+       ,FORMAT((`pro`.`vlprecovenda` * `ite`.`qtitempedido`) - IFNULL(`ite`.`vldesconto`, 0),2,'de_DE') AS `vltotalitemcomdesconto` 
+       ,FORMAT(`vlr`.`vlpedido`,2,'de_DE') AS `vlpedido`
+       ,FORMAT(`vlr`.`vltotaldesconto`,2,'de_DE') AS `vltotaldesconto`
+       ,FORMAT(`vlr`.`vltotal`,2,'de_DE') AS `vltotal` 
+FROM `pedido` `ped`
+	INNER JOIN `vw_cliente` `cli` ON `ped`.`idcliente` = `cli`.`idcliente` 
+	LEFT JOIN `itempedido` `ite` ON  `ite`.`idpedido` = `ped`.`idpedido`
+	LEFT JOIN `produto` `pro` ON `ite`.`idproduto` = `pro`.`idproduto`
+  LEFT JOIN (SELECT `pe`.`idpedido`
+						        ,SUM(`pr`.`vlprecovenda` * `it`.`qtitempedido`) AS `vlpedido`
+                    ,SUM(`it`.`vldesconto`) AS `vltotaldesconto`
+						        ,SUM(`pr`.`vlprecovenda` * `it`.`qtitempedido`) - IFNULL(SUM(`it`.`vldesconto`), 0) AS `vltotal`  
+				    FROM `itempedido` `it`
+					      INNER JOIN `pedido` `pe` ON `it`.`idpedido` = `pe`.`idpedido`
+					      INNER JOIN `produto` `pr` ON `it`.`idproduto` = `pr`.`idproduto`
+                WHERE `pr`.`stativo` = 'S'
+				    GROUP BY `pe`.`idpedido`) AS `vlr` ON `vlr`.`idpedido` = `ped`.`idpedido`
+WHERE `cli`.`stativo` = 'S' AND `pro`.`stativo` = 'S';
