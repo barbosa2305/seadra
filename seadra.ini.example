@@ -4,6 +4,7 @@
 ; Arquivo de configuração
 [config]
 ambiente = "desenvolvimento"
+sigla = "Empresa Teste"
 
 [ds-adm]
 dbms = "MYSQL"

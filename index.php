@@ -26,7 +26,7 @@ $app->setAppRootDir(__DIR__);
 $app->setTitle('');
 $app->setTitle(SYSTEM_NAME);
 $app->setSubtitle(SYSTEM_NAME_SUB);
-$app->setSigla('Empresa Txt');  // Criar mais um campo na tabela de configuracao: nmEmitenteFantasia
+$app->setSigla(ucwords(strtolower(SYSTEM_SIGLA))); 
 $app->setVersionSystem(SYSTEM_VERSION);
 $app->addCssFile('css/app.css');
 

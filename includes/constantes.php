@@ -14,11 +14,13 @@ $ambiente  = ServidorConfig::getInstancia()->getConfigParam('ambiente');
 if ( $ambiente == 'produção' || $ambiente == 'producao' ){
     $ambiente = null;
 }
+$sigla = ServidorConfig::getInstancia()->getConfigParam('sigla');
 
 define('SYSTEM_NAME'       , 'Seadra');
 define('SYSTEM_NAME_SUB'   , $ambiente);
 define('SYSTEM_ACRONYM'    , 'seadra');
 define('SYSTEM_VERSION'    , '0.1.0');
+define('SYSTEM_SIGLA'      , $sigla);
 define('APLICATIVO'        , SYSTEM_ACRONYM);
 define('STATUS_ATIVO'      , 'S');
 define('STATUS_INATIVO'    , 'N');
