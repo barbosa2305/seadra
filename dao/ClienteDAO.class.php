@@ -8,6 +8,7 @@ class ClienteDAO extends TPDOConnection {
 									 ,dsemail
 									 ,nrtelefone
 									 ,nrcelular
+									 ,dsobservacao
 									 ,stativo
 									 ,idendereco
 									 ,dscep
@@ -33,6 +34,7 @@ class ClienteDAO extends TPDOConnection {
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSEMAIL', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRTELEFONE', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'NRCELULAR', SqlHelper::SQL_TYPE_TEXT_LIKE);
+			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSOBSERVACAO', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDENDERECO', SqlHelper::SQL_TYPE_NUMERIC);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSCEP', SqlHelper::SQL_TYPE_TEXT_LIKE);
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'DSLOGRADOURO', SqlHelper::SQL_TYPE_TEXT_LIKE);
@@ -88,6 +90,7 @@ class ClienteDAO extends TPDOConnection {
 						, trim(strtolower($objVo->getDsemail()))
 						, preg_replace('/[^0-9]/','',$objVo->getNrtelefone())
 						, preg_replace('/[^0-9]/','',$objVo->getNrcelular()) 
+						, trim($objVo->getDsobservacao())
 						, $objVo->getIdusuario()
 						);				
 		self::executeSql('insert into seadra.cliente(
@@ -96,8 +99,9 @@ class ClienteDAO extends TPDOConnection {
 								,dsemail
 								,nrtelefone
 								,nrcelular
+								,dsobservacao
 								,idusuariocriacao
-								) values (?,?,?,?,?,?)', $values );
+								) values (?,?,?,?,?,?,?)', $values );
 		return self::getLastId('seadra.cliente','idCliente');
 	}
 	//--------------------------------------------------------------------------------
@@ -106,7 +110,8 @@ class ClienteDAO extends TPDOConnection {
 						, preg_replace('/[^0-9]/','',$objVo->getNrcpfcnpj())
 						, trim(strtolower($objVo->getDsemail()))
 						, preg_replace('/[^0-9]/','',$objVo->getNrtelefone())
-						, preg_replace('/[^0-9]/','',$objVo->getNrcelular()) 
+						, preg_replace('/[^0-9]/','',$objVo->getNrcelular())
+						, trim($objVo->getDsobservacao()) 
 						, $objVo->getStativo()
 						, $objVo->getIdusuario()
 						, $objVo->getIdCliente()
@@ -117,6 +122,7 @@ class ClienteDAO extends TPDOConnection {
 								,dsemail = ?
 								,nrtelefone = ?
 								,nrcelular = ?
+								,dsobservacao = ?
 								,stativo = ?
 								,idusuariomodificacao = ?
 								where idCliente = ?',$values);

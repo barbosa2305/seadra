@@ -54,6 +54,12 @@ $frm->addGroupField('gpEndereco','Endereço',null,400,FALSE);
 	$frm->addSelectField('CDMUNICIPIO', 'Município:', null, null, TRUE);
 	$frm->combinarSelects('DSSIGLA', 'CDMUNICIPIO', 'vw_municipio', 'DSSIGLA', 'CDMUNICIPIO', 'NMMUNICIPIO', '-- selecione --', '0', 'Nenhum município encontrado.');
 $frm->closeGroup();
+
+$frm->setColumns('64');
+$frm->addGroupField('gpObservacao','Observações',null,823);
+	$frm->addMemoField('DSOBSERVACAO',null,2000,null,122,null,TRUE);
+$frm->closeGroup();
+
 $frm->addHtmlField('html1', '* Preenchimento obrigatório.', null, null, null, null)->setCss('color', 'red');
 
 $frm->addButton('Buscar', null, 'btnBuscar', 'buscar()', null, TRUE, FALSE);
@@ -69,24 +75,24 @@ switch( $acao ) {
 	break;
 	case 'Salvar':
 		try{
-			if ( $frm->validate() ) {
+			if ( $frm->validate() ){
 				$vo = new ClienteVO();
 				$frm->setVo( $vo );
 				$vo->setIdusuario( Acesso::getUserId() );
 				$resultado = Cliente::save( $vo );
-				if( $resultado ) {
-					$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
+				if ( $resultado ){
+					$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 					$frm->clearFields();
-				}else{
-					$frm->setMessage(Mensagem::OPERACAO_FALHOU);
+				} else {
+					$frm->setMessage( $resultado );
 				}
 			}
 		}
-		catch (DomainException $e) {
+		catch ( DomainException $e ){
 			$frm->setMessage( $e->getMessage() );
 		}
-		catch (Exception $e) {
-			MessageHelper::logRecord($e);
+		catch ( Exception $e ){
+			MessageHelper::logRecord( $e );
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
@@ -95,19 +101,18 @@ switch( $acao ) {
 		try{
 			$id = $frm->get( $primaryKey ) ;
 			$resultado = Cliente::delete( $id );;
-			if( $resultado ) {
-				$frm->setMessage(Mensagem::OPERACAO_COM_SUCESSO);
+			if ( $resultado ){
+				$frm->setMessage( Mensagem::OPERACAO_COM_SUCESSO );
 				$frm->clearFields();
-			}else{
-				$frm->clearFields();
-				$frm->setMessage(Mensagem::OPERACAO_FALHOU);
+			} else {
+				$frm->setMessage( $resultado );
 			}
 		}
-		catch (DomainException $e) {
+		catch ( DomainException $e ){
 			$frm->setMessage( $e->getMessage() );
 		}
-		catch (Exception $e) {
-			MessageHelper::logRecord($e);
+		catch ( Exception $e ){
+			MessageHelper::logRecord( $e );
 			$frm->setMessage( $e->getMessage() );
 		}
 	break;
@@ -142,6 +147,7 @@ function getWhereGridParameters(&$frm){
 				,'NMMUNICIPIO'=>$frm->get('NMMUNICIPIO')
 				,'DSSIGLA'=>$frm->get('DSSIGLA')
 				,'STATIVO'=>$frm->get('STATIVO')
+				,'DSOBSERVACAO'=>$frm->get('DSOBSERVACAO')
 
 		);
 	}
@@ -170,7 +176,8 @@ if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
 					.',CDMUNICIPIO|CDMUNICIPIO'
 					.',NMMUNICIPIO|NMMUNICIPIO'
 					.',DSSIGLA|DSSIGLA'
-					.',STATIVO|STATIVO'
+					.',STATIVO|STATIVO' 
+					.',DSOBSERVACAO|DSOBSERVACAO'
 					;
 	$tituloGride = 'Lista de clientes -'.' Quantidade: '.$realTotalRowsSqlPaginator;
 	$gride = new TGrid( 'gd'                        // id do gride
@@ -221,6 +228,7 @@ $frm->show();
 						,"NMMUNICIPIO":""
 						,"DSSIGLA":""
 						,"STATIVO":""
+						,"DSOBSERVACAO":""
 						};
 		fwGetGrid('cliente.php','gride',Parameters,true);
 	}
