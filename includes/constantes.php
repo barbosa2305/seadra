@@ -15,6 +15,8 @@ if ( $ambiente == 'produção' || $ambiente == 'producao' ){
     $ambiente = null;
 }
 $sigla = ServidorConfig::getInstancia()->getConfigParam('sigla');
+$cssFile = ServidorConfig::getInstancia()->getConfigParam('cssfile');
+$customMenu = ServidorConfig::getInstancia()->getConfigParam('custommenu');
 
 define('SYSTEM_NAME'       , 'Seadra');
 define('SYSTEM_NAME_SUB'   , $ambiente);
@@ -25,6 +27,8 @@ define('APLICATIVO'        , SYSTEM_ACRONYM);
 define('STATUS_ATIVO'      , 'S');
 define('STATUS_INATIVO'    , 'N');
 define('LINHAS_POR_PAGINA' , 15);
+define('CSS_FILE'          , $cssFile);
+define('CUSTOM_MENU'       , $customMenu);
 
 if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 ?>

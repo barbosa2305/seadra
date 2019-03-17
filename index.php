@@ -28,13 +28,13 @@ $app->setTitle(SYSTEM_NAME);
 $app->setSubtitle(SYSTEM_NAME_SUB);
 $app->setSigla(ucwords(strtolower(SYSTEM_SIGLA))); 
 $app->setVersionSystem(SYSTEM_VERSION);
-$app->addCssFile('css/app.css');
+$app->addCssFile(CSS_FILE);
 
 //Parametros para login
 $app->setLoginFile('includes/tela_login.php');
 $app->setLoginInfo(Acesso::getUserName());
-$app->setMenuTheme("modern_blue");
 $app->setBackgroundImage('../css/imagens/app/bg_listrado.jpg');
+$app->setMenuTheme(CUSTOM_MENU);
 
 $app->setMainMenuFile('includes/menu.php');
 $app->setDefaultModule('pedido.php');

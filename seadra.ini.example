@@ -5,6 +5,8 @@
 [config]
 ambiente = "desenvolvimento"
 sigla = ""
+cssfile = "css/app_tst.css"
+custommenu = ""
 
 [ds-adm]
 dbms = "MYSQL"

@@ -70,6 +70,6 @@ class ServidorConfig {
         return $this->config;
     }
     public function getConfigParam($param){
-        return strtolower(trim($this->config[$param]));
+        return $this->config[$param];
     }
 }
