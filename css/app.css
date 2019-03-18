@@ -1,31 +1,19 @@
-/*
 header {
-    background-image: url(../images/jeans1.jpg); 
+    display: table;
+    background-image: url(../images/jeans.jpg); 
+    background-position: 0% 50%;
+    background-size: 100% 500%;
+    font-family: sans-serif;
+    color: rgb(197, 6, 6);
+    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 }
-*/
+#app_header_logo {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 32px;
+}
+#app_header_title_main {
+    font-size: 26px;
+}
 footer {
     display: none;
 }
-/*
-#app_header_logo {
-    font-family: "Times New Roman", Times, serif;
-    font-size: 36px;
-    color: red;
-    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
-}
-*/
-
-
-
-/*
-header{
-    display     :table;
-    background-image: url("../imagem/jeans.jpg");
-    background-position: 0% 50%; 
-    background-size: auto 50%;
-  
-    font-family: sans-serif;
-    color: darkred;
-    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
-  }
-*/
