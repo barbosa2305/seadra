@@ -17,7 +17,7 @@ class ServidorConfig {
     private function __construct() {
         $root     = $_SERVER['DOCUMENT_ROOT'];
         $nome_ini = 'seadra.ini';
-        $ini_path = $root .DS. 'config' . DS . $nome_ini;
+        $ini_path = $root .DS. 'sys' .DS. 'config' .DS. $nome_ini;
         $ini_conf = null;
         if (file_exists($ini_path)) {
             $ini_conf = parse_ini_file($ini_path, true);

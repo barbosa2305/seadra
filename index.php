@@ -17,7 +17,7 @@ require_once('includes/constantes.php');
 require_once('includes/config_conexao.php');
 
 //FormDin version: 4.2.7-alpha
-require_once('base/classes/webform/TApplication.class.php');
+require_once('../base/classes/webform/TApplication.class.php');
 require_once('classes/autoload_seadra.php');
 
 
