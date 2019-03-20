@@ -32,7 +32,7 @@ class ItempedidoDAO extends TPDOConnection {
 									 ,vltotal 
 									 from 
 									 (select @contador:=0) as zeracontador
-									 ,seadra.vw_pedido_itens ' ;
+									 ,vw_pedido_itens ' ;
 
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
@@ -52,13 +52,13 @@ class ItempedidoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$values = array($id);
-		$sql = self::$sqlBasicSelect.' where idItemPedido = ?';
+		$sql = self::$sqlBasicSelect.' where iditempedido = ?';
 		return self::executeSql($sql, $values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
-		$sql = 'select count(idItemPedido) as qtd from seadra.vw_pedido_itens';
+		$sql = 'select count(idItemPedido) as qtd from vw_pedido_itens';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql( $sql );
 		return $result['QTD'][0];
@@ -89,7 +89,7 @@ class ItempedidoDAO extends TPDOConnection {
 						,$objVo->getQtitempedido()
 						,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
 						);
-		return self::executeSql('insert into seadra.itempedido(
+		return self::executeSql('insert into itempedido(
 								idpedido
 								,idproduto
 								,qtitempedido
@@ -105,22 +105,22 @@ class ItempedidoDAO extends TPDOConnection {
 						,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
 						,$objVo->getIdItemPedido() 
 						);
-		return self::executeSql('update seadra.itempedido set 
+		return self::executeSql('update itempedido set 
 								idpedido = ?
 								,idproduto = ?
 								,qtitempedido = ?
 								,vldesconto = ?
-								where idItemPedido = ?',$values);
+								where iditempedido = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
 		$values = array( $id );
-		return self::executeSql('delete from seadra.itempedido where idItemPedido = ?',$values);
+		return self::executeSql('delete from itempedido where iditempedido = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 	public static function deleteIdPedido( $id ){
 		$values = array( $id );
-		return self::executeSql('delete from seadra.itempedido where idPedido = ?',$values);
+		return self::executeSql('delete from itempedido where idpedido = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 }

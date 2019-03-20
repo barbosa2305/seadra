@@ -7,7 +7,7 @@ class MunicipioDAO extends TPDOConnection {
 									 ,nmmunicipio
 									 ,idunidadefederativa
 									 ,stativo
-									 from seadra.municipio ';
+									 from municipio ';
 
 	private static function processWhereGridParameters( $whereGrid ) {
 		$result = $whereGrid;
@@ -25,14 +25,14 @@ class MunicipioDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ) {
 		$values = array($id);
-		$sql = self::$sqlBasicSelect.' where idMunicipio = ?';
+		$sql = self::$sqlBasicSelect.' where idmunicipio = ?';
 		$result = self::executeSql($sql, $values );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
-		$sql = 'select count(idMunicipio) as qtd from seadra.municipio';
+		$sql = 'select count(idmunicipio) as qtd from municipio';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql($sql);
 		return $result['QTD'][0];
@@ -70,7 +70,7 @@ class MunicipioDAO extends TPDOConnection {
 					,idmunicipio
 					,cdmunicipio
 					,nmmunicipio
-				from seadra.vw_municipio 
+				from vw_municipio 
 				where nmmunicipio = ? 
 				and dssigla = ? ';
 		return self::executeSql( $sql,$values );
@@ -82,7 +82,7 @@ class MunicipioDAO extends TPDOConnection {
 						, $objVo->getIdunidadefederativa() 
 						, $objVo->getStativo() 
 						);
-		return self::executeSql('insert into seadra.municipio(
+		return self::executeSql('insert into municipio(
 								 cdmunicipio
 								,nmmunicipio
 								,idunidadefederativa
@@ -96,17 +96,17 @@ class MunicipioDAO extends TPDOConnection {
 						,$objVo->getIdunidadefederativa()
 						,$objVo->getStativo()
 						,$objVo->getIdMunicipio() );
-		return self::executeSql('update seadra.municipio set 
+		return self::executeSql('update municipio set 
 								 cdmunicipio = ?
 								,nmmunicipio = ?
 								,idunidadefederativa = ?
 								,stativo = ?
-								where idMunicipio = ?',$values);
+								where idmunicipio = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
 		$values = array($id);
-		return self::executeSql('delete from seadra.municipio where idMunicipio = ?',$values);
+		return self::executeSql('delete from municipio where idmunicipio = ?',$values);
 	}
 }
 ?>

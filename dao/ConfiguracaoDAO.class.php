@@ -6,7 +6,7 @@ class ConfiguracaoDAO extends TPDOConnection {
 									 ,dsemitente
 									 ,dsenderecoemitente
 									 ,dstelefoneemitente
-									 from seadra.configuracao ';
+									 from configuracao ';
 
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
@@ -23,13 +23,13 @@ class ConfiguracaoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$values = array( $id );
-		$sql = self::$sqlBasicSelect.' where idConfiguracao = ?';
+		$sql = self::$sqlBasicSelect.' where idconfiguracao = ?';
 		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters( $where );
-		$sql = 'select count(idConfiguracao) as qtd from seadra.configuracao';
+		$sql = 'select count(idconfiguracao) as qtd from configuracao';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql( $sql );
 		return $result['QTD'][0];
@@ -58,7 +58,7 @@ class ConfiguracaoDAO extends TPDOConnection {
 						, $objVo->getDsenderecoemitente() 
 						, $objVo->getDstelefoneemitente() 
 						);
-		return self::executeSql('insert into seadra.configuracao(
+		return self::executeSql('insert into configuracao(
 								 dsemitente
 								,dsenderecoemitente
 								,dstelefoneemitente
@@ -70,16 +70,16 @@ class ConfiguracaoDAO extends TPDOConnection {
 						,$objVo->getDsenderecoemitente()
 						,$objVo->getDstelefoneemitente()
 						,$objVo->getIdConfiguracao() );
-		return self::executeSql('update seadra.configuracao set 
+		return self::executeSql('update configuracao set 
 								 dsemitente = ?
 								,dsenderecoemitente = ?
 								,dstelefoneemitente = ?
-								where idConfiguracao = ?',$values);
+								where idconfiguracao = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
 		$values = array( $id );
-		return self::executeSql('delete from seadra.configuracao where idConfiguracao = ?',$values);
+		return self::executeSql('delete from configuracao where idconfiguracao = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 }

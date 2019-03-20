@@ -10,7 +10,7 @@ class EnderecoDAO extends TPDOConnection {
 									 ,dsbairro
 									 ,dslocalidade
 									 ,idmunicipio
-									 from seadra.endereco ';
+									 from endereco ';
 
 	private static function processWhereGridParameters( $whereGrid ) {
 		$result = $whereGrid;
@@ -38,7 +38,7 @@ class EnderecoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
-		$sql = 'select count(idEndereco) as qtd from seadra.endereco';
+		$sql = 'select count(idendereco) as qtd from endereco';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql($sql);
 		return $result['QTD'][0];
@@ -76,7 +76,7 @@ class EnderecoDAO extends TPDOConnection {
 						, $objVo->getDslocalidade() 
 						, $objVo->getIdmunicipio() 
 						);
-		return self::executeSql('insert into seadra.endereco(
+		return self::executeSql('insert into endereco(
 								 idcliente
 								,dscep
 								,dslogradouro
@@ -97,7 +97,7 @@ class EnderecoDAO extends TPDOConnection {
 						, $objVo->getIdmunicipio()
 						, $objVo->getIdEndereco() 
 					   );
-		return self::executeSql('update seadra.endereco set 
+		return self::executeSql('update endereco set 
 								 idcliente = ?
 								,dscep = ?
 								,dslogradouro = ?
@@ -105,7 +105,7 @@ class EnderecoDAO extends TPDOConnection {
 								,dsbairro = ?
 								,dslocalidade = ?
 								,idmunicipio = ?
-								where idEndereco = ?',$values);
+								where idendereco = ?',$values);
 	}
 }
 ?>

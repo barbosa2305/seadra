@@ -8,7 +8,7 @@ class PedidoDAO extends TPDOConnection {
 									 ,nrcpfcnpj
 									 ,stativo
 									 ,DATE_FORMAT(dtpedido,\'%d/%m/%Y\') as dtpedido
-									 from seadra.vw_pedido_cliente ';
+									 from vw_pedido_cliente ';
 	//--------------------------------------------------------------------------------
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
@@ -48,7 +48,7 @@ class PedidoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters( $where );
-		$sql = 'select count(idPedido) as qtd from seadra.vw_pedido_cliente ';
+		$sql = 'select count(idpedido) as qtd from vw_pedido_cliente ';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql( $sql );
 		return $result['QTD'][0];
@@ -77,7 +77,7 @@ class PedidoDAO extends TPDOConnection {
 						 ,$objVo->getDtpedido() 
 						 ,$objVo->getIdusuario() 
 						);
-		return self::executeSql( 'insert into seadra.pedido(
+		return self::executeSql( 'insert into pedido(
 								  idcliente
 								 ,dtpedido
 								 ,idusuariocriacao
@@ -90,11 +90,11 @@ class PedidoDAO extends TPDOConnection {
 						 ,$objVo->getIdusuario()
 						 ,$objVo->getIdPedido() 
 					    );
-		return self::executeSql( 'update seadra.pedido set 
+		return self::executeSql( 'update pedido set 
 								  idcliente = ?
 							  	 ,dtpedido = ?
 								 ,idusuariomodificacao = ?
-								 where idPedido = ?',$values );
+								 where idpedido = ?',$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
@@ -102,7 +102,7 @@ class PedidoDAO extends TPDOConnection {
 		$values = array( $id );
 		self::beginTransaction();
 		$result = ItempedidoDAO::deleteIdPedido( $id );
-		$result = self::executeSql( 'delete from seadra.pedido where idPedido = ?',$values );
+		$result = self::executeSql( 'delete from pedido where idpedido = ?',$values );
 		self::commit();
 		$erro =self::getError();
 		if ( $erro ) {

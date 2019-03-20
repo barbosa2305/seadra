@@ -5,7 +5,7 @@ class UnidadefederativaDAO extends TPDOConnection {
 									  idunidadefederativa
 									 ,dssigla
 									 ,dsnome
-									 from seadra.unidadefederativa ';
+									 from unidadefederativa ';
 
 	private static function processWhereGridParameters( $whereGrid ) {
 		$result = $whereGrid;
@@ -21,14 +21,14 @@ class UnidadefederativaDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ) {
 		$values = array($id);
-		$sql = self::$sqlBasicSelect.' where idUnidadeFederativa = ?';
+		$sql = self::$sqlBasicSelect.' where idunidadefederativa = ?';
 		$result = self::executeSql($sql, $values );
 		return $result;
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters($where);
-		$sql = 'select count(idUnidadeFederativa) as qtd from seadra.unidadefederativa';
+		$sql = 'select count(idunidadefederativa) as qtd from unidadefederativa';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql($sql);
 		return $result['QTD'][0];
@@ -71,7 +71,7 @@ class UnidadefederativaDAO extends TPDOConnection {
 		$values = array(  $objVo->getDssigla() 
 						, $objVo->getDsnome() 
 						);
-		return self::executeSql('insert into seadra.unidadefederativa(
+		return self::executeSql('insert into unidadefederativa(
 								 dssigla
 								,dsnome
 								) values (?,?)', $values );
@@ -81,15 +81,15 @@ class UnidadefederativaDAO extends TPDOConnection {
 		$values = array( $objVo->getDssigla()
 						,$objVo->getDsnome()
 						,$objVo->getIdUnidadeFederativa() );
-		return self::executeSql('update seadra.unidadefederativa set 
+		return self::executeSql('update unidadefederativa set 
 								 dssigla = ?
 								,dsnome = ?
-								where idUnidadeFederativa = ?',$values);
+								where idunidadefederativa = ?',$values);
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){
 		$values = array($id);
-		return self::executeSql('delete from seadra.unidadefederativa where idUnidadeFederativa = ?',$values);
+		return self::executeSql('delete from unidadefederativa where idunidadefederativa = ?',$values);
 	}
 }
 ?>

@@ -8,7 +8,7 @@ class ProdutoDAO extends TPDOConnection {
 									 ,format(vlprecocusto,2,\'de_DE\') as vlprecocusto
 									 ,format(vlprecovenda,2,\'de_DE\') as vlprecovenda
 									 ,stativo
-									 from seadra.produto ';
+									 from produto ';
 
 	private static function processWhereGridParameters( $whereGrid ){
 		$result = $whereGrid;
@@ -27,13 +27,13 @@ class ProdutoDAO extends TPDOConnection {
 	//--------------------------------------------------------------------------------
 	public static function selectById( $id ){
 		$values = array( $id );
-		$sql = self::$sqlBasicSelect.' where idProduto = ?';
+		$sql = self::$sqlBasicSelect.' where idproduto = ?';
 		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function selectCount( $where=null ){
 		$where = self::processWhereGridParameters( $where );
-		$sql = 'select count(idProduto) as qtd from seadra.produto';
+		$sql = 'select count(idproduto) as qtd from produto';
 		$sql = $sql.( ($where)? ' where '.$where:'');
 		$result = self::executeSql( $sql );
 		return $result['QTD'][0];
@@ -64,7 +64,7 @@ class ProdutoDAO extends TPDOConnection {
 						,TrataDados::converteMoeda( $objVo->getVlprecovenda() ) 
 						,$objVo->getIdusuario() 
 						);
-		return self::executeSql('insert into seadra.produto(
+		return self::executeSql('insert into produto(
                                  nmproduto
                                 ,dsunidademedida
 								,vlprecocusto
@@ -81,22 +81,22 @@ class ProdutoDAO extends TPDOConnection {
 						,$objVo->getStativo()
 						,$objVo->getIdusuario()
 						,$objVo->getIdProduto() );
-		return self::executeSql('update seadra.produto set 
+		return self::executeSql('update produto set 
                                  nmproduto = ?
                                 ,dsunidademedida = ? 
 								,vlprecocusto = ?
 								,vlprecovenda = ?
 								,stativo = ?
 								,idusuariomodificacao = ?
-								where idProduto = ?',$values );
+								where idproduto = ?',$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function updateStatus ( ProdutoVO $objVo ){
 		$values = array( $objVo->getStativo()
 						,$objVo->getIdproduto() );
-		return self::executeSql('update seadra.produto set 
+		return self::executeSql('update produto set 
 								 stativo = ?
-								 where idProduto = ?',$values );
+								 where idproduto = ?',$values );
 	}
 	//--------------------------------------------------------------------------------
 }
