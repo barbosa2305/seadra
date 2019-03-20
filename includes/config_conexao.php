@@ -10,14 +10,12 @@
  * System seadra created in: 2018-12-03 21:17:31
  */
 
-$perfilBancoAdm  = ServidorConfig::getInstancia()->getPerfilAdm();
-
-define('BANCO'   , $perfilBancoAdm['dbms']);
-define('HOST'    , $perfilBancoAdm['hostname']);
-define('PORT'    , $perfilBancoAdm['port']);
-define('DATABASE', $perfilBancoAdm['dbname']);
+define('BANCO'   , DBMS);
+define('HOST'    , HOSTNAME);
+define('PORT'    , PORTNUMBER);
+define('DATABASE', DBNAME);
 define('SCHEMA'  , '');
-define('USUARIO' , $perfilBancoAdm['username']);
-define('SENHA'   , $perfilBancoAdm['password']);
+define('USUARIO' , USERNAME);
+define('SENHA'   , PASSWORD);
 define('UTF8_DECODE'   , 0);
 ?>

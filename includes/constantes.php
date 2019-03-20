@@ -9,26 +9,26 @@
  * 
  * System seadra created in: 2018-12-03 21:17:31
  */
-
-$ambiente  = ServidorConfig::getInstancia()->getConfigParam('ambiente');
-if ( $ambiente == 'produção' || $ambiente == 'producao' ){
-    $ambiente = null;
+$ambiente = null;
+if ( defined('AMBIENTE') ) {
+    if ( !(AMBIENTE == 'produção' || AMBIENTE == 'producao') ){
+        $ambiente = AMBIENTE;
+    }  
 }
-$sigla = ServidorConfig::getInstancia()->getConfigParam('sigla');
-$cssFile = ServidorConfig::getInstancia()->getConfigParam('cssfile');
-$customMenu = ServidorConfig::getInstancia()->getConfigParam('custommenu');
-
-define('SYSTEM_NAME'       , 'Seadra');
 define('SYSTEM_NAME_SUB'   , $ambiente);
+define('SYSTEM_NAME'       , 'Seadra');
 define('SYSTEM_ACRONYM'    , 'seadra');
-define('SYSTEM_VERSION'    , '0.1.0');
+define('SYSTEM_VERSION'    , '1.0.0');
+if ( defined('SIGLA') ) {
+    $sigla = SIGLA;
+} else {
+    $sigla = null;
+}
 define('SYSTEM_SIGLA'      , $sigla);
 define('APLICATIVO'        , SYSTEM_ACRONYM);
 define('STATUS_ATIVO'      , 'S');
 define('STATUS_INATIVO'    , 'N');
 define('LINHAS_POR_PAGINA' , 15);
-define('CSS_FILE'          , $cssFile);
-define('CUSTOM_MENU'       , $customMenu);
 
 if (!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 ?>

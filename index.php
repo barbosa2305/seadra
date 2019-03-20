@@ -10,8 +10,12 @@
  * System seadra created in: 2018-12-03 21:17:31
  */
 
-// Configurações
-require_once('classes/ServidorConfig.class.php');
+/* Configuracoes 
+* config_constantes_dev.php   => DESENVOLVIMENTO
+* config_constantes.php       => PRODUCAO
+*/
+require_once('../config/config_constantes_dev.php');
+//require_once('../config/config_constantes.php');
 
 require_once('includes/constantes.php');
 require_once('includes/config_conexao.php');
@@ -34,7 +38,7 @@ $app->addCssFile(CSS_FILE);
 $app->setLoginFile('includes/tela_login.php');
 $app->setLoginInfo(Acesso::getUserName());
 $app->setBackgroundImage('../css/imagens/app/bg_listrado.jpg');
-$app->setMenuTheme(CUSTOM_MENU);
+$app->setMenuTheme(TEMA_MENU);
 
 $app->setMainMenuFile('includes/menu.php');
 $app->setDefaultModule('pedido.php');
