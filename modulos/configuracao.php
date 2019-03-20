@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCONFIGURACAO';
-$frm = new TForm('Configuração',500,850);
+$frm = new TForm('Configuração',500,860);
 $frm->setFlat(TRUE);
 $frm->setMaximize(TRUE);
 $frm->setShowCloseButton( FALSE );
