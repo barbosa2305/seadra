@@ -14,7 +14,9 @@
 * config_constantes_dev.php   => DESENVOLVIMENTO
 * config_constantes.php       => PRODUCAO
 */
-require_once('../config/seadra_config_dev.php');
+
+require_once('../config/seadra_config_dev.php'); 
+//require_once('../config/seadra_config_tst.php');
 //require_once('../config/seadra_config.php');
 
 require_once('includes/constantes.php');
