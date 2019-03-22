@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `itempedido` (
   `iditempedido` INT NOT NULL AUTO_INCREMENT,
   `idpedido` INT NOT NULL,
   `idproduto` INT NOT NULL,
-  `qtitempedido` INT NOT NULL,
+  `qtitempedido` DECIMAL(10,2) NOT NULL,
   `vldesconto` DECIMAL(10,2) NULL,
   PRIMARY KEY (`iditempedido`),
   CONSTRAINT `fk_itempedido_produto`
@@ -344,8 +344,10 @@ SELECT `cli`.`idcliente` AS `idcliente`
        ,FORMAT(`pro`.`vlprecovenda`,2,'de_DE') AS `vlprecovenda`
        ,`pro`.`stativo` AS `stprodutoativo`
        ,`ite`.`qtitempedido` AS `qtitempedido`
+       ,FORMAT(`ite`.`qtitempedido`,2,'de_DE') AS `qtitempedidoformatado`
        ,FORMAT((`pro`.`vlprecovenda` * `ite`.`qtitempedido`),2,'de_DE') AS `vltotalitem` 
-       ,FORMAT(IFNULL(`ite`.`vldesconto`, 0),2,'de_DE') AS `vldesconto`
+       ,IFNULL(`ite`.`vldesconto`, 0) AS `vldesconto`
+       ,FORMAT(IFNULL(`ite`.`vldesconto`, 0),2,'de_DE') AS `vldescontoformatado`
        ,FORMAT((`pro`.`vlprecovenda` * `ite`.`qtitempedido`) - IFNULL(`ite`.`vldesconto`, 0),2,'de_DE') AS `vltotalitemcomdesconto` 
        ,FORMAT(`vlr`.`vlpedido`,2,'de_DE') AS `vlpedido`
        ,FORMAT(`vlr`.`vltotaldesconto`,2,'de_DE') AS `vltotaldesconto`

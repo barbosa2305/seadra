@@ -26,7 +26,7 @@ $frm->addGroupField('gpItens','Itens');
 	$frm->addTextField('IDPRODUTO','Produto:',10,TRUE,6,null,TRUE);  // campo obrigatorio para funcionar o autocomplete
     $frm->addTextField('NMPRODUTO',null,255,FALSE,75,null,FALSE); // campo obrigatorio para funcionar o autocomplete
 	$frm->addNumberField('VLPRECOVENDA', 'Valor unit. (R$):',8,FALSE,2,FALSE)->setEnabled( FALSE );
-	$frm->addNumberField('QTITEMPEDIDO','Qtd:',6,TRUE,0,FALSE);
+	$frm->addNumberField('QTITEMPEDIDO','Qtd:',6,TRUE,2,FALSE);
 	$frm->addNumberField('VLDESCONTO', 'Desconto (R$):',8,FALSE,2,FALSE);
 	$frm->setAutoComplete('NMPRODUTO','vw_produto_ativo','NMPRODUTO','IDPRODUTO|IDPRODUTO,NMPRODUTO|NMPRODUTO,VLPRECOVENDA|VLPRECOVENDA'
 						,TRUE,null,null,3,500,50,null,null,null,null,TRUE,null,null,TRUE);
@@ -144,8 +144,8 @@ function getWhereGridParameters(&$frm){
 						'IDITEMPEDIDO'=>$frm->get('IDITEMPEDIDO')
 						,'IDPEDIDO'=>$frm->get('IDPEDIDO')
 						,'IDPRODUTO'=>$frm->get('IDPRODUTO') 
-						,'QTITEMPEDIDO'=>$frm->get('QTITEMPEDIDO')
-						//,'VLDESCONTO'=>$frm->get('VLDESCONTO')
+						,'QTITEMPEDIDO'=>TrataDados::converteMoeda( $frm->get('QTITEMPEDIDO') )
+						,'VLDESCONTO'=>TrataDados::converteMoeda( $frm->get('VLDESCONTO') )
 						);
 	}
 	return $retorno;
@@ -189,9 +189,9 @@ if ( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ){
     $gride->addColumnCompact('NMPRODUTO','Produto',null,null,110);
     $gride->addColumn('DSUNIDADEMEDIDA','Unid.',null,'center');
 	$gride->addColumn('VLPRECOVENDA','Valor unit. (R$)',null,'right');
-	$gride->addColumn('QTITEMPEDIDO','Qtd',null,'center');
+	$gride->addColumn('QTITEMPEDIDOFORMATADO','Qtd',null,'right');
 	$gride->addColumn('VLTOTALITEM','Total (R$)',null,'right');
-	$gride->addColumn('VLDESCONTO','Desc. (R$)',null,'right');
+	$gride->addColumn('VLDESCONTOFORMATADO','Desc. (R$)',null,'right');
 	$gride->addColumn('VLTOTALITEMCOMDESCONTO','Total c/ desc. (R$)',null,'right');
 
 	$gride->show();

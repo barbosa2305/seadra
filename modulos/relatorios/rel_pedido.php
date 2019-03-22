@@ -42,8 +42,8 @@ class RelPedido extends TPDF {
         $this->addColumn(utf8_decode('Código'),12,'C','IDPRODUTOFORMATADO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Descrição'),83,'L','NMPRODUTO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Unid.'),10,'C','DSUNIDADEMEDIDA',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Qtd'),12,'C','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Valor Unit. (R$)'),23,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Qtd'),15,'R','QTITEMPEDIDO',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Valor Unit. (R$)'),20,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Desc. (R$)'),18,'R','VLDESCONTO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Total (R$)'),23,'R','VLTOTALITEMCOMDESCONTO',null,null,$tamanho,$fontCor,$tipo);
         $this->printRows();
