@@ -24,8 +24,10 @@ class ItempedidoDAO extends TPDOConnection {
 									 ,dsunidademedida
 									 ,vlprecovenda
 									 ,qtitempedido
+									 ,qtitempedidoformatado
 									 ,vltotalitem
 									 ,vldesconto
+									 ,vldescontoformatado
 									 ,vltotalitemcomdesconto
 									 ,vlpedido
 									 ,vltotaldesconto
@@ -86,7 +88,7 @@ class ItempedidoDAO extends TPDOConnection {
 		$values = array( 
 						$objVo->getIdpedido() 
 						,$objVo->getIdproduto() 
-						,$objVo->getQtitempedido()
+						,TrataDados::converteMoeda( $objVo->getQtitempedido() )
 						,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
 						);
 		return self::executeSql('insert into itempedido(
@@ -101,7 +103,7 @@ class ItempedidoDAO extends TPDOConnection {
 		$values = array( 
 						$objVo->getIdpedido()
 						,$objVo->getIdproduto()
-						,$objVo->getQtitempedido()
+						,TrataDados::converteMoeda( $objVo->getQtitempedido() )
 						,TrataDados::converteMoeda( $objVo->getVldesconto() ) 
 						,$objVo->getIdItemPedido() 
 						);
