@@ -11,6 +11,11 @@ $msgSysNameVersion = SYSTEM_NAME.' - v'.SYSTEM_VERSION;
 </head>
 <body>
     <h2><?php echo($msgSysNameVersion); ?></h2>
+    <li>versão 1.1.0</li>
+        <ul>
+            <li>Campo quantidade do item alterado para decimal, com duas casas decimais</li>
+            <li>Correção de erro na busca de itens por quantidade e valor do desconto</li>
+        </ul>
     <li>versão 1.0.0</li>
         <ul>
             <li>Primeira versão</li>
