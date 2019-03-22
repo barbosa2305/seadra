@@ -1,6 +1,6 @@
 <?php
 require_once("../includes/constantes.php");
-$msgSysNameVersion = SYSTEM_NAME.' - v'.SYSTEM_VERSION;
+$msgSysNameVersion = SYSTEM_NAME.' - versão '.SYSTEM_VERSION;
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +11,10 @@ $msgSysNameVersion = SYSTEM_NAME.' - v'.SYSTEM_VERSION;
 </head>
 <body>
     <h2><?php echo($msgSysNameVersion); ?></h2>
+    <li>versão 1.2.0</li>
+        <ul>
+            <li>Acesso ao arquivo de log pelo sistema</li>
+        </ul>
     <li>versão 1.1.0</li>
         <ul>
             <li>Campo quantidade do item alterado para decimal, com duas casas decimais</li>
