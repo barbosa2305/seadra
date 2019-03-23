@@ -16,6 +16,10 @@ $frm->addGroupField('gpDadosBasicos','Dados básicos',null,400);
 	$frm->addTextField('NMCLIENTE', 'Nome:',255,TRUE,49,null,TRUE);
 	$frm->addEmailField('DSEMAIL', 'E-mail:',null,FALSE,49,TRUE);
 	$frm->addFoneField('NRTELEFONE', 'Telefone:',null,TRUE);
+
+	//$frm->addMaskField('C2', 'Celular 2:', FALSE, '999999999999999',TRUE)->addEvent('onkeypress','text_change(this)');
+	//$frm->addNumberField('C2','Cel:',20,FALSE,0,TRUE)->addEvent('onkeypress','text_change(this)');
+	
 	$frm->addFoneField('NRCELULAR', 'Celular:',null,TRUE);
 	$ativo = array( 'S'=>'Sim','N'=>'Não' );
 	$frm->addSelectField('STATIVO', 'Ativo ?',FALSE,$ativo,null,null,null,null,null,null,null,null);
@@ -243,5 +247,16 @@ $frm->show();
 	function select_change(e) {   
 		jQuery("#DSCOMPLEMENTO").val("");
 		jQuery("#CDMUNICIPIO").html('<option value="">-- selecione --</option>');
+	}
+	function text_change(e) {
+		var options = {
+						onKeyPress: function (phone, e, field, options) {
+								var masks = ['(00) 0000-00000', '(00) 00000-0000'];
+								var mask = (phone.length > 14) ? masks[1] : masks[0];
+								$('#C2').mask(mask, options);
+					  }
+		};
+
+		jQuery('#C2').mask('(00) 0000-00000', options);
 	}
 </script>
