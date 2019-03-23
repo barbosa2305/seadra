@@ -11,8 +11,9 @@
  */
 
 /* Configuracoes 
-* config_constantes_dev.php   => DESENVOLVIMENTO
-* config_constantes.php       => PRODUCAO
+*   seadra_config_dev.php  => DESENVOLVIMENTO
+*   seadra_config_tst.php  => TESTES
+*   seadra_config.php      => PRODUCAO
 */
 
 require_once('../config/seadra_config_dev.php'); 
