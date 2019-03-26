@@ -54,6 +54,7 @@ if( $acao =='login'){
     $result = Acesso::login($nom_user,$pwd_user);
     if( $result == 1 ) {
         $_SESSION[APLICATIVO]['conectado']=true;
+        Timezone::set();
         prepareReturnAjax(1);
     } else {
         $frm->setMessage(Mensagem::USUARIO_SENHA_INCORRETOS);

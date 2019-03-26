@@ -77,11 +77,13 @@ class PedidoDAO extends TPDOConnection {
 						 ,$objVo->getDtpedido() 
 						 ,$objVo->getIdusuario() 
 						);
-		return self::executeSql( 'insert into pedido(
-								  idcliente
-								 ,dtpedido
-								 ,idusuariocriacao
-								 ) values (?,?,?)', $values );
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'insert into pedido(
+						idcliente
+						,dtpedido
+						,idusuariocriacao
+					) values (?,?,?)' ;
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update( PedidoVO $objVo ){
@@ -89,12 +91,14 @@ class PedidoDAO extends TPDOConnection {
 						 ,$objVo->getDtpedido()
 						 ,$objVo->getIdusuario()
 						 ,$objVo->getIdPedido() 
-					    );
-		return self::executeSql( 'update pedido set 
-								  idcliente = ?
-							  	 ,dtpedido = ?
-								 ,idusuariomodificacao = ?
-								 where idpedido = ?',$values );
+						);
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update pedido set 
+						idcliente = ?
+						,dtpedido = ?
+						,idusuariomodificacao = ?
+					where idpedido = ?' ;
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function delete( $id ){

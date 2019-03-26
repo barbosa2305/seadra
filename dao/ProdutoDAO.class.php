@@ -64,13 +64,15 @@ class ProdutoDAO extends TPDOConnection {
 						,TrataDados::converteMoeda( $objVo->getVlprecovenda() ) 
 						,$objVo->getIdusuario() 
 						);
-		return self::executeSql('insert into produto(
-                                 nmproduto
-                                ,dsunidademedida
-								,vlprecocusto
-								,vlprecovenda
-								,idusuariocriacao
-								) values (?,?,?,?,?)', $values );
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'insert into produto(
+						nmproduto
+						,dsunidademedida
+						,vlprecocusto
+						,vlprecovenda
+						,idusuariocriacao
+					) values (?,?,?,?,?)' ;
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( ProdutoVO $objVo ){
@@ -81,22 +83,26 @@ class ProdutoDAO extends TPDOConnection {
 						,$objVo->getStativo()
 						,$objVo->getIdusuario()
 						,$objVo->getIdProduto() );
-		return self::executeSql('update produto set 
-                                 nmproduto = ?
-                                ,dsunidademedida = ? 
-								,vlprecocusto = ?
-								,vlprecovenda = ?
-								,stativo = ?
-								,idusuariomodificacao = ?
-								where idproduto = ?',$values );
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update produto set 
+						nmproduto = ?
+						,dsunidademedida = ? 
+						,vlprecocusto = ?
+						,vlprecovenda = ?
+						,stativo = ?
+						,idusuariomodificacao = ?
+					where idproduto = ?' ;
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function updateStatus ( ProdutoVO $objVo ){
 		$values = array( $objVo->getStativo()
 						,$objVo->getIdproduto() );
-		return self::executeSql('update produto set 
-								 stativo = ?
-								 where idproduto = ?',$values );
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update produto set 
+						stativo = ?
+					where idproduto = ?' ;			
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 }

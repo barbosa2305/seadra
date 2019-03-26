@@ -92,16 +92,18 @@ class ClienteDAO extends TPDOConnection {
 						, preg_replace('/[^0-9]/','',$objVo->getNrcelular()) 
 						, trim($objVo->getDsobservacao())
 						, $objVo->getIdusuario()
-						);				
-		self::executeSql('insert into cliente(
-								 nmcliente
-								,nrcpfcnpj
-								,dsemail
-								,nrtelefone
-								,nrcelular
-								,dsobservacao
-								,idusuariocriacao
-								) values (?,?,?,?,?,?,?)', $values );
+						);
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'insert into cliente(
+						nmcliente
+						,nrcpfcnpj
+						,dsemail
+						,nrtelefone
+						,nrcelular
+						,dsobservacao
+						,idusuariocriacao
+					 ) values (?,?,?,?,?,?,?)' ;		
+		self::executeSql( $sql,$values );
 		return self::getLastId('cliente','idCliente');
 	}
 	//--------------------------------------------------------------------------------
@@ -116,24 +118,29 @@ class ClienteDAO extends TPDOConnection {
 						, $objVo->getIdusuario()
 						, $objVo->getIdCliente()
 					   );
-		return self::executeSql('update cliente set 
-								 nmcliente = ?
-								,nrcpfcnpj = ?
-								,dsemail = ?
-								,nrtelefone = ?
-								,nrcelular = ?
-								,dsobservacao = ?
-								,stativo = ?
-								,idusuariomodificacao = ?
-								where idCliente = ?',$values);
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update cliente set 
+						nmcliente = ?
+						,nrcpfcnpj = ?
+						,dsemail = ?
+						,nrtelefone = ?
+						,nrcelular = ?
+						,dsobservacao = ?
+						,stativo = ?
+						,idusuariomodificacao = ?
+					where idCliente = ? ';
+
+		return self::executeSql($sql,$values);
 	}
 	//--------------------------------------------------------------------------------
 	public static function updateStatus ( ClienteVO $objVo ){
 		$values = array( $objVo->getStativo()
 						,$objVo->getIdCliente() );
-		return self::executeSql('update cliente set 
-								 stativo = ?
-								 where idCliente = ?',$values);
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update cliente set 
+						stativo = ?
+					where idCliente = ?' ;
+		return self::executeSql( $sql,$values );
 	}
 }
 ?>

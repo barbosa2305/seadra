@@ -73,12 +73,14 @@ class UsuarioDAO extends TPDOConnection {
 						,$objVo->getDssenha()
 						,$objVo->getTpgrupo()
 						);
-		return self::executeSql('insert into usuario(
-								 nmusuario
-								,dslogin
-								,dssenha
-								,tpgrupo
-								) values (?,?,?,?)', $values );
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'insert into usuario(
+						nmusuario
+						,dslogin
+						,dssenha
+						,tpgrupo
+					) values (?,?,?,?)' ;
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( UsuarioVO $objVo ){
@@ -87,24 +89,34 @@ class UsuarioDAO extends TPDOConnection {
 						,$objVo->getTpgrupo()
 						,$objVo->getStativo()
 						,$objVo->getIdUsuario() );
-		return self::executeSql('update usuario set 
-								 nmusuario = ?
-								,dslogin = ?
-								,tpgrupo = ?
-								,stativo = ?
-								where idusuario = ?',$values);
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update usuario set 
+						nmusuario = ?
+						,dslogin = ?
+						,tpgrupo = ?
+						,stativo = ?
+					where idusuario = ?' ;						
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function updatePassword ( UsuarioVO $objVo ){
 		$values = array( $objVo->getDssenha()
-                        ,$objVo->getIdusuario() );
-		return self::executeSql('update usuario set dssenha = ? where idusuario = ?',$values);
+						,$objVo->getIdusuario() );
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update usuario set 
+						dssenha = ? 
+					where idusuario = ?' ;
+		return self::executeSql( $sql,$values );
 	}
 	//--------------------------------------------------------------------------------
 	public static function updateStatus ( UsuarioVO $objVo ){
 		$values = array( $objVo->getStativo()
-                        ,$objVo->getIdusuario() );
-		return self::executeSql('update usuario set stativo = ? where idusuario = ?',$values);
+						,$objVo->getIdusuario() );
+		$sql = 'SET time_zone = "'.Timezone::get().'";'.PHP_EOL;
+		$sql = $sql.'update usuario set 
+						stativo = ? 
+					where idusuario = ?' ;
+		return self::executeSql( $sql,$values );
 	}
 }
 ?>
