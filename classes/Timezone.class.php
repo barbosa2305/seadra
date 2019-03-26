@@ -10,7 +10,7 @@ class Timezone {
 	//--------------------------------------------------------------------------------
     public static function set(){
         $_SESSION[APLICATIVO]['TIMEZONE'] = self::TIMEZONE;
-        $horarioVerao = HorarioveraoDAO::selectAll();
+        $horarioVerao = HorarioveraoDAO::selectUltimoPeriodo('DTINICIO DESC');
         if ( !empty($horarioVerao) ){
            $hoje = DateTimeHelper::getNow();
             if ( ($hoje >= $horarioVerao['DTINICIO'][0]) && ($hoje <= $horarioVerao['DTFIM'][0]) ){

@@ -33,6 +33,7 @@ if (Acesso::isUserLoggedAdm()) {
     $menu->add('10.3','10','Ambiente Resumido','modulos/sys_environment_summary.php');
     $menu->add('10.4','10','PHPInfo','modulos/sys_environment.php');
     $menu->add('10.5','10','Exibir o log','modulos/exibelog.php');
+	$menu->add('10.6','10','Horário de verão','modulos/horarioverao.php');
 }
 
 $menu->getXml();

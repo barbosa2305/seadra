@@ -239,6 +239,17 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `horarioverao`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `horarioverao` (
+  `idhorarioverao` INT NOT NULL AUTO_INCREMENT,
+  `dtinicio` DATETIME NOT NULL,
+  `dtfim` DATETIME NOT NULL,
+  PRIMARY KEY (`idhorarioverao`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- View `vw_municipio`
 -- -----------------------------------------------------
 CREATE OR REPLACE VIEW `vw_municipio` AS 
