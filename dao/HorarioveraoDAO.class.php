@@ -2,26 +2,31 @@
 class HorarioveraoDAO extends TPDOConnection {
 
 	private static $sqlBasicSelect = 'select
-										idhorarioverao
-										,dtinicio
-										,DATE_FORMAT(dtinicio,\'%d/%m/%Y %H:%i:%s\') as dtinicioformatada
-										,dtfim
-										,DATE_FORMAT(dtfim,\'%d/%m/%Y %H:%i:%s\') as dtfimformatada
-									 from horarioverao ';
+											idhorarioverao
+											,dtinicio
+											,DATE_FORMAT(dtinicio,\'%d/%m/%Y\') as dtinicioformatada
+											,DATE_FORMAT(dtinicio,\'%H:%i:%s\') as hrinicioformatada
+											,dtfim
+											,DATE_FORMAT(dtfim,\'%d/%m/%Y\') as dtfimformatada
+											,DATE_FORMAT(dtfim,\'%H:%i:%s\') as hrfimformatada
+										from horarioverao ';
 
 	private static function processWhereGridParameters( $whereGrid ) {
 		$result = $whereGrid;
 		if ( is_array($whereGrid) ){
 			$where = ' 1=1 ';
 			$where = SqlHelper::getAtributeWhereGridParameters($where, $whereGrid, 'IDHORARIOVERAO', SqlHelper::SQL_TYPE_NUMERIC);
+			/*
 			if ( !empty($whereGrid['DTINICIO']) ){
 				$dtInicio = DateTimeHelper::date2Mysql( $whereGrid['DTINICIO'] );
 				$where = $where.( paginationSQLHelper::attributeIssetOrNotZero($whereGrid,'DTINICIO',' AND DTINICIO = \''.$dtInicio.'\' ',null) );
 			}
+			
 			if ( !empty($whereGrid['DTFIM']) ){
 				$dtFim = DateTimeHelper::date2Mysql( $whereGrid['DTFIM'] );
 				$where = $where.( paginationSQLHelper::attributeIssetOrNotZero($whereGrid,'DTFIM',' AND DTFIM = \''.$dtFim.'\' ',null) );
 			}
+			*/
 			$result = $where;
 		}
 		return $result;
@@ -78,8 +83,10 @@ class HorarioveraoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function insert( HorarioveraoVO $objVo ) {
-		$values = array(  $objVo->getDtinicio() 
-						, $objVo->getDtfim() 
+		$dtInicio = date( 'Y-m-d H:i:s',strtotime(str_replace("/","-",$objVo->getDtinicio())) );
+		$dtFim = date( 'Y-m-d H:i:s',strtotime(str_replace("/","-",$objVo->getDtfim())) );
+		$values = array( $dtInicio
+						 ,$dtFim
 						);
 		return self::executeSql('insert into horarioverao(
 									dtinicio
@@ -88,8 +95,10 @@ class HorarioveraoDAO extends TPDOConnection {
 	}
 	//--------------------------------------------------------------------------------
 	public static function update ( HorarioveraoVO $objVo ) {
-		$values = array( $objVo->getDtinicio()
-						,$objVo->getDtfim()
+		$dtInicio = date( 'Y-m-d H:i:s',strtotime(str_replace("/","-",$objVo->getDtinicio())) );
+		$dtFim = date( 'Y-m-d H:i:s',strtotime(str_replace("/","-",$objVo->getDtfim())) );
+		$values = array( $dtInicio
+						,$dtFim
 						,$objVo->getIdhorarioverao() );
 		return self::executeSql('update horarioverao set 
 									dtinicio = ?
