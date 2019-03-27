@@ -2,7 +2,7 @@
 defined('APLICATIVO') or die();
 
 $primaryKey = 'IDCLIENTE';
-$frm = new TForm('Cliente',610,840);
+$frm = new TForm('Cliente',662,840);
 $frm->setFlat( TRUE );
 $frm->setMaximize( TRUE );
 $frm->setShowCloseButton( FALSE );
@@ -159,7 +159,7 @@ function getWhereGridParameters(&$frm){
 }
 
 if( isset( $_REQUEST['ajax'] )  && $_REQUEST['ajax'] ) {
-	$maxRows = 12; // ROWS_PER_PAGE;
+	$maxRows = 10; // ROWS_PER_PAGE;
 	$whereGrid = getWhereGridParameters($frm);
 	$page = PostHelper::get('page');
 	$dados = Cliente::selectAllPagination( $primaryKey, $whereGrid, $page,  $maxRows);
