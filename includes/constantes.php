@@ -18,7 +18,7 @@ if ( defined('AMBIENTE') ) {
 define('SYSTEM_NAME_SUB'   , $ambiente);
 define('SYSTEM_NAME'       , 'Seadra');
 define('SYSTEM_ACRONYM'    , 'seadra');
-define('SYSTEM_VERSION'    , '1.2.0');
+define('SYSTEM_VERSION'    , '1.3.0');
 if ( defined('SIGLA') ) {
     $sigla = SIGLA;
 } else {

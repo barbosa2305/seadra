@@ -11,6 +11,11 @@ $msgSysNameVersion = SYSTEM_NAME.' - versão '.SYSTEM_VERSION;
 </head>
 <body>
     <h2><?php echo($msgSysNameVersion); ?></h2>
+    <li>versão 1.3.0</li>
+        <ul>
+            <li>Cadastro dos horários de verão</li>
+            <li>Salvando campos data/hora com timezone correto</li>
+        </ul>
     <li>versão 1.2.0</li>
         <ul>
             <li>Acesso ao arquivo de log pelo sistema</li>
