@@ -344,6 +344,7 @@ SELECT `cli`.`idcliente` AS `idcliente`
        ,`cli`.`dsbairro` AS `dsbairro`
        ,`cli`.`nmmunicipio` AS `nmmunicipio`
        ,`cli`.`dssigla` AS `dssigla`
+       ,`cli`.`dsobservacao` AS `dsobservacao`
        ,`ped`.`idpedido` AS `idpedido` 
        ,`ped`.`dtpedido` AS `dtpedido`
        ,DATE_FORMAT(`dtpedido`,'%d/%m/%Y') AS `dtpedidoformatada`

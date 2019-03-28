@@ -13,6 +13,7 @@ class ItempedidoDAO extends TPDOConnection {
 									 ,dsbairro
 									 ,nmmunicipio
 									 ,dssigla
+									 ,dsobservacao
 									 ,idpedido
 									 ,dtpedido
 									 ,dtpedidoformatada

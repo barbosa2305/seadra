@@ -62,6 +62,9 @@ class RelPedido extends TPDF {
         $this->SetFont('Arial','B',$fontSize);
         $this->linha($w1,$h,'Total (R$): ',1,0,'R');
         $this->linha($w2,$h,$dados['VLTOTAL'][0],1,1,'R');
+        $this->SetFont('Arial','',$fontSize-1);
+        $this->Cell(190,$h,utf8_decode('Observações do cliente:'),'T,L,R',1,'L');
+        $this->Cell(190,$h+1,utf8_decode(trim($dados['DSOBSERVACAO'][0])),'B,L,R',1,'L');
         $this->Ln();
     }
     public function Assinaturas(){
