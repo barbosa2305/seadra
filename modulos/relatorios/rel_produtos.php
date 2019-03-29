@@ -37,6 +37,7 @@ class RelProdutos extends TPDF {
         $fontCor = $this->gridFontCor;
         $h = 6;
 
+        /*
         $this->clearColumns();
         $this->setData( $dados );
         $this->addColumn(utf8_decode('Código'),12,'C','IDPRODUTO',null,null,$tamanho,$fontCor,$tipo);
@@ -45,7 +46,23 @@ class RelProdutos extends TPDF {
         $this->addColumn(utf8_decode('Vl. Custo (R$)'),20,'R','VLPRECOCUSTO',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Vl. Venda (R$)'),20,'R','VLPRECOVENDA',null,null,$tamanho,$fontCor,$tipo);
         $this->printRows();
-    
+        */
+
+        $header = array('Código','Descrição','Unid.','Vl. Custo (R$)','Vl. Venda (R$)');
+
+        $w = array( 16,112,14,24,24 ); // Largura das colunas
+
+        for ($i=0;$i<count($header);$i++) // Cabeçalho da tabela
+            $this->Cell($w[$i],$h,utf8_decode($header[$i]),'T,B',0,'C');
+        $this->Ln();
+
+        foreach( $dados['IDPRODUTO'] as  $key => $idProduto ){ // Dados
+            $this->Cell($w[0],$h,utf8_decode(trim($dados['IDPRODUTO'][$key])),0,0,'C');
+            $this->Cell($w[1],$h,utf8_decode(trim($dados['NMPRODUTO'][$key])),0,0,'L');
+            $this->Cell($w[2],$h,utf8_decode(trim($dados['DSUNIDADEMEDIDA'][$key])),0,0,'C');
+            $this->Cell($w[3],$h,utf8_decode(trim($dados['VLPRECOCUSTO'][$key])),0,0,'R');
+            $this->Cell($w[4],$h,utf8_decode(trim($dados['VLPRECOVENDA'][$key])),0,1,'R');
+        }    
     }
 }
 
