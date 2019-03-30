@@ -24,7 +24,9 @@ if ( Acesso::getUserGroup() == Acesso::USER_GRUPO_ADMIN ) {
 }
 
 $menu->add('3', null, 'Relatórios', null, null, 'mini-page.png');
-$menu->add('3.1', '3', 'Produtos', 'modulos/relatorios/rel_produtos.php');
+$menu->add('3.1', '3', 'Clientes', 'modulos/relatorios/rel_clientes.php');
+$menu->add('3.2', '3', 'Produtos', 'modulos/relatorios/rel_produtos.php');
+
 
 $menu->add('9', null, 'Sobre', 'modulos/sys_about.php', null, 'information16.gif');
 
