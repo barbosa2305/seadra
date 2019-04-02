@@ -106,9 +106,9 @@ function rodape(TPDF $pdf)
 {   
     $fontSize = 8;
     $h = 6;
-    $pdf->SetY(-14);
+    $pdf->SetY(-16);
     $pdf->SetFont('Arial','',$fontSize);
-    $pdf->linha(0,$h,'Página: '.$pdf->PageNo().'/{nb}',0,1,'C');
+    $pdf->linha(0,$h,'Página: '.$pdf->PageNo().'/{nb}','T',1,'C');
 }
 
 function mask($val, $mask)
