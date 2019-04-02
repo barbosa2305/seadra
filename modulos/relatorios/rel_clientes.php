@@ -37,19 +37,25 @@ class RelClientes extends TPDF {
         $fontCor = $this->gridFontCor;
         $h = 6;
         
-        /*
+        foreach( $dados['IDCLIENTE'] as  $key => $idCliente ){ 
+            $dados['NRCPFCNPJ'][$key] = utf8_decode(trim($this->applyMaskCpfCnpj($dados['NRCPFCNPJ'][$key])));
+            $dados['NRTELEFONE'][$key] = utf8_decode(trim($this->applyMaskTelefone($dados['NRTELEFONE'][$key])));
+            $dados['NRCELULAR'][$key] = utf8_decode(trim($this->applyMaskCelular($dados['NRCELULAR'][$key])));
+        } 
+        
         $this->clearColumns();
         $this->setData( $dados );
         $this->addColumn(utf8_decode('Código'),12,'C','IDCLIENTE',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Nome'),60,'L','NMCLIENTE',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('CPF/CNPJ'),24,'C','NRCPFCNPJ',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('E-mail'),48,'C','DSEMAIL',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Telefone'),16,'C','NRTELEFONE',null,null,$tamanho,$fontCor,$tipo);
-        $this->addColumn(utf8_decode('Celular'),18,'C','NRCELULAR',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Nome'),46,'L','NMCLIENTE',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('CPF/CNPJ'),26,'C','NRCPFCNPJ',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('E-mail'),50,'C','DSEMAIL',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Telefone'),20,'C','NRTELEFONE',null,null,$tamanho,$fontCor,$tipo);
+        $this->addColumn(utf8_decode('Celular'),24,'C','NRCELULAR',null,null,$tamanho,$fontCor,$tipo);
         $this->addColumn(utf8_decode('Ativo ?'),12,'C','STATIVO',null,null,$tamanho,$fontCor,$tipo);
         $this->printRows();
-        */
         
+        
+        /*
         $header = array('Código','Nome','CPF/CNPJ','E-mail','Telefone','Celular','Ativo ?');
         $w = array( 12,55,24,48,18,20,12 ); // Largura das colunas
 
@@ -67,6 +73,7 @@ class RelClientes extends TPDF {
             $this->Cell($w[5],$h,utf8_decode(trim($this->applyMaskCelular($dados['NRCELULAR'][$key]))),0,0,'C');
             $this->Cell($w[5],$h,utf8_decode(trim($dados['STATIVO'][$key])),0,1,'C');
         } 
+        */
 
     }
     private function applyMaskCpfCnpj( $campo ){
@@ -135,9 +142,9 @@ function rodape(TPDF $pdf)
 {   
     $fontSize = 8;
     $h = 6;
-    $pdf->SetY(-14);
+    $pdf->SetY(-16);
     $pdf->SetFont('Arial','',$fontSize);
-    $pdf->linha(0,$h,'Página: '.$pdf->PageNo().'/{nb}',0,1,'C');
+    $pdf->linha(0,$h,'Página: '.$pdf->PageNo().'/{nb}','T',1,'C');
 }
 
 function mask($val, $mask)
