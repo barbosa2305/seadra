@@ -85,6 +85,20 @@ class ItempedidoDAO extends TPDOConnection {
 		return self::executeSql( $sql );
 	}
 	//--------------------------------------------------------------------------------
+	public static function selectItensMaisVendidos(){
+		$sql = 'select lpad(`ite`.`idproduto`,5,\'0\') AS `idprodutoformatado`
+					   ,`pro`.`nmproduto` AS `nmproduto`
+        			   ,format(sum(`ite`.`qtitempedido`),2,\'de_DE\') AS `qtitempedidoformatado`
+        			   ,sum(((`pro`.`vlprecovenda` * `ite`.`qtitempedido`) - ifnull(`ite`.`vldesconto`,0))) AS `vltotalitemcomdesconto`
+        			   ,format(sum(((`pro`.`vlprecovenda` * `ite`.`qtitempedido`) - ifnull(`ite`.`vldesconto`,0))),2,\'de_DE\') AS `vltotalitemcomdescontoformatado`
+				from `pedido` `ped`
+					inner join `itempedido` `ite` on `ped`.`idpedido` = `ite`.`idpedido`
+    				inner join `produto` `pro` on `ite`.`idproduto` = `pro`.`idproduto`
+				group by `ite`.`idproduto`,`pro`.`nmproduto`
+				order by `vltotalitemcomdesconto` desc ';
+		return self::executeSql( $sql );
+	}
+	//--------------------------------------------------------------------------------
 	public static function insert( ItempedidoVO $objVo ){
 		$values = array( 
 						$objVo->getIdpedido() 

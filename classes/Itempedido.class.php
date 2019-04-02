@@ -31,6 +31,10 @@ class Itempedido {
 		return ItempedidoDAO::selectAll( $orderBy,$where );
 	}
 	//--------------------------------------------------------------------------------
+	public static function selectItensMaisVendidos(){
+		return ItempedidoDAO::selectItensMaisVendidos();
+	}
+	//--------------------------------------------------------------------------------
 	public static function save( ItempedidoVO $objVo ){
 		$result = null;
 		if( $objVo->getIditempedido() ) {
