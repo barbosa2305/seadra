@@ -15,7 +15,7 @@ $msgSysNameVersion = SYSTEM_NAME.' - versão '.SYSTEM_VERSION;
         <ul>
             <li>Criação de relatórios: Produtos, Clientes e Itens Mais Vendidos</li>
             <li>Acréscimo do campo observação do cliente no relatório de pedido de venda.</li>
-            <li>Correções de problema de perfomance dos relatórios</li>
+            <li>Correções de problema de perfomance dos relatórios.</li>
         </ul>
     <li>versão 1.3.0</li>
         <ul>
