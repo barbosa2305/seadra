@@ -13,7 +13,7 @@ $msgSysNameVersion = SYSTEM_NAME.' - versão '.SYSTEM_VERSION;
     <h2><?php echo($msgSysNameVersion); ?></h2>
     <li>versão 1.4.0</li>
         <ul>
-            <li>Criação de relatórios: Produtos, Clientes e Itens Mais Vendidos</li>
+            <li>Criação de relatórios: Produtos, Clientes e Itens Mais Vendidos.</li>
             <li>Acréscimo do campo observação do cliente no relatório de pedido de venda.</li>
             <li>Correções de problema de perfomance dos relatórios.</li>
         </ul>
